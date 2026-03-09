@@ -1,4 +1,4 @@
-import { Brain, QrCode, Image, Star, Crown, Package, Check, Infinity, FileText, Lock, Headphones } from "lucide-react";
+import { Brain, QrCode, Image, Star, Crown, Package, Check, Clock, FileText, Lock, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createPageUrl } from "@/utils";
 
