@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #FAFAF8;
+  color: #2D3748;
+}
+
+.font-serif {
+  font-family: 'Playfair Display', serif !important;
+}
+
+.parallax-hero {
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}
+
+@media (max-width: 768px) {
+  .parallax-hero { background-attachment: scroll; }
+}
+
+@keyframes flicker {
+  0%, 100% { transform: scaleX(1) scaleY(1); opacity: 1; }
+  25%  { transform: scaleX(0.88) scaleY(1.06); opacity: 0.88; }
+  50%  { transform: scaleX(1.06) scaleY(0.94); opacity: 0.95; }
+  75%  { transform: scaleX(0.94) scaleY(1.03); opacity: 0.9; }
+}
+
+.candle-flame { animation: flicker 2s ease-in-out infinite; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in { animation: fadeIn 0.6s ease forwards; }
