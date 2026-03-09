@@ -1,6 +1,7 @@
 import HeroLanding from "@/components/home/HeroLanding";
 import FeaturesSection from "@/components/home/FeaturesSection";
 import PricingSection from "@/components/home/PricingSection";
+import CardTeaser from "@/components/home/CardTeaser";
 import { Heart } from "lucide-react";
 
 export default function Home() {
