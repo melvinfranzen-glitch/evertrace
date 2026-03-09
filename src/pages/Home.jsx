@@ -9,6 +9,7 @@ export default function Home() {
     <div>
       <HeroLanding />
       <FeaturesSection />
+      <CardTeaser />
       <PricingSection />
 
       {/* Final CTA */}
