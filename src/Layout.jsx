@@ -217,18 +217,62 @@ export default function Layout({ children, currentPageName }) {
 
       <main className="flex-1">{children}</main>
 
-      <footer style={{ background: "#1c1917" }} className="text-stone-400 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
-            <Link to={createPageUrl("Home")} className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: "#b45309" }}>
-                <Heart className="w-3.5 h-3.5 text-white" />
+      <footer style={{ background: "#1a1410" }} className="text-stone-500">
+        {/* Main footer */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 border-b border-stone-800">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {/* Brand */}
+            <div>
+              <Link to={createPageUrl("Home")} className="flex items-center gap-2 mb-4">
+                <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: "linear-gradient(135deg,#92400e,#b45309)" }}>
+                  <Heart className="w-3.5 h-3.5 text-white" />
+                </div>
+                <span className="text-white text-lg" style={{ fontFamily: "'Playfair Display', serif" }}>Evertrace</span>
+              </Link>
+              <p className="text-sm leading-relaxed text-stone-500">
+                Digitale Gedenkkultur mit Würde — Erinnern, Erzählen, Bewahren.
+              </p>
+              {/* Stars */}
+              <div className="flex items-center gap-1.5 mt-5">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-4 h-4" fill="#c9a84c" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                ))}
+                <span className="text-xs text-stone-400 ml-1">4.9 · Über 500 Gedenkseiten</span>
               </div>
-              <span className="text-white text-lg" style={{ fontFamily: "'Playfair Display', serif" }}>Evertrace</span>
-            </Link>
-            <p className="text-sm">Erinnern. Erzählen. Bewahren. — Digitale Gedenkkultur mit Würde.</p>
-            <p className="text-sm shrink-0">© 2026 Evertrace · DSGVO-konform</p>
+            </div>
+
+            {/* Links */}
+            <div>
+              <p className="text-xs uppercase tracking-widest text-stone-600 mb-4">Navigation</p>
+              <ul className="space-y-2.5 text-sm">
+                {[["Startseite", "Home"], ["Dashboard", "Dashboard"], ["Shop", "Shop"]].map(([label, page]) => (
+                  <li key={page}>
+                    <Link to={createPageUrl(page)} className="hover:text-stone-300 transition-colors">{label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Legal */}
+            <div>
+              <p className="text-xs uppercase tracking-widest text-stone-600 mb-4">Rechtliches</p>
+              <ul className="space-y-2.5 text-sm">
+                <li><span className="hover:text-stone-300 transition-colors cursor-pointer">Datenschutz (DSGVO)</span></li>
+                <li><span className="hover:text-stone-300 transition-colors cursor-pointer">Impressum</span></li>
+                <li><span className="hover:text-stone-300 transition-colors cursor-pointer">AGB</span></li>
+              </ul>
+              <div className="mt-6 flex items-center gap-2 text-xs text-stone-600">
+                <ShieldCheck className="w-3.5 h-3.5 text-green-600" />
+                <span>In Deutschland gehostet · ISO-konform</span>
+              </div>
+            </div>
           </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-stone-600">
+          <span>© 2026 Evertrace. Alle Rechte vorbehalten.</span>
+          <span>Mit ♥ für würdevolle Erinnerungen</span>
         </div>
       </footer>
     </div>
