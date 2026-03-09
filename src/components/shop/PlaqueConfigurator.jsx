@@ -107,7 +107,7 @@ export default function PlaqueConfigurator({ memorial, selected, onSelect }) {
 
           {/* Subtitle */}
           <text x="155" y="135" textAnchor="middle" fill={mat.textFill} fontFamily="Georgia, serif" fontSize="10" fontStyle="italic" opacity="0.75">
-            {memorial?.subtitle ? `„${memorial.subtitle.substring(0, 28)}"` : "„In liebevoller Erinnerung""}
+            {memorial?.subtitle ? `\u201e${memorial.subtitle.substring(0, 28)}\u201c` : "\u201eIn liebevoller Erinnerung\u201c"}
           </text>
 
           {/* evertrace watermark */}
