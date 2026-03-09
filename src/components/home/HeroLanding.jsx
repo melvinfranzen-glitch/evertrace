@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Heart, ArrowDown, Sparkles, QrCode, ShieldCheck } from "lucide-react";
 
