@@ -54,6 +54,7 @@ import MemorialProfile from './pages/MemorialProfile';
 import EditMemorial from './pages/EditMemorial';
 import Shop from './pages/Shop';
 import AdminDashboard from './pages/AdminDashboard';
+import CardDesigner from './pages/CardDesigner';
 import __Layout from './Layout.jsx';
 
 
@@ -65,6 +66,7 @@ export const PAGES = {
     "EditMemorial": EditMemorial,
     "Shop": Shop,
     "AdminDashboard": AdminDashboard,
+    "CardDesigner": CardDesigner,
 }
 
 export const pagesConfig = {
