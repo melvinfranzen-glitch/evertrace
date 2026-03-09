@@ -154,6 +154,8 @@ export default function MemorialProfile() {
 
       <FamilyTreeSection memorial={memorial} />
 
+      <AudioSection tracks={audioTracks} />
+
       <BlogSection posts={blogPosts} />
 
       {memorial.spotify_url && (
