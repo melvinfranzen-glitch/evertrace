@@ -8,7 +8,7 @@ const featureIcons = {
   "QR-Code als PNG": QrCode,
   "Galerie (bis zu 50 Bilder)": Image,
   "Unbegrenzte Galerie": Image,
-  "Lebenslanges Hosting": Infinity,
+  "Lebenslanges Hosting": Clock,
   "PDF-Export Kondolenzbuch": FileText,
   "Passwortschutz & Private Seite": Lock,
   "Premium-Support": Headphones,
