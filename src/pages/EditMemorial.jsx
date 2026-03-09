@@ -214,12 +214,11 @@ export default function EditMemorial() {
                   </label>
                 </div>
               </div>
-            </div>
 
-            <div className="border-t border-stone-200 pt-6">
-              <AudioUploader memorialId={memorial.id} />
+              <div className="border-t border-stone-200 pt-6">
+                <AudioUploader memorialId={memorial.id} />
+              </div>
             </div>
-          </div>
           )}
 
           {activeTab === "timeline" && (
