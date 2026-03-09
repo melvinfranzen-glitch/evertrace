@@ -147,6 +147,8 @@ export default function MemorialProfile() {
 
       {timeline.length > 0 && <TimelineSection events={timeline} />}
 
+      <BlogSection posts={blogPosts} />
+
       {memorial.spotify_url && (
         <section className="py-16 px-6" style={{ background: "#F5F0E8" }}>
           <div className="max-w-3xl mx-auto text-center">
