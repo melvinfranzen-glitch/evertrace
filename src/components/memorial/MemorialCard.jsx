@@ -1,9 +1,11 @@
-import { Eye, Edit, QrCode, Calendar } from "lucide-react";
+import { Eye, Edit, QrCode, Calendar, Trash2 } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
+import { base44 } from "@/api/base44Client";
+import { useState } from "react";
 
 const planColors = {
   free: "bg-gray-100 text-gray-600",
