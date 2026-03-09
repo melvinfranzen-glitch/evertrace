@@ -148,6 +148,8 @@ export default function MemorialProfile() {
 
       {timeline.length > 0 && <TimelineSection events={timeline} />}
 
+      <FamilyTreeSection memorial={memorial} />
+
       <BlogSection posts={blogPosts} />
 
       {memorial.spotify_url && (
