@@ -43,14 +43,16 @@ export default function MemorialProfile() {
 
   const loadContent = async (id) => {
     try {
-      const [t, c, k] = await Promise.all([
+      const [t, c, k, b] = await Promise.all([
         base44.entities.TimelineEvent.filter({ memorial_id: id }, "sort_order"),
         base44.entities.CondolenceEntry.filter({ memorial_id: id, status: "approved" }, "-created_date"),
         base44.entities.Candle.filter({ memorial_id: id }, "-created_date"),
+        base44.entities.MemorialBlogPost.filter({ memorial_id: id, is_published: true }, "-created_date"),
       ]);
       setTimeline(t);
       setCondolences(c);
       setCandles(k);
+      setBlogPosts(b);
     } catch (e) {
       // ignore
     }
