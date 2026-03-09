@@ -38,7 +38,7 @@ const plans = [
     badge: "Beliebteste Wahl",
     price: "€ 79",
     period: "einmalig",
-    desc: "Lebenslanges digitales Erbe",
+    desc: "Einmal zahlen, f\u00FCr immer bewahren.",
     features: [
       "Lebenslanges Hosting",
       "KI-Biografie-Generator",
@@ -57,7 +57,7 @@ const plans = [
     badge: null,
     price: "€ 149",
     period: "einmalig",
-    desc: "Das komplette Paket",
+    desc: "Alles inklusive, keinerlei Kompromisse.",
     features: [
       "Alles aus Classic",
       "KI-Trauerkarten (4 Unikate)",
@@ -68,7 +68,7 @@ const plans = [
     ],
     cta: "Premium wählen",
     highlight: false,
-    color: "#6d28d9",
+    color: "#1e3a5f",
   },
 ];
 
@@ -94,25 +94,32 @@ export default function PricingSection() {
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className={`relative rounded-2xl border-2 transition-all ${
-                plan.highlight
-                  ? "border-amber-400 shadow-2xl shadow-amber-100/60"
-                  : "border-stone-200 bg-white"
-              }`}
+              className="relative rounded-2xl transition-all"
               style={
                 plan.highlight
-                  ? { background: "linear-gradient(160deg, #fffcf5, #fff)", marginTop: "-8px" }
-                  : {}
+                  ? {
+                      background: "linear-gradient(160deg, #fffcf5, #fff)",
+                      border: "2px solid #c9a84c",
+                      boxShadow: "0 8px 40px rgba(201,168,76,0.22), 0 2px 12px rgba(201,168,76,0.12)",
+                      marginTop: "-8px",
+                    }
+                  : plan.id === "premium"
+                  ? { background: "#fff", border: "2px solid #1e3a5f22" }
+                  : { background: "#fafaf8", border: "1.5px solid #e7e5e4" }
               }
             >
               {/* Floating badge */}
               {plan.badge && (
                 <div
-                  className="absolute -top-5 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full text-xs font-semibold text-white shadow-lg whitespace-nowrap"
+                  className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full whitespace-nowrap"
                   style={{
                     background: "linear-gradient(135deg, #c9a84c, #a07830)",
-                    boxShadow: "0 4px 16px rgba(201,168,76,0.4)",
-                    letterSpacing: "0.03em",
+                    boxShadow: "0 3px 14px rgba(201,168,76,0.38)",
+                    fontSize: "0.65rem",
+                    fontWeight: 600,
+                    letterSpacing: "0.12em",
+                    color: "#1c1917",
+                    textTransform: "uppercase",
                   }}
                 >
                   ✦ {plan.badge}
@@ -165,10 +172,10 @@ export default function PricingSection() {
                   className="w-full rounded-xl py-5 font-medium transition-all duration-200"
                   style={
                     plan.highlight
-                      ? { background: "linear-gradient(135deg, #c9a84c, #a07830)", color: "#1c1917", boxShadow: "0 4px 16px rgba(201,168,76,0.3)" }
+                      ? { background: "linear-gradient(135deg, #c9a84c, #a07830)", color: "#1c1917", boxShadow: "0 4px 16px rgba(201,168,76,0.3)", fontWeight: 600 }
                       : plan.id === "premium"
-                      ? { background: "#6d28d9", color: "white" }
-                      : { background: "#f5f5f4", color: "#374151" }
+                      ? { background: "#1e3a5f", color: "white", fontWeight: 600 }
+                      : { background: "#f0ede8", color: "#57534e", fontWeight: 500 }
                   }
                   onClick={() => window.location.href = createPageUrl("Dashboard")}
                 >
@@ -184,7 +191,7 @@ export default function PricingSection() {
           {/* Mockup image */}
           <div className="relative md:w-64 h-52 md:h-auto flex-shrink-0 overflow-hidden">
             <img
-              src="https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=500&q=80"
+              src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=85"
               alt="Messing-Plakette Mockup"
               className="w-full h-full object-cover"
             />

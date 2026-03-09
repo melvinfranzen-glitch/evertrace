@@ -45,16 +45,19 @@ export default function Layout({ children, currentPageName }) {
           {/* Logo */}
           <Link to={createPageUrl("Home")} className="flex items-center gap-2.5 shrink-0">
             <div
-              className="w-8 h-8 rounded-full flex items-center justify-center shadow-sm"
+              className="w-9 h-9 rounded-full flex items-center justify-center shadow-sm"
               style={{ background: "linear-gradient(135deg,#92400e,#b45309)" }}
             >
-              <Heart className="w-4 h-4 text-white" />
+              <svg width="18" height="13" viewBox="0 0 36 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 12C6 12 5 5 11 5C15 5 17.5 9 18 12C18.5 15 21 19 25 19C31 19 33 12 33 12C33 12 31 5 25 5C21 5 18.5 9 18 12C17.5 15 15 19 11 19C5 19 3 12 3 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <circle cx="32" cy="12" r="1.5" fill="#c9a84c"/>
+              </svg>
             </div>
             <span
-              className="text-lg sm:text-xl font-semibold tracking-wide text-gray-800"
-              style={{ fontFamily: "'Playfair Display', serif" }}
+              className="text-lg sm:text-xl font-semibold tracking-wide"
+              style={{ fontFamily: "'Playfair Display', serif", color: "#2c1a0e", letterSpacing: "0.02em" }}
             >
-              Evertrace
+              Ever<span style={{ color: "#b45309" }}>trace</span>
             </span>
           </Link>
 
@@ -225,9 +228,14 @@ export default function Layout({ children, currentPageName }) {
             <div>
               <Link to={createPageUrl("Home")} className="flex items-center gap-2 mb-4">
                 <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: "linear-gradient(135deg,#92400e,#b45309)" }}>
-                  <Heart className="w-3.5 h-3.5 text-white" />
+                  <svg width="14" height="10" viewBox="0 0 36 24" fill="none">
+                    <path d="M6 12C6 12 5 5 11 5C15 5 17.5 9 18 12C18.5 15 21 19 25 19C31 19 33 12 33 12C33 12 31 5 25 5C21 5 18.5 9 18 12C17.5 15 15 19 11 19C5 19 3 12 3 12" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <circle cx="32" cy="12" r="1.8" fill="#c9a84c"/>
+                  </svg>
                 </div>
-                <span className="text-white text-lg" style={{ fontFamily: "'Playfair Display', serif" }}>Evertrace</span>
+                <span className="text-lg" style={{ fontFamily: "'Playfair Display', serif", color: "#e5d5c0" }}>
+                  Ever<span style={{ color: "#c9a84c" }}>trace</span>
+                </span>
               </Link>
               <p className="text-sm leading-relaxed text-stone-500">
                 Digitale Gedenkkultur mit Würde — Erinnern, Erzählen, Bewahren.
