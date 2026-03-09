@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Loader2, Save, ArrowLeft, Upload, Plus, Trash2, Sparkles, Eye, CreditCard } from "lucide-react";
 import FamilyEditor from "@/components/memorial/FamilyEditor";
-import AudioUploader from "@/components/memorial/AudioUploader";
+import AudioUploader from "@/components/memorial/AudioUploader.jsx";
 
 export default function EditMemorial() {
   const [memorial, setMemorial] = useState(null);
