@@ -47,13 +47,30 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import AdminDashboard from './pages/AdminDashboard';
+import CardDesigner from './pages/CardDesigner';
+import CreateMemorial from './pages/CreateMemorial';
+import Dashboard from './pages/Dashboard';
+import EditMemorial from './pages/EditMemorial';
+import Home from './pages/Home';
+import MemorialProfile from './pages/MemorialProfile';
+import Shop from './pages/Shop';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AdminDashboard": AdminDashboard,
+    "CardDesigner": CardDesigner,
+    "CreateMemorial": CreateMemorial,
+    "Dashboard": Dashboard,
+    "EditMemorial": EditMemorial,
+    "Home": Home,
+    "MemorialProfile": MemorialProfile,
+    "Shop": Shop,
 }
 
 export const pagesConfig = {
+    mainPage: "Home",
     Pages: PAGES,
     Layout: __Layout,
 };
