@@ -52,6 +52,8 @@ export default function Dashboard() {
           </Button>
         </div>
 
+        <AnniversaryReminders memorials={memorials} />
+
         {memorials.length === 0 ? (
           <div className="text-center py-24">
             <div className="w-20 h-20 rounded-2xl mx-auto flex items-center justify-center mb-6" style={{ background: "#f5f0e8" }}>
