@@ -215,6 +215,11 @@ export default function EditMemorial() {
                 </div>
               </div>
             </div>
+
+            <div className="border-t border-stone-200 pt-6">
+              <AudioUploader memorialId={memorial.id} />
+            </div>
+          </div>
           )}
 
           {activeTab === "timeline" && (
