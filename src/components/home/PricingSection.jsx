@@ -1,6 +1,18 @@
-import { Check, Crown, Star, Package } from "lucide-react";
+import { Brain, QrCode, Image, Star, Crown, Package, Check, Infinity, FileText, Lock, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createPageUrl } from "@/utils";
+
+const featureIcons = {
+  "KI-Biografie-Generator": Brain,
+  "QR-Code als SVG & PNG": QrCode,
+  "QR-Code als PNG": QrCode,
+  "Galerie (bis zu 50 Bilder)": Image,
+  "Unbegrenzte Galerie": Image,
+  "Lebenslanges Hosting": Infinity,
+  "PDF-Export Kondolenzbuch": FileText,
+  "Passwortschutz & Private Seite": Lock,
+  "Premium-Support": Headphones,
+};
 
 const plans = [
   {
@@ -8,8 +20,8 @@ const plans = [
     name: "Basic",
     badge: null,
     price: "Kostenlos",
-    period: "14 Tage",
-    desc: "Zum Testen und Kennenlernen",
+    period: "14 Tage testen",
+    desc: "Zum Kennenlernen",
     features: [
       "Digitale Gedenkseite (14 Tage)",
       "KI-Biografie-Generator",
@@ -22,8 +34,8 @@ const plans = [
   },
   {
     id: "classic",
-    name: "Evertrace Classic",
-    badge: "Beliebt",
+    name: "Classic",
+    badge: "Beliebteste Wahl",
     price: "€ 79",
     period: "einmalig",
     desc: "Lebenslanges digitales Erbe",
@@ -33,8 +45,7 @@ const plans = [
       "Unbegrenzte Kondolenzeinträge",
       "QR-Code als SVG & PNG",
       "Galerie (bis zu 50 Bilder)",
-      "Spotify-Integration",
-      "Virtuelle Kerzen",
+      "Spotify & Kerzen",
     ],
     cta: "Jetzt sichern",
     highlight: true,
@@ -42,14 +53,14 @@ const plans = [
   },
   {
     id: "premium",
-    name: "Evertrace Premium",
+    name: "Premium",
     badge: null,
     price: "€ 149",
     period: "einmalig",
-    desc: "Das komplette Erinnerungspaket",
+    desc: "Das komplette Paket",
     features: [
       "Alles aus Classic",
-      "KI-Trauerkarten-Design (4 Unikate)",
+      "KI-Trauerkarten (4 Unikate)",
       "PDF-Export Kondolenzbuch",
       "Passwortschutz & Private Seite",
       "Unbegrenzte Galerie",
@@ -63,97 +74,159 @@ const plans = [
 
 export default function PricingSection() {
   return (
-    <section id="pricing" className="py-24 px-6" style={{ background: "#FAFAF8" }}>
+    <section id="pricing" className="py-28 px-6" style={{ background: "#FAFAF8" }}>
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <p className="text-xs uppercase tracking-[0.3em] font-medium mb-3" style={{ color: "#b45309" }}>Preise</p>
-          <h2 className="text-4xl md:text-5xl font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
+        <div className="text-center mb-20">
+          <p className="text-xs uppercase tracking-[0.35em] font-medium mb-4" style={{ color: "#b45309" }}>Preise</p>
+          <h2
+            className="text-4xl md:text-5xl font-semibold text-gray-800 mb-5"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
             Transparent & fair
           </h2>
-          <p className="mt-4 text-gray-500 max-w-lg mx-auto font-light">
+          <p className="text-gray-500 max-w-lg mx-auto font-light leading-relaxed">
             Keine versteckten Kosten, keine Abonnements. Einmalig zahlen, dauerhaft erinnern.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        {/* Pricing grid — extra top margin on classic for floating badge */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 items-start" style={{ marginTop: "20px" }}>
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className={`relative rounded-2xl p-8 border-2 transition-all ${
+              className={`relative rounded-2xl border-2 transition-all ${
                 plan.highlight
-                  ? "border-amber-500 shadow-xl shadow-amber-100 scale-105"
-                  : "border-stone-200 bg-white hover:border-stone-300"
+                  ? "border-amber-400 shadow-2xl shadow-amber-100/60"
+                  : "border-stone-200 bg-white"
               }`}
-              style={plan.highlight ? { background: "linear-gradient(160deg, #fffbf5, #fff)" } : {}}
+              style={
+                plan.highlight
+                  ? { background: "linear-gradient(160deg, #fffcf5, #fff)", marginTop: "-8px" }
+                  : {}
+              }
             >
+              {/* Floating badge */}
               {plan.badge && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-semibold text-white" style={{ background: "#b45309" }}>
-                  {plan.badge}
+                <div
+                  className="absolute -top-5 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full text-xs font-semibold text-white shadow-lg whitespace-nowrap"
+                  style={{
+                    background: "linear-gradient(135deg, #c9a84c, #a07830)",
+                    boxShadow: "0 4px 16px rgba(201,168,76,0.4)",
+                    letterSpacing: "0.03em",
+                  }}
+                >
+                  ✦ {plan.badge}
                 </div>
               )}
 
-              <div className="mb-6">
+              <div className="p-7">
+                {/* Plan name */}
+                <div className="flex items-center gap-2 mb-4">
+                  {plan.id === "premium" && <Crown className="w-4 h-4" style={{ color: plan.color }} />}
+                  {plan.id === "classic" && <Star className="w-4 h-4" style={{ color: plan.color }} />}
+                  <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: plan.color }}>
+                    {plan.name}
+                  </span>
+                </div>
+
+                {/* Price */}
+                <div className="mb-1">
+                  <span
+                    className="font-bold text-gray-900 leading-none"
+                    style={{ fontSize: plan.price === "Kostenlos" ? "2rem" : "3.25rem" }}
+                  >
+                    {plan.price}
+                  </span>
+                </div>
                 <div className="flex items-center gap-2 mb-2">
-                  {plan.id === "premium" ? <Crown className="w-4 h-4" style={{ color: plan.color }} /> : 
-                   plan.id === "classic" ? <Star className="w-4 h-4" style={{ color: plan.color }} /> : null}
-                  <p className="text-sm font-medium text-gray-500">{plan.name}</p>
+                  <span className="text-xs text-gray-400">{plan.period}</span>
                 </div>
-                <div className="flex items-end gap-1 mb-1">
-                  <span className="text-4xl font-bold text-gray-800">{plan.price}</span>
-                  <span className="text-sm text-gray-400 pb-1">/ {plan.period}</span>
-                </div>
-                <p className="text-sm text-gray-500">{plan.desc}</p>
+                <p className="text-sm text-gray-500 mb-6">{plan.desc}</p>
+
+                {/* Feature list */}
+                <ul className="space-y-2.5 mb-7">
+                  {plan.features.map((f) => {
+                    const Icon = featureIcons[f] || Check;
+                    return (
+                      <li key={f} className="flex items-center gap-2.5 text-sm text-gray-600">
+                        <span
+                          className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
+                          style={{ background: `${plan.color}14` }}
+                        >
+                          <Check className="w-3 h-3" style={{ color: plan.color }} strokeWidth={2.5} />
+                        </span>
+                        {f}
+                      </li>
+                    );
+                  })}
+                </ul>
+
+                <Button
+                  className="w-full rounded-xl py-5 font-medium transition-all duration-200"
+                  style={
+                    plan.highlight
+                      ? { background: "linear-gradient(135deg, #c9a84c, #a07830)", color: "#1c1917", boxShadow: "0 4px 16px rgba(201,168,76,0.3)" }
+                      : plan.id === "premium"
+                      ? { background: "#6d28d9", color: "white" }
+                      : { background: "#f5f5f4", color: "#374151" }
+                  }
+                  onClick={() => window.location.href = createPageUrl("Dashboard")}
+                >
+                  {plan.cta}
+                </Button>
               </div>
-
-              <ul className="space-y-3 mb-8">
-                {plan.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2.5 text-sm text-gray-600">
-                    <Check className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: plan.color }} />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-
-              <Button
-                className="w-full rounded-xl py-5"
-                style={
-                  plan.highlight
-                    ? { background: "#b45309", color: "white" }
-                    : { background: "#f5f5f4", color: "#374151" }
-                }
-                onClick={() => window.location.href = createPageUrl("Dashboard")}
-              >
-                {plan.cta}
-              </Button>
             </div>
           ))}
         </div>
 
-        {/* Physical Add-on */}
-        <div className="rounded-2xl p-8 border border-stone-200 bg-white flex flex-col md:flex-row items-center gap-6">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ background: "#c9a84c20" }}>
-            <Package className="w-8 h-8" style={{ color: "#c9a84c" }} />
+        {/* Physical Add-on with mockup */}
+        <div className="rounded-2xl overflow-hidden border border-stone-200 bg-white flex flex-col md:flex-row">
+          {/* Mockup image */}
+          <div className="relative md:w-64 h-52 md:h-auto flex-shrink-0 overflow-hidden">
+            <img
+              src="https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=500&q=80"
+              alt="Messing-Plakette Mockup"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(28,22,8,0.3), transparent)" }} />
+            <div className="absolute bottom-3 left-3">
+              <span
+                className="text-xs font-medium px-2.5 py-1 rounded-full"
+                style={{ background: "rgba(201,168,76,0.9)", color: "#1c1917" }}
+              >
+                Physisches Produkt
+              </span>
+            </div>
           </div>
-          <div className="flex-1 text-center md:text-left">
-            <h3 className="font-semibold text-gray-800 text-xl mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>
-              Physisches Add-on: Messing-Plakette
-            </h3>
-            <p className="text-gray-500 text-sm">
-              Hochwertige gravierte QR-Plakette aus Messing, Schiefer oder Edelstahl inkl. Versand. 
-              Direkt am Grabstein oder Urne anbringbar.
-            </p>
-          </div>
-          <div className="text-center flex-shrink-0">
-            <p className="text-3xl font-bold text-gray-800 mb-1">€ 89</p>
-            <p className="text-sm text-gray-400 mb-3">inkl. MwSt. & Versand</p>
-            <Button
-              size="sm"
-              className="rounded-xl text-white"
-              style={{ background: "#c9a84c" }}
-              onClick={() => window.location.href = createPageUrl("Shop")}
-            >
-              Zur Plakette
-            </Button>
+
+          <div className="flex-1 p-8 flex flex-col md:flex-row items-center gap-6">
+            <div className="flex-1 text-center md:text-left">
+              <div className="flex items-center gap-2 mb-2 justify-center md:justify-start">
+                <Package className="w-4 h-4" style={{ color: "#c9a84c" }} />
+                <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: "#c9a84c" }}>Add-on</span>
+              </div>
+              <h3
+                className="font-semibold text-gray-800 text-xl mb-2"
+                style={{ fontFamily: "'Playfair Display', serif" }}
+              >
+                Gravierte QR-Plakette
+              </h3>
+              <p className="text-gray-500 text-sm leading-relaxed max-w-md">
+                Hochwertige Plakette aus Messing, Schiefer oder Edelstahl — graviert mit individuellem QR-Code.
+                Direkt am Grabstein, an der Urne oder der Trauerkarte anbringbar.
+              </p>
+            </div>
+            <div className="text-center flex-shrink-0">
+              <p className="text-4xl font-bold text-gray-800 mb-0.5">€ 89</p>
+              <p className="text-xs text-gray-400 mb-4">inkl. MwSt. & Versand</p>
+              <Button
+                className="rounded-xl text-sm px-6 py-2.5 font-medium"
+                style={{ background: "linear-gradient(135deg, #c9a84c, #a07830)", color: "#1c1917" }}
+                onClick={() => window.location.href = createPageUrl("Shop")}
+              >
+                Zur Plakette →
+              </Button>
+            </div>
           </div>
         </div>
       </div>
