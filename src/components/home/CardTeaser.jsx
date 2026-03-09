@@ -47,7 +47,6 @@ export default function CardTeaser() {
 
           {/* Visual side */}
           <div className="md:w-80 relative hidden md:flex items-center justify-center p-10">
-            {/* Stacked card mockups */}
             <div className="relative w-48">
               {/* Card 3 - back */}
               <div className="absolute -right-6 top-4 w-40 h-56 rounded-xl rotate-6 overflow-hidden shadow-xl opacity-60"
@@ -62,7 +61,7 @@ export default function CardTeaser() {
               {/* Card 1 - front */}
               <div className="relative w-40 h-56 rounded-xl overflow-hidden shadow-2xl"
                 style={{ background: "linear-gradient(160deg, #2d1f0a, #1a1410)" }}>
-                <img src="https://images.unsplash.com/photo-1490750967868-88df5691cc51?w=300&q=80" alt="" className="w-full h-full object-cover opacity-60" />
+                <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&q=80" alt="" className="w-full h-full object-cover opacity-60" />
                 <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(20,10,2,0.8) 0%, transparent 50%)" }} />
                 <div className="absolute bottom-4 left-0 right-0 text-center">
                   <p className="text-white text-xs font-semibold" style={{ fontFamily: "'Playfair Display', serif" }}>Maria Schmidt</p>
