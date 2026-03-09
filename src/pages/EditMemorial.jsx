@@ -91,6 +91,7 @@ export default function EditMemorial() {
     { id: "bio", label: "Biografie" },
     { id: "media", label: "Medien" },
     { id: "timeline", label: "Timeline" },
+    { id: "family", label: "Stammbaum" },
     { id: "settings", label: "Einstellungen" },
   ];
 
@@ -241,6 +242,10 @@ export default function EditMemorial() {
                 </Button>
               </div>
             </div>
+          )}
+
+          {activeTab === "family" && (
+            <FamilyEditor memorialId={memorial.id} />
           )}
 
           {activeTab === "settings" && (
