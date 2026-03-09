@@ -31,7 +31,7 @@ export default function MemorialCard({ memorial, onDelete }) {
     await base44.entities.Memorial.delete(memorial.id);
     onDelete(memorial.id);
   };
-  const memorialUrl = `${window.location.origin}/MemorialProfile?id=${memorial.short_id}`;
+  const memorialUrl = `${window.location.origin}${createPageUrl("MemorialProfile")}?id=${memorial.short_id}`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent(memorialUrl)}`;
 
   const formatDate = (d) => {
