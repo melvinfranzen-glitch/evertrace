@@ -22,7 +22,15 @@ const statusColors = {
 const statusLabels = { draft: "Entwurf", active: "Aktiv", expired: "Abgelaufen" };
 const planLabels = { free: "Free", classic: "Classic", premium: "Premium" };
 
-export default function MemorialCard({ memorial }) {
+export default function MemorialCard({ memorial, onDelete }) {
+  const [confirming, setConfirming] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    await base44.entities.Memorial.delete(memorial.id);
+    onDelete(memorial.id);
+  };
   const memorialUrl = `${window.location.origin}/MemorialProfile?id=${memorial.short_id}`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent(memorialUrl)}`;
 
