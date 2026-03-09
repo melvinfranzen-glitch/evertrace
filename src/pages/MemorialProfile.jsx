@@ -9,6 +9,7 @@ import CondolenceBook from "@/components/memorial/CondolenceBook";
 import VirtualCandleSection from "@/components/memorial/VirtualCandleSection";
 import GallerySection from "@/components/memorial/GallerySection";
 import BlogSection from "@/components/memorial/BlogSection";
+import FamilyTreeSection from "@/components/memorial/FamilyTreeSection";
 
 export default function MemorialProfile() {
   const [memorial, setMemorial] = useState(null);
