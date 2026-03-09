@@ -10,6 +10,7 @@ import VirtualCandleSection from "@/components/memorial/VirtualCandleSection";
 import GallerySection from "@/components/memorial/GallerySection";
 import BlogSection from "@/components/memorial/BlogSection";
 import FamilyTreeSection from "@/components/memorial/FamilyTreeSection";
+import AudioSection from "@/components/memorial/AudioSection";
 
 export default function MemorialProfile() {
   const [memorial, setMemorial] = useState(null);
