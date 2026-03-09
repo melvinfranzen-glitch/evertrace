@@ -27,23 +27,31 @@ export default function MemorialProfile() {
   }, []);
 
   const load = async (id) => {
-    const results = await base44.entities.Memorial.filter({ short_id: id });
-    if (results.length === 0) { setLoading(false); return; }
-    const m = results[0];
-    setMemorial(m);
-    if (!m.is_private) await loadContent(m.id);
+    try {
+      const results = await base44.entities.Memorial.filter({ short_id: id });
+      if (results.length === 0) { setLoading(false); return; }
+      const m = results[0];
+      setMemorial(m);
+      if (!m.is_private) await loadContent(m.id);
+    } catch (e) {
+      // ignore auth/network errors – show not-found instead of redirect
+    }
     setLoading(false);
   };
 
   const loadContent = async (id) => {
-    const [t, c, k] = await Promise.all([
-      base44.entities.TimelineEvent.filter({ memorial_id: id }, "sort_order"),
-      base44.entities.CondolenceEntry.filter({ memorial_id: id, status: "approved" }, "-created_date"),
-      base44.entities.Candle.filter({ memorial_id: id }, "-created_date"),
-    ]);
-    setTimeline(t);
-    setCondolences(c);
-    setCandles(k);
+    try {
+      const [t, c, k] = await Promise.all([
+        base44.entities.TimelineEvent.filter({ memorial_id: id }, "sort_order"),
+        base44.entities.CondolenceEntry.filter({ memorial_id: id, status: "approved" }, "-created_date"),
+        base44.entities.Candle.filter({ memorial_id: id }, "-created_date"),
+      ]);
+      setTimeline(t);
+      setCondolences(c);
+      setCandles(k);
+    } catch (e) {
+      // ignore
+    }
   };
 
   const handleUnlock = () => {
