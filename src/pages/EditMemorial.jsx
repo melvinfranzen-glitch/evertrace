@@ -106,7 +106,14 @@ export default function EditMemorial() {
               <p className="text-gray-500 text-sm">Gedenkseite bearbeiten</p>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
+            <Button
+              variant="outline" size="sm" className="rounded-xl text-xs"
+              onClick={() => window.location.href = createPageUrl("CardDesigner") + `?id=${memorial.id}`}
+              style={{ borderColor: "#c9a84c", color: "#a07830" }}
+            >
+              <CreditCard className="w-3.5 h-3.5 mr-1" /> Trauerkarte gestalten
+            </Button>
             <Button variant="outline" size="sm" className="rounded-xl" onClick={() => window.open(`/MemorialProfile?id=${memorial.short_id}`, "_blank")}>
               <Eye className="w-4 h-4 mr-1" /> Vorschau
             </Button>
