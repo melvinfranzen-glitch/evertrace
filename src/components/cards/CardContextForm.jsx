@@ -17,10 +17,10 @@ const suggestions = [
 ];
 
 const quoteTemplates = [
-  "„In unseren Herzen wirst du immer leben."",
-  "„Nicht Weinen, dass es vorbei ist – Lächeln, dass es gewesen ist." (Seuss)",
-  "„Der Tod ist nichts anderes als ein Übergang." (Seneca)",
-  "„Liebe kennt keine Grenzen – auch nicht die des Todes."",
+  `\u201EIn unseren Herzen wirst du immer leben.\u201C`,
+  `\u201ENicht Weinen, dass es vorbei ist \u2013 L\u00E4cheln, dass es gewesen ist.\u201C (Seuss)`,
+  `\u201EDer Tod ist nichts anderes als ein \u00DCbergang.\u201C (Seneca)`,
+  `\u201ELiebe kennt keine Grenzen \u2013 auch nicht die des Todes.\u201C`,
 ];
 
 export default function CardContextForm({ memorial, onGenerate, generating }) {
