@@ -72,7 +72,7 @@ export default function MemorialCard({ memorial, onDelete }) {
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <Button
               size="sm"
               variant="outline"
@@ -89,6 +89,36 @@ export default function MemorialCard({ memorial, onDelete }) {
             >
               <Edit className="w-3.5 h-3.5 mr-1" /> Bearbeiten
             </Button>
+            {!confirming ? (
+              <Button
+                size="sm"
+                variant="outline"
+                className="text-xs rounded-lg h-8 border-red-200 text-red-500 hover:bg-red-50"
+                onClick={() => setConfirming(true)}
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </Button>
+            ) : (
+              <div className="flex gap-1 items-center">
+                <span className="text-xs text-red-600 font-medium">Löschen?</span>
+                <Button
+                  size="sm"
+                  className="text-xs rounded-lg h-7 bg-red-500 hover:bg-red-600 text-white px-2"
+                  onClick={handleDelete}
+                  disabled={deleting}
+                >
+                  {deleting ? "..." : "Ja"}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="text-xs rounded-lg h-7 px-2"
+                  onClick={() => setConfirming(false)}
+                >
+                  Nein
+                </Button>
+              </div>
+            )}
           </div>
           {memorial.short_id && (
             <img src={qrUrl} alt="QR" className="w-10 h-10 rounded" />
