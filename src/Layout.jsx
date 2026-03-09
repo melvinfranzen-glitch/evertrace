@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
-import { Heart, Menu, X, Shield, LogOut, User, ShieldCheck } from "lucide-react";
+import { Heart, Menu, X, Shield, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function Layout({ children, currentPageName }) {
@@ -17,7 +17,6 @@ export default function Layout({ children, currentPageName }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close menu on route change
   useEffect(() => { setMenuOpen(false); }, [currentPageName]);
 
   const isMemorialPage = currentPageName === "MemorialProfile";
@@ -270,7 +269,9 @@ export default function Layout({ children, currentPageName }) {
                 <li><span className="hover:text-stone-300 transition-colors cursor-pointer">AGB</span></li>
               </ul>
               <div className="mt-6 flex items-center gap-2 text-xs text-stone-600">
-                <ShieldCheck className="w-3.5 h-3.5 text-green-600" />
+                <svg className="w-3.5 h-3.5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
                 <span>In Deutschland gehostet · ISO-konform</span>
               </div>
             </div>
