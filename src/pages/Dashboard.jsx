@@ -4,6 +4,7 @@ import { createPageUrl } from "@/utils";
 import { Plus, Loader2, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MemorialCard from "@/components/memorial/MemorialCard";
+import AnniversaryReminders from "@/components/dashboard/AnniversaryReminders";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
