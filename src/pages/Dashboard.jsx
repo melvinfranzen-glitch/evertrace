@@ -11,6 +11,7 @@ export default function Dashboard() {
   const [memorials, setMemorials] = useState([]);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
     const init = async () => {
       const u = await base44.auth.me().catch(() => null);
