@@ -162,7 +162,7 @@ export default function MemorialProfile() {
               </div>
             </div>
           </section>
-          <SectionDivider quote="„Das Leben endet, wenn man aufhört zu träumen — die Erinnerung nie."" />
+          <SectionDivider quote={"„Das Leben endet, wenn man aufhört zu träumen — die Erinnerung nie.""} />
         </>
       )}
 
