@@ -56,7 +56,7 @@ export default function FeaturesSection() {
           {features.map((f) => (
             <div
               key={f.title}
-              className="bg-white rounded-2xl p-10 shadow-sm hover:shadow-lg transition-all duration-300 border border-stone-100 group"
+              className="bg-white rounded-2xl p-10 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-in-out border border-stone-100 group cursor-default"
             >
               {/* Gold line icon */}
               <div
