@@ -11,15 +11,19 @@ const RELATION_LABEL = {
   sohn: "Sohn", tochter: "Tochter",
 };
 
-function PersonNode({ person, isDeceased }) {
+function PersonNode({ person, isDeceased, onClick }) {
   const initials = person.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
   return (
-    <div className="flex flex-col items-center gap-2">
+    <button
+      onClick={onClick}
+      className="flex flex-col items-center gap-2 group focus:outline-none"
+      title={`${person.name} – Profil anzeigen`}
+    >
       <div
-        className={`rounded-full flex items-center justify-center font-semibold overflow-hidden transition-all ${
+        className={`rounded-full flex items-center justify-center font-semibold overflow-hidden transition-all group-hover:scale-110 group-hover:shadow-lg ${
           isDeceased
             ? "w-16 h-16 text-white shadow-lg ring-2 ring-amber-500 ring-offset-2 text-base"
-            : "w-11 h-11 text-stone-600 bg-stone-200 text-sm"
+            : "w-11 h-11 text-stone-600 bg-stone-200 text-sm group-hover:ring-2 group-hover:ring-amber-400 group-hover:ring-offset-1"
         }`}
         style={isDeceased ? { background: "linear-gradient(135deg,#92400e,#b45309)" } : {}}
       >
@@ -28,7 +32,7 @@ function PersonNode({ person, isDeceased }) {
           : initials}
       </div>
       <div className="text-center max-w-[88px]">
-        <p className={`text-xs font-semibold leading-tight truncate ${isDeceased ? "text-amber-800" : "text-gray-700"}`}>
+        <p className={`text-xs font-semibold leading-tight truncate group-hover:underline ${isDeceased ? "text-amber-800" : "text-gray-700"}`}>
           {person.name}
         </p>
         {!isDeceased && (
@@ -40,7 +44,7 @@ function PersonNode({ person, isDeceased }) {
           </p>
         )}
       </div>
-    </div>
+    </button>
   );
 }
 
