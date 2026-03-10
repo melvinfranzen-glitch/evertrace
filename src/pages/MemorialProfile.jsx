@@ -26,6 +26,9 @@ export default function MemorialProfile() {
   const [candles, setCandles] = useState([]);
   const [blogPosts, setBlogPosts] = useState([]);
   const [audioTracks, setAudioTracks] = useState([]);
+  const [memoryWall, setMemoryWall] = useState([]);
+  const [legacyEntries, setLegacyEntries] = useState([]);
+  const [serviceEvents, setServiceEvents] = useState([]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
