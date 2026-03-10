@@ -162,13 +162,19 @@ export default function MemorialProfile() {
         <GallerySection images={memorial.gallery_images} name={memorial.name} />
       )}
 
+      {serviceEvents.length > 0 && <ServiceEventSection events={serviceEvents} />}
+
       {timeline.length > 0 && <TimelineSection events={timeline} />}
+
+      {legacyEntries.length > 0 && <LegacySection entries={legacyEntries} />}
 
       <FamilyTreeSection memorial={memorial} />
 
       <AudioSection tracks={audioTracks} />
 
       <BlogSection posts={blogPosts} />
+
+      <MemoryWallSection memorialId={memorial.id} entries={memoryWall} />
 
       {memorial.spotify_url && (
         <section className="py-16 px-6" style={{ background: "#F5F0E8" }}>
