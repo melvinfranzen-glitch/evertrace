@@ -186,6 +186,24 @@ export default function PricingSection() {
           ))}
         </div>
 
+        {/* Trust badges */}
+        <div className="flex flex-wrap justify-center gap-4 mb-10">
+          {[
+            { icon: "🔒", label: "SSL-verschlüsselt" },
+            { icon: "🇩🇪", label: "Hosting in Deutschland" },
+            { icon: "✅", label: "DSGVO-konform" },
+            { icon: "💳", label: "Sichere Zahlung" },
+          ].map((b) => (
+            <div
+              key={b.label}
+              className="flex items-center gap-2 px-4 py-2 rounded-full border border-stone-200 text-xs text-stone-500 bg-white shadow-sm"
+            >
+              <span>{b.icon}</span>
+              <span>{b.label}</span>
+            </div>
+          ))}
+        </div>
+
         {/* Physical Add-on with mockup */}
         <div className="rounded-2xl overflow-hidden border border-stone-200 bg-white flex flex-col md:flex-row">
           {/* Mockup image */}
