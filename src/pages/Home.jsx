@@ -2,6 +2,7 @@ import HeroLanding from "@/components/home/HeroLanding";
 import FeaturesSection from "@/components/home/FeaturesSection";
 import PricingSection from "@/components/home/PricingSection";
 import CardTeaser from "@/components/home/CardTeaser";
+import TestimonialsSection from "@/components/home/TestimonialsSection";
 import { Heart } from "lucide-react";
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
       <FeaturesSection />
       <CardTeaser />
       <PricingSection />
+      <TestimonialsSection />
 
       {/* Final CTA */}
       <section className="py-28 px-6 text-center relative overflow-hidden" style={{ background: "linear-gradient(160deg, #1a1410, #231a0e)" }}>

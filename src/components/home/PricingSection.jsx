@@ -40,8 +40,8 @@ const plans = [
     period: "einmalig",
     desc: "Einmal zahlen, f\u00FCr immer bewahren.",
     features: [
-      "Lebenslanges Hosting",
       "KI-Biografie-Generator",
+      "Lebenslanges Hosting",
       "Unbegrenzte Kondolenzeinträge",
       "QR-Code als SVG & PNG",
       "Galerie (bis zu 50 Bilder)",
