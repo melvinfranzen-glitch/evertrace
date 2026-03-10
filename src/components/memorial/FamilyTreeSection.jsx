@@ -151,7 +151,20 @@ export default function FamilyTreeSection({ memorial }) {
 
           </div>
         </div>
+
+        <p className="text-center text-xs text-stone-400 mt-6 italic">
+          Auf ein Familienmitglied klicken, um das Kurzprofil anzuzeigen
+        </p>
       </div>
+
+      {selected && (
+        <FamilyMemberModal
+          person={selected.person}
+          isDeceased={selected.isDeceased}
+          memorialId={memorial.id}
+          onClose={() => setSelected(null)}
+        />
+      )}
     </section>
   );
 }
