@@ -172,7 +172,7 @@ export default function PricingSection() {
                   className="w-full rounded-xl py-5 font-medium transition-all duration-200"
                   style={
                     plan.highlight
-                      ? { background: "linear-gradient(135deg, #c9a84c, #a07830)", color: "#1c1917", boxShadow: "0 4px 16px rgba(201,168,76,0.3)", fontWeight: 600 }
+                      ? { background: "linear-gradient(135deg, #c9a84c, #a07830)", color: "#1c1917", boxShadow: "0 6px 24px rgba(201,168,76,0.45), 0 2px 8px rgba(201,168,76,0.25)", fontWeight: 600 }
                       : plan.id === "premium"
                       ? { background: "#1e3a5f", color: "white", fontWeight: 600 }
                       : { background: "#f0ede8", color: "#57534e", fontWeight: 500 }
