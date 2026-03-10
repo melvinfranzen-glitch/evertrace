@@ -1,4 +1,4 @@
-import { Eye, Edit, QrCode, Calendar, Trash2 } from "lucide-react";
+import { Eye, Edit, QrCode, Calendar, Trash2, X, Copy, Check } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,14 @@ const planLabels = { free: "Free", classic: "Classic", premium: "Premium" };
 export default function MemorialCard({ memorial, onDelete }) {
   const [confirming, setConfirming] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [qrOpen, setQrOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(memorialUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleDelete = async () => {
     setDeleting(true);
@@ -33,6 +41,7 @@ export default function MemorialCard({ memorial, onDelete }) {
   };
   const memorialUrl = `${window.location.origin}${createPageUrl("MemorialProfile")}?id=${memorial.short_id}`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent(memorialUrl)}`;
+  const qrLarge = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(memorialUrl)}`;
 
   const formatDate = (d) => {
     if (!d) return "–";
@@ -121,10 +130,42 @@ export default function MemorialCard({ memorial, onDelete }) {
             )}
           </div>
           {memorial.short_id && (
-            <img src={qrUrl} alt="QR" className="w-10 h-10 rounded" />
+            <button
+              onClick={() => setQrOpen(true)}
+              className="relative group rounded-lg overflow-hidden border border-stone-200 hover:border-amber-400 transition-colors"
+              title="Klicken zum Vergrößern"
+            >
+              <img src={qrUrl} alt="QR" className="w-10 h-10 block" />
+              <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <QrCode className="w-4 h-4 text-white" />
+              </div>
+            </button>
           )}
         </div>
       </div>
     </div>
+
+      {qrOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          onClick={() => setQrOpen(false)}>
+          <div className="bg-white rounded-2xl p-8 shadow-2xl flex flex-col items-center gap-5 max-w-xs w-full"
+            onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between w-full">
+              <p className="font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
+                QR-Code · {memorial.name}
+              </p>
+              <button onClick={() => setQrOpen(false)} className="text-gray-400 hover:text-gray-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <img src={qrLarge} className="w-64 h-64 rounded-lg" alt="QR-Code groß" />
+            <p className="text-xs text-gray-400 text-center break-all">{memorialUrl}</p>
+            <Button onClick={copyLink} variant="outline" size="sm" className="w-full rounded-xl gap-2">
+              {copied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+              {copied ? "Kopiert!" : "Link kopieren"}
+            </Button>
+          </div>
+        </div>
+      )}
   );
 }
