@@ -10,7 +10,7 @@ export default function FloatingMusicPlayer({ spotifyUrl, name }) {
   // Extract Spotify ID and type (playlist, album, track)
   const match = spotifyUrl.match(/spotify\.com\/(playlist|album|track)\/([a-zA-Z0-9]+)/);
   if (!match) return null;
-  const [, type, id] = match;
+  const [, type, spotifyId] = match;
 
   const embedHeight = type === "track" ? 152 : 352;
 
