@@ -84,7 +84,7 @@ export default function PricingSection() {
           >
             Das Vermächtnis bewahren
           </h2>
-          <p className="text-gray-500 max-w-lg mx-auto font-light leading-relaxed">
+          <p className="text-gray-500 max-w-lg mx-auto font-light leading-relaxed text-base">
             Einmalig zahlen — das Erbe bleibt für immer. Keine Abonnements, keine versteckten Kosten.
           </p>
         </div>
@@ -148,14 +148,14 @@ export default function PricingSection() {
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xs text-gray-400">{plan.period}</span>
                 </div>
-                <p className="text-sm text-gray-500 mb-6">{plan.desc}</p>
+                <p className="text-base text-gray-500 mb-6">{plan.desc}</p>
 
                 {/* Feature list */}
                 <ul className="space-y-2.5 mb-7">
                   {plan.features.map((f) => {
                     const Icon = featureIcons[f] || Check;
                     return (
-                      <li key={f} className="flex items-center gap-2.5 text-sm text-gray-600">
+                      <li key={f} className="flex items-start gap-2.5 text-sm text-gray-600 leading-snug">
                         <span
                           className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
                           style={{ background: `${plan.color}14` }}

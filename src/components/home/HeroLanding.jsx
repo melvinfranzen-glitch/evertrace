@@ -35,7 +35,7 @@ export default function HeroLanding() {
         </div>
 
         <h1
-          className="text-5xl md:text-7xl font-semibold mb-7 leading-tight"
+          className="text-4xl md:text-6xl font-semibold mb-7 leading-tight"
           style={{ fontFamily: "'Playfair Display', serif", letterSpacing: "-0.01em" }}
         >
           Eine Geschichte
@@ -45,7 +45,7 @@ export default function HeroLanding() {
           wo Erinnerungen lebendig bleiben.
         </h1>
 
-        <p className="text-lg md:text-xl text-stone-300 max-w-2xl mx-auto mb-12 leading-relaxed font-light">
+        <p className="text-base md:text-lg text-stone-300 max-w-xl mx-auto mb-12 leading-relaxed font-light">
           Ein würdevoller Ort für die Geschichte eines geliebten Menschen —
           mit persönlicher Biografie, digitaler Gedenkseite und bleibenden Erinnerungsstücken.
         </p>

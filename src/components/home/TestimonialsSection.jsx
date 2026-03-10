@@ -2,7 +2,7 @@ const testimonials = [
   {
     name: "Maria K.",
     relation: "Tochter",
-    text: "Evertrace hat uns geholfen, die Geschichte meines Vaters würdevoll zu bewahren. Die KI-Biografie klingt, als hätte er sie selbst geschrieben – wir sind überwältigt.",
+    text: "Evertrace hat uns geholfen, die Geschichte meines Vaters würdevoll zu bewahren. Die Lebensgeschichte klingt, als hätte er sie selbst geschrieben – wir sind überwältigt.",
     stars: 5,
     initial: "M",
   },
@@ -48,7 +48,7 @@ export default function TestimonialsSection() {
           >
             Was Trauernde sagen
           </h2>
-          <p className="text-stone-400 font-light max-w-md mx-auto leading-relaxed">
+          <p className="text-stone-300 font-light max-w-md mx-auto leading-relaxed text-base">
             Über 500 Familien vertrauen Evertrace, um die Erinnerung zu bewahren.
           </p>
         </div>
@@ -65,7 +65,7 @@ export default function TestimonialsSection() {
               }}
             >
               <Stars count={t.stars} />
-              <p className="text-stone-300 text-sm leading-relaxed flex-1 mb-6 italic">
+              <p className="text-stone-300 text-base leading-relaxed flex-1 mb-6 italic">
                 „{t.text}"
               </p>
               <div className="flex items-center gap-3">

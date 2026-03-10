@@ -56,7 +56,7 @@ export default function FeaturesSection() {
           {features.map((f) => (
             <div
               key={f.title}
-              className="bg-white rounded-2xl p-10 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-in-out border border-stone-100 group cursor-default"
+              className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-in-out border border-stone-100 group cursor-default"
             >
               {/* Gold line icon */}
               <div
@@ -77,7 +77,7 @@ export default function FeaturesSection() {
               >
                 {f.title}
               </h3>
-              <p className="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
+              <p className="text-gray-500 text-base leading-relaxed">{f.desc}</p>
             </div>
           ))}
         </div>
