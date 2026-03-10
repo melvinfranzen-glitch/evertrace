@@ -267,14 +267,8 @@ export default function EditMemorial() {
                 <div><Label>Passwort</Label><Input value={memorial.access_password || ""} onChange={(e) => set("access_password", e.target.value)} className="mt-1" /></div>
               )}
               <div>
-                <Label>QR-Code URL</Label>
-                <div className="mt-2 p-4 rounded-xl bg-stone-50 border border-stone-200 flex items-center gap-4">
-                  <img src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(`${window.location.origin}/MemorialProfile?id=${memorial.short_id}`)}`} className="w-20 h-20 rounded" alt="QR" />
-                  <div>
-                    <p className="text-xs text-gray-500 break-all">{window.location.origin}/MemorialProfile?id={memorial.short_id}</p>
-                    <button className="mt-2 text-xs text-amber-700 underline" onClick={() => navigator.clipboard.writeText(`${window.location.origin}/MemorialProfile?id=${memorial.short_id}`)}>Link kopieren</button>
-                  </div>
-                </div>
+                <Label>QR-Code & Teilen</Label>
+                <QrSharePanel memorial={memorial} />
               </div>
             </div>
           )}
