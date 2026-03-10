@@ -11,6 +11,9 @@ import GallerySection from "@/components/memorial/GallerySection";
 import BlogSection from "@/components/memorial/BlogSection";
 import FamilyTreeSection from "@/components/memorial/FamilyTreeSection";
 import AudioSection from "@/components/memorial/AudioSection";
+import MemoryWallSection from "@/components/memorial/MemoryWallSection";
+import LegacySection from "@/components/memorial/LegacySection";
+import ServiceEventSection from "@/components/memorial/ServiceEventSection";
 
 export default function MemorialProfile() {
   const [memorial, setMemorial] = useState(null);

@@ -10,6 +10,9 @@ import FamilyEditor from "@/components/memorial/FamilyEditor";
 import TimelineEditor from "@/components/memorial/TimelineEditor";
 import QrSharePanel from "@/components/memorial/QrSharePanel";
 import AudioUploader from "@/components/memorial/AudioUploader";
+import LegacyEditor from "@/components/memorial/LegacyEditor";
+import ServiceEventEditor from "@/components/memorial/ServiceEventEditor";
+import MemoryWallModerator from "@/components/memorial/MemoryWallModerator";
 
 export default function EditMemorial() {
   const [memorial, setMemorial] = useState(null);
