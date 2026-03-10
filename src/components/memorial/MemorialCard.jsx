@@ -41,7 +41,7 @@ export default function MemorialCard({ memorial, onDelete }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 ease-in-out">
       <div className="relative h-36 bg-stone-100 overflow-hidden">
         {memorial.hero_image_url ? (
           <img src={memorial.hero_image_url} alt={memorial.name} className="w-full h-full object-cover" />
