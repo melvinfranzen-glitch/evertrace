@@ -241,6 +241,8 @@ export default function MemorialProfile() {
         condolences={condolences}
       />
 
+      <FloatingMusicPlayer spotifyUrl={memorial.spotify_url} name={memorial.name} />
+
       {/* Footer */}
       <div className="py-12 text-center border-t border-stone-100" style={{ background: "#1a1410" }}>
         <div className="flex items-center justify-center gap-3 mb-4">
