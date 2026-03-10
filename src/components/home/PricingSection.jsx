@@ -94,7 +94,7 @@ export default function PricingSection() {
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className="relative rounded-2xl transition-all"
+              className="relative rounded-2xl transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-lg"
               style={
                 plan.highlight
                   ? {
