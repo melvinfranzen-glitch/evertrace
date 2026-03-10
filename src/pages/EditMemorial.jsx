@@ -97,6 +97,9 @@ export default function EditMemorial() {
     { id: "bio", label: "Biografie" },
     { id: "media", label: "Medien" },
     { id: "timeline", label: "Timeline" },
+    { id: "legacy", label: "Lebenswerk" },
+    { id: "events", label: "Veranstaltungen" },
+    { id: "wall", label: "Erinnerungswand" },
     { id: "family", label: "Stammbaum" },
     { id: "settings", label: "Einstellungen" },
   ];
