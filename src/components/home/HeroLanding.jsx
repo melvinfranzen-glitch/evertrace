@@ -38,11 +38,11 @@ export default function HeroLanding() {
           className="text-5xl md:text-7xl font-semibold mb-7 leading-tight"
           style={{ fontFamily: "'Playfair Display', serif", letterSpacing: "-0.01em" }}
         >
-          Erinnern.
+          Eine Geschichte
           <br />
-          <span style={{ color: "#c9a84c" }}>Erzählen.</span>
+          <span style={{ color: "#c9a84c" }}>für die Ewigkeit,</span>
           <br />
-          Bewahren.
+          wo Erinnerungen lebendig bleiben.
         </h1>
 
         <p className="text-lg md:text-xl text-stone-300 max-w-2xl mx-auto mb-12 leading-relaxed font-light">
