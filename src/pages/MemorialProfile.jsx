@@ -15,6 +15,7 @@ import MemoryWallSection from "@/components/memorial/MemoryWallSection";
 import LegacySection from "@/components/memorial/LegacySection";
 import ServiceEventSection from "@/components/memorial/ServiceEventSection";
 import SectionDivider from "@/components/memorial/SectionDivider";
+import FloatingMusicPlayer from "@/components/memorial/FloatingMusicPlayer";
 
 export default function MemorialProfile() {
   const [memorial, setMemorial] = useState(null);
