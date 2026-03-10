@@ -167,5 +167,6 @@ export default function MemorialCard({ memorial, onDelete }) {
           </div>
         </div>
       )}
+    </>
   );
 }
