@@ -144,46 +144,76 @@ export default function MemorialProfile() {
 
       {/* Biography */}
       {memorial.biography && (
-        <section className="py-20 px-6">
-          <div className="max-w-3xl mx-auto">
-            <div className="text-center mb-10">
-              <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#b45309" }}>Lebensgeschichte</p>
-              <h2 className="text-3xl md:text-4xl font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
-                Biografie
-              </h2>
+        <>
+          <section className="py-24 px-6" style={{ background: "white" }}>
+            <div className="max-w-3xl mx-auto">
+              <div className="text-center mb-12">
+                <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#b45309" }}>Lebensgeschichte</p>
+                <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+                  {memorial.name}
+                </h2>
+                <p className="text-gray-400 text-sm font-light" style={{ fontFamily: "'Playfair Display', serif" }}>
+                  Eine Geschichte, die weiterlebt.
+                </p>
+              </div>
+              <div className="text-gray-600 leading-9 text-lg whitespace-pre-wrap"
+                style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic" }}>
+                {memorial.biography}
+              </div>
             </div>
-            <div className="text-gray-600 leading-8 text-lg whitespace-pre-wrap" style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic" }}>
-              {memorial.biography}
-            </div>
-          </div>
-        </section>
+          </section>
+          <SectionDivider quote="„Das Leben endet, wenn man aufhört zu träumen — die Erinnerung nie."" />
+        </>
       )}
 
       {memorial.gallery_images?.length > 0 && (
-        <GallerySection images={memorial.gallery_images} name={memorial.name} />
+        <>
+          <GallerySection images={memorial.gallery_images} name={memorial.name} />
+          <SectionDivider light />
+        </>
       )}
 
-      {serviceEvents.length > 0 && <ServiceEventSection events={serviceEvents} />}
+      {serviceEvents.length > 0 && (
+        <>
+          <ServiceEventSection events={serviceEvents} />
+        </>
+      )}
 
-      {timeline.length > 0 && <TimelineSection events={timeline} />}
+      {timeline.length > 0 && (
+        <>
+          <TimelineSection events={timeline} />
+          <SectionDivider quote="„Jeder Moment mit ihm / ihr war ein Geschenk."" />
+        </>
+      )}
 
-      {legacyEntries.length > 0 && <LegacySection entries={legacyEntries} />}
+      {legacyEntries.length > 0 && (
+        <>
+          <LegacySection entries={legacyEntries} />
+          <SectionDivider light />
+        </>
+      )}
 
       <FamilyTreeSection memorial={memorial} />
 
       <AudioSection tracks={audioTracks} />
 
-      <BlogSection posts={blogPosts} />
-
-      <MemoryWallSection memorialId={memorial.id} entries={memoryWall} />
+      {blogPosts.length > 0 && (
+        <>
+          <BlogSection posts={blogPosts} />
+          <SectionDivider light />
+        </>
+      )}
 
       {memorial.spotify_url && (
         <section className="py-16 px-6" style={{ background: "#F5F0E8" }}>
           <div className="max-w-3xl mx-auto text-center">
-            <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#b45309" }}>Musik</p>
-            <h2 className="text-3xl font-semibold text-gray-800 mb-6" style={{ fontFamily: "'Playfair Display', serif" }}>
-              Lieblingslieder
+            <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#b45309" }}>Lieblingsmelodien</p>
+            <h2 className="text-3xl font-semibold text-gray-800 mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+              Musik, die verbindet
             </h2>
+            <p className="text-gray-400 text-sm mb-8 font-light" style={{ fontFamily: "'Playfair Display', serif" }}>
+              Songs, die {memorial.name} liebte — und die uns an ihn / sie erinnern.
+            </p>
             <iframe
               src={`https://open.spotify.com/embed/playlist/${memorial.spotify_url.split("/").pop().split("?")[0]}`}
               width="100%"
@@ -203,15 +233,26 @@ export default function MemorialProfile() {
         onNewCandle={(c) => setCandles((prev) => [c, ...prev])}
       />
 
+      <MemoryWallSection memorialId={memorial.id} entries={memoryWall} />
+
       <CondolenceBook
         memorialId={memorial.id}
         condolences={condolences}
       />
 
-      <div className="py-8 text-center border-t border-stone-200" style={{ background: "#FAFAF8" }}>
-        <p className="text-sm text-gray-400">
-          Diese Gedenkseite wurde liebevoll erstellt mit{" "}
-          <a href="/" className="font-medium" style={{ color: "#b45309" }}>Evertrace</a>
+      {/* Footer */}
+      <div className="py-12 text-center border-t border-stone-100" style={{ background: "#1a1410" }}>
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <div className="h-px w-8 bg-amber-700/30" />
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C12 2 7 7 7 12C7 17 12 22 12 22C12 22 17 17 17 12C17 7 12 2 12 2Z" fill="#c9a84c" opacity="0.5"/>
+            <circle cx="12" cy="12" r="2.5" fill="#c9a84c"/>
+          </svg>
+          <div className="h-px w-8 bg-amber-700/30" />
+        </div>
+        <p className="text-sm" style={{ color: "#6b5a44", fontFamily: "'Playfair Display', serif", fontStyle: "italic" }}>
+          In liebevoller Erinnerung bewahrt mit{" "}
+          <a href="/" className="font-semibold" style={{ color: "#c9a84c" }}>Evertrace</a>
         </p>
       </div>
     </div>
