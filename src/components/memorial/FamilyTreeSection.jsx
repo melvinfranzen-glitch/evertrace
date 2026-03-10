@@ -68,6 +68,7 @@ function HLine() {
 export default function FamilyTreeSection({ memorial }) {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState(null); // { person, isDeceased }
 
   useEffect(() => {
     base44.entities.FamilyMember.filter({ memorial_id: memorial.id })
