@@ -182,7 +182,7 @@ export default function MemorialProfile() {
       {timeline.length > 0 && (
         <>
           <TimelineSection events={timeline} />
-          <SectionDivider quote={"„Jeder Moment mit ihm / ihr war ein Geschenk.""} />
+          <SectionDivider quote={`\u201EJeder Moment mit ihm / ihr war ein Geschenk.\u201C`} />
         </>
       )}
 
