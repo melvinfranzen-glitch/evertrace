@@ -240,6 +240,18 @@ export default function EditMemorial() {
             <TimelineEditor memorialId={memorial.id} timeline={timeline} setTimeline={setTimeline} />
           )}
 
+          {activeTab === "legacy" && (
+            <LegacyEditor memorialId={memorial.id} />
+          )}
+
+          {activeTab === "events" && (
+            <ServiceEventEditor memorialId={memorial.id} />
+          )}
+
+          {activeTab === "wall" && (
+            <MemoryWallModerator memorialId={memorial.id} />
+          )}
+
           {activeTab === "family" && (
             <FamilyEditor memorialId={memorial.id} />
           )}
