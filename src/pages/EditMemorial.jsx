@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Loader2, Save, ArrowLeft, Upload, Plus, Trash2, Sparkles, Eye, CreditCard } from "lucide-react";
+import { Loader2, Save, ArrowLeft, Upload, Plus, Trash2, Sparkles, Eye, CreditCard, BookOpen } from "lucide-react";
 import FamilyEditor from "@/components/memorial/FamilyEditor";
 import QrSharePanel from "@/components/memorial/QrSharePanel";
 import AudioUploader from "@/components/memorial/AudioUploader";
@@ -117,6 +117,13 @@ export default function EditMemorial() {
               style={{ borderColor: "#c9a84c", color: "#a07830" }}
             >
               <CreditCard className="w-3.5 h-3.5 mr-1" /> Trauerkarte gestalten
+            </Button>
+            <Button
+              variant="outline" size="sm" className="rounded-xl text-xs"
+              onClick={() => window.location.href = createPageUrl("MemoryBook") + `?id=${memorial.id}`}
+              style={{ borderColor: "#1e3a5f", color: "#1e3a5f" }}
+            >
+              <BookOpen className="w-3.5 h-3.5 mr-1" /> Erinnerungsbuch
             </Button>
             <Button variant="outline" size="sm" className="rounded-xl" onClick={() => window.open(`/MemorialProfile?id=${memorial.short_id}`, "_blank")}>
               <Eye className="w-4 h-4 mr-1" /> Vorschau
