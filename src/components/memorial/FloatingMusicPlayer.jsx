@@ -57,7 +57,7 @@ export default function FloatingMusicPlayer({ spotifyUrl, name }) {
       {/* Spotify embed */}
       {expanded && (
         <iframe
-          src={`https://open.spotify.com/embed/${type}/${id}?utm_source=generator&theme=0`}
+          src={`https://open.spotify.com/embed/${type}/${spotifyId}?utm_source=generator&theme=0`}
           width="320"
           height={embedHeight}
           frameBorder="0"
