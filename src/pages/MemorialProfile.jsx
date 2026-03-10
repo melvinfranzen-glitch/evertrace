@@ -52,18 +52,24 @@ export default function MemorialProfile() {
 
   const loadContent = async (id) => {
     try {
-      const [t, c, k, b, a] = await Promise.all([
+      const [t, c, k, b, a, w, l, s] = await Promise.all([
         base44.entities.TimelineEvent.filter({ memorial_id: id }, "sort_order"),
         base44.entities.CondolenceEntry.filter({ memorial_id: id, status: "approved" }, "-created_date"),
         base44.entities.Candle.filter({ memorial_id: id }, "-created_date"),
         base44.entities.MemorialBlogPost.filter({ memorial_id: id, is_published: true }, "-created_date"),
         base44.entities.MemorialAudio.filter({ memorial_id: id }, "created_date"),
+        base44.entities.MemoryWallEntry.filter({ memorial_id: id, status: "approved" }, "-created_date"),
+        base44.entities.LegacyEntry.filter({ memorial_id: id }, "sort_order"),
+        base44.entities.MemorialServiceEvent.filter({ memorial_id: id }, "date"),
       ]);
       setTimeline(t);
       setCondolences(c);
       setCandles(k);
       setBlogPosts(b);
       setAudioTracks(a);
+      setMemoryWall(w);
+      setLegacyEntries(l);
+      setServiceEvents(s);
     } catch (e) {
       // ignore
     }
