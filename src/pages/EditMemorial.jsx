@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Loader2, Save, ArrowLeft, Upload, Plus, Trash2, Sparkles, Eye, CreditCard } from "lucide-react";
 import FamilyEditor from "@/components/memorial/FamilyEditor";
+import QrSharePanel from "@/components/memorial/QrSharePanel";
 import AudioUploader from "@/components/memorial/AudioUploader";
 
 export default function EditMemorial() {
