@@ -166,10 +166,10 @@ export default function EditMemorial() {
             <div className="space-y-4">
               <div>
                 <Label>Rohfakten & Erinnerungen</Label>
-                <Textarea value={memorial.biography_raw_input || ""} onChange={(e) => set("biography_raw_input", e.target.value)} className="mt-1 h-28 resize-none" placeholder="Fakten und Erinnerungen eingeben..." />
+                <Textarea value={memorial.biography_raw_input || ""} onChange={(e) => set("biography_raw_input", e.target.value)} className="mt-1 h-28 resize-none" placeholder={`Erzählen Sie uns von besonderen Momenten im Leben von ${memorial.name}. Beruf, Leidenschaften, Lieblingsplätze, unvergessliche Erlebnisse...`} />
               </div>
               <Button onClick={generateBio} disabled={generating || !memorial.biography_raw_input} className="w-full text-white rounded-xl" style={{ background: "#b45309" }}>
-                {generating ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Generiere...</> : <><Sparkles className="w-4 h-4 mr-2" /> Neu generieren</>}
+                {generating ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Wird verfasst...</> : <><Sparkles className="w-4 h-4 mr-2" /> Lebensgeschichte neu verfassen</>}
               </Button>
               <div>
                 <Label>Biografie</Label>

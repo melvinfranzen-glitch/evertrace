@@ -3,15 +3,15 @@ import { Button } from "@/components/ui/button";
 import { createPageUrl } from "@/utils";
 
 const featureIcons = {
-  "KI-Biografie-Generator": Brain,
-  "QR-Code als SVG & PNG": QrCode,
-  "QR-Code als PNG": QrCode,
-  "Galerie (bis zu 50 Bilder)": Image,
-  "Unbegrenzte Galerie": Image,
-  "Lebenslanges Hosting": Clock,
-  "PDF-Export Kondolenzbuch": FileText,
-  "Passwortschutz & Private Seite": Lock,
-  "Premium-Support": Headphones,
+  "Schreibassistent für die Lebensgeschichte": Brain,
+  "Persönlicher QR-Code als SVG & PNG": QrCode,
+  "Persönlicher QR-Code": QrCode,
+  "Fotogalerie (bis zu 50 Aufnahmen)": Image,
+  "Unbegrenzte Fotogalerie": Image,
+  "Schutzraum für Ihr digitales Vermächtnis": Clock,
+  "Kondolenzbuch als druckbares PDF": FileText,
+  "Privater, passwortgeschützter Gedenkraum": Lock,
+  "Persönliche Betreuung": Headphones,
 };
 
 const plans = [
@@ -23,12 +23,12 @@ const plans = [
     period: "14 Tage testen",
     desc: "Zum Kennenlernen",
     features: [
-      "Digitale Gedenkseite (14 Tage)",
-      "KI-Biografie-Generator",
-      "Kondolenzbuch (max. 10 Einträge)",
-      "QR-Code als PNG",
+      "Gedenkseite zum Kennenlernen (14 Tage)",
+      "Schreibassistent für die Lebensgeschichte",
+      "Kondolenzbuch (bis zu 10 Beileidsbekundungen)",
+      "Persönlicher QR-Code",
     ],
-    cta: "Kostenlos starten",
+    cta: "Kostenlos erkunden",
     highlight: false,
     color: "#6b7280",
   },
@@ -40,14 +40,14 @@ const plans = [
     period: "einmalig",
     desc: "Einmal zahlen, f\u00FCr immer bewahren.",
     features: [
-      "KI-Biografie-Generator",
-      "Lebenslanges Hosting",
-      "Unbegrenzte Kondolenzeinträge",
-      "QR-Code als SVG & PNG",
-      "Galerie (bis zu 50 Bilder)",
-      "Spotify & Kerzen",
+      "Schreibassistent für die Lebensgeschichte",
+      "Schutzraum für Ihr digitales Vermächtnis",
+      "Ein offenes Buch für alle Beileidsbekundungen",
+      "Persönlicher QR-Code als SVG & PNG",
+      "Fotogalerie (bis zu 50 Aufnahmen)",
+      "Lieblingsmusik & virtuelle Kerzen",
     ],
-    cta: "Jetzt sichern",
+    cta: "Erinnerung jetzt gestalten",
     highlight: true,
     color: "#b45309",
   },
@@ -60,13 +60,13 @@ const plans = [
     desc: "Alles inklusive, keinerlei Kompromisse.",
     features: [
       "Alles aus Classic",
-      "KI-Trauerkarten (4 Unikate)",
-      "PDF-Export Kondolenzbuch",
-      "Passwortschutz & Private Seite",
-      "Unbegrenzte Galerie",
-      "Premium-Support",
+      "Individuelle Gestaltungshilfe für Ihre Trauerpost (4 Motive)",
+      "Kondolenzbuch als druckbares PDF",
+      "Privater, passwortgeschützter Gedenkraum",
+      "Unbegrenzte Fotogalerie",
+      "Persönliche Betreuung",
     ],
-    cta: "Premium wählen",
+    cta: "Vollständiges Erbe sichern",
     highlight: false,
     color: "#1e3a5f",
   },
@@ -82,10 +82,10 @@ export default function PricingSection() {
             className="text-4xl md:text-5xl font-semibold text-gray-800 mb-5"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
-            Transparent & fair
+            Das Vermächtnis bewahren
           </h2>
           <p className="text-gray-500 max-w-lg mx-auto font-light leading-relaxed">
-            Keine versteckten Kosten, keine Abonnements. Einmalig zahlen, dauerhaft erinnern.
+            Einmalig zahlen — das Erbe bleibt für immer. Keine Abonnements, keine versteckten Kosten.
           </p>
         </div>
 
@@ -234,11 +234,11 @@ export default function PricingSection() {
                 className="font-semibold text-gray-800 text-xl mb-2"
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
-                Gravierte QR-Plakette
+                Die digitale Brücke zum ewigen Gedenken
               </h3>
               <p className="text-gray-500 text-sm leading-relaxed max-w-md">
-                Hochwertige Plakette aus Messing, Schiefer oder Edelstahl — graviert mit individuellem QR-Code.
-                Direkt am Grabstein, an der Urne oder der Trauerkarte anbringbar.
+                Feinste Gravur in zeitlosem Messing, Schiefer oder Edelstahl — mit persönlichem QR-Code.
+                An Grabstein, Urne oder Trauerkarte: eine stille Einladung zur Erinnerung.
               </p>
             </div>
             <div className="text-center flex-shrink-0">

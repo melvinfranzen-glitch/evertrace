@@ -46,8 +46,8 @@ export default function HeroLanding() {
         </h1>
 
         <p className="text-lg md:text-xl text-stone-300 max-w-2xl mx-auto mb-12 leading-relaxed font-light">
-          Evertrace verbindet das Erbe geliebter Menschen mit moderner Technologie —
-          durch KI-gestützte Biografien, digitale Gedenkseiten und physische Erinnerungsstücke.
+          Ein würdevoller Ort für die Geschichte eines geliebten Menschen —
+          mit persönlicher Biografie, digitaler Gedenkseite und bleibenden Erinnerungsstücken.
         </p>
 
         {/* CTAs */}
@@ -80,7 +80,7 @@ export default function HeroLanding() {
         {/* Trust stats */}
         <div className="flex flex-wrap justify-center gap-8 md:gap-12">
           {[
-            { icon: Sparkles, label: "KI-Biografie", sub: "GPT-gestützt" },
+            { icon: Sparkles, label: "Lebensgeschichte", sub: "Würdevoll & persönlich" },
             { icon: QrCode, label: "QR-Plaketten", sub: "Messing · Schiefer" },
             { icon: ShieldCheck, label: "DSGVO-konform", sub: "Hosting in DE" },
           ].map(({ icon: Icon, label, sub }) => (

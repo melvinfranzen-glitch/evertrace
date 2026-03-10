@@ -201,9 +201,9 @@ export default function CreateMemorial() {
             <div className="space-y-5">
               <div className="mb-6">
                 <h1 className="text-2xl font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
-                  KI-Biografie erstellen
+                  Die Lebensgeschichte festhalten
                 </h1>
-                <p className="text-gray-500 text-sm mt-1">Unsere KI schreibt eine individuelle, würdevolle Lebensgeschichte</p>
+                <p className="text-gray-500 text-sm mt-1">Erzählen Sie uns von besonderen Momenten — wir helfen dabei, daraus eine fließende Geschichte zu weben.</p>
               </div>
 
               <div>
@@ -227,11 +227,11 @@ export default function CreateMemorial() {
               </div>
 
               <div>
-                <Label className="text-sm font-medium">Erinnerungen, Fakten & besondere Momente *</Label>
+                <Label className="text-sm font-medium">Besondere Momente & Erinnerungen *</Label>
                 <Textarea
                   value={form.biography_raw_input}
                   onChange={(e) => set("biography_raw_input", e.target.value)}
-                  placeholder="Erzählen Sie vom Leben: Beruf, Hobbys, Familie, besondere Erlebnisse, Lieblingsplätze, Leidenschaften, was andere an ihr/ihm schätzten..."
+                  placeholder={`Erzählen Sie uns ein wenig über das Leben von ${form.name || "dieser Person"}. Was hat sie/ihn besonders gemacht? Beruf, Leidenschaften, Lieblingsplätze, Familie, unvergessliche Momente — alles ist willkommen.`}
                   className="mt-1 h-36 resize-none"
                 />
               </div>
@@ -243,9 +243,9 @@ export default function CreateMemorial() {
                 style={{ background: generating ? "#9a7252" : "#b45309" }}
               >
                 {generating ? (
-                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> KI schreibt Biografie...</>
+                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Biografie wird verfasst...</>
                 ) : (
-                  <><Sparkles className="w-4 h-4 mr-2" /> Biografie generieren</>
+                  <><Sparkles className="w-4 h-4 mr-2" /> Lebensgeschichte verfassen</>
                 )}
               </Button>
 
@@ -253,10 +253,10 @@ export default function CreateMemorial() {
                 <div className="rounded-xl p-6 border border-stone-200" style={{ background: "#fafaf8" }}>
                   <div className="flex items-center justify-between mb-3">
                     <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "#b45309" }}>
-                      KI-generierte Biografie
+                      Entwurf der Lebensgeschichte
                     </p>
                     <button className="text-xs text-gray-400 hover:text-gray-600 underline" onClick={() => set("biography", "")}>
-                      Neu generieren
+                      Neu verfassen
                     </button>
                   </div>
                   <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">{form.biography}</p>

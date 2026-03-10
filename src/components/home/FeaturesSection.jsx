@@ -3,8 +3,8 @@ import { Brain, QrCode, BookOpen, Flame, Music2, ShieldCheck } from "lucide-reac
 const features = [
   {
     icon: Brain,
-    title: "KI-Biografie-Generator",
-    desc: "Geben Sie Erinnerungen ein – unsere KI verfasst eine würdevolle, individuelle Lebensgeschichte in Ihrem Stil.",
+    title: "Biografie-Assistent",
+    desc: "Teilen Sie uns besondere Momente und Erinnerungen mit — gemeinsam finden wir die richtigen Worte für ein bewegtes Leben.",
   },
   {
     icon: QrCode,
@@ -45,10 +45,10 @@ export default function FeaturesSection() {
             className="text-4xl md:text-5xl font-semibold text-gray-800 mb-5"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
-            Ein würdevolles Erbe schaffen
+            Ein Platz für die Ewigkeit
           </h2>
           <p className="text-gray-500 max-w-xl mx-auto text-lg font-light leading-relaxed">
-            Alles, was Sie brauchen, um die Erinnerung an einen geliebten Menschen dauerhaft zu bewahren und zu teilen.
+            Alles, was Sie brauchen, um die Geschichte eines geliebten Menschen mit Würde zu bewahren — für Ihre Familie und alle, die trauern.
           </p>
         </div>
 

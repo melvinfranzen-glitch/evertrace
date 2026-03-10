@@ -13,20 +13,19 @@ export default function CardTeaser() {
             <div className="flex items-center gap-2 mb-4">
               <Sparkles className="w-4 h-4" style={{ color: "#c9a84c" }} />
               <span className="text-xs uppercase tracking-[0.3em] font-medium" style={{ color: "#c9a84c" }}>
-                Neu · KI-Feature
+                Neu · Gestaltungshilfe
               </span>
             </div>
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4 leading-tight"
               style={{ fontFamily: "'Playfair Display', serif" }}>
-              Trauerkarten mit KI gestalten
+              Trauerkarten — so einzigartig wie das Leben
             </h2>
             <p className="text-stone-400 text-base leading-relaxed mb-7 max-w-lg">
-              Erstellen Sie in wenigen Minuten 4 einzigartige, künstlerische Trauerkarten-Designs —
-              Aquarelle, Lichtspiele, Lebensbäume. Die KI nutzt Biografie und Foto der Gedenkseite als Basis.
-              Print-Ready PDF oder direkt drucken lassen.
+              Vier handwerklich gestaltete Motive — Aquarelle, Lichtspiele, Lebensbäume —
+              entstehen auf Basis der Biografie und des Portraits. Print-Ready PDF oder direkt drucken lassen.
             </p>
             <div className="flex flex-wrap gap-3 mb-8">
-              {["4 KI-Designs", "Aquarell & Abstrakt", "PDF-Export", "Druck & Versand"].map((tag) => (
+              {["4 einzigartige Motive", "Aquarell & Abstrakt", "PDF-Export", "Druck & Versand"].map((tag) => (
                 <span key={tag} className="px-3 py-1 rounded-full text-xs font-medium"
                   style={{ background: "rgba(201,168,76,0.12)", color: "#c9a84c", border: "1px solid rgba(201,168,76,0.2)" }}>
                   {tag}
@@ -41,7 +40,7 @@ export default function CardTeaser() {
               onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 4px 20px rgba(201,168,76,0.35)"; e.currentTarget.style.transform = ""; }}
             >
               <CreditCard className="w-4 h-4" />
-              Jetzt gestalten
+              Motive entwerfen
             </button>
           </div>
 
