@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Loader2, Save, ArrowLeft, Upload, Plus, Trash2, Sparkles, Eye, CreditCard, BookOpen } from "lucide-react";
 import FamilyEditor from "@/components/memorial/FamilyEditor";
+import TimelineEditor from "@/components/memorial/TimelineEditor";
 import QrSharePanel from "@/components/memorial/QrSharePanel";
 import AudioUploader from "@/components/memorial/AudioUploader";
 
@@ -230,31 +231,7 @@ export default function EditMemorial() {
           )}
 
           {activeTab === "timeline" && (
-            <div className="space-y-4">
-              {timeline.map((ev) => (
-                <div key={ev.id} className="flex items-start gap-3 p-3 rounded-xl border border-stone-200 bg-stone-50">
-                  <div className="text-sm font-bold text-amber-700 w-14 flex-shrink-0">{ev.year}</div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-800 text-sm">{ev.title}</p>
-                    {ev.description && <p className="text-xs text-gray-500 mt-0.5">{ev.description}</p>}
-                  </div>
-                  <button onClick={() => deleteEvent(ev.id)} className="text-gray-300 hover:text-red-500 flex-shrink-0">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              ))}
-              <div className="border-t border-stone-200 pt-4 space-y-3">
-                <p className="text-sm font-medium text-gray-700">Neues Ereignis</p>
-                <div className="grid grid-cols-3 gap-2">
-                  <Input value={newEvent.year} onChange={(e) => setNewEvent((p) => ({ ...p, year: e.target.value }))} placeholder="Jahr" className="col-span-1" />
-                  <Input value={newEvent.title} onChange={(e) => setNewEvent((p) => ({ ...p, title: e.target.value }))} placeholder="Titel" className="col-span-2" />
-                </div>
-                <Textarea value={newEvent.description} onChange={(e) => setNewEvent((p) => ({ ...p, description: e.target.value }))} placeholder="Beschreibung (optional)" className="h-16 resize-none" />
-                <Button onClick={addEvent} disabled={!newEvent.year || !newEvent.title} className="rounded-xl text-white" style={{ background: "#b45309" }}>
-                  <Plus className="w-4 h-4 mr-1" /> Hinzufügen
-                </Button>
-              </div>
-            </div>
+            <TimelineEditor memorialId={memorial.id} timeline={timeline} setTimeline={setTimeline} />
           )}
 
           {activeTab === "family" && (
