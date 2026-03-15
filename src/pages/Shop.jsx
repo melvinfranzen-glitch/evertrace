@@ -8,7 +8,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Check, Package, BookOpen, Loader2 } from "lucide-react";
 import PlaqueConfigurator from "@/components/shop/PlaqueConfigurator";
 
-const PRICES = { plaque_brass: 89, plaque_slate: 79, plaque_steel: 99, print_book: 49 };
+const PRICES = { plaque_brass: 149, plaque_slate: 129, plaque_steel: 219, print_book: 59 };
+
+const PRODUCTS = [
+  { id: "plaque_brass", icon: Package, label: "Messing-Plakette", desc: "Klassische Gravur, QR-Code, wetterfest — 20 × 11 cm", price: 149 },
+  { id: "plaque_slate", icon: Package, label: "Schiefer-Plakette", desc: "Natürlicher Stein, Lasergravur, zeitlos — 20 × 11 cm", price: 129 },
+  { id: "plaque_steel", icon: Package, label: "Edelstahl-Plakette Premium", desc: "Gebürsteter Stahl, UV-Beschichtung, Montageset — 20 × 11 cm", price: 219 },
+  { id: "print_book", icon: BookOpen, label: "Kondolenzbuch (Hardcover)", desc: "Alle Beiträge der Gedenkseite, KI-layoutet, Soft-Touch-Einband — A4", price: 59 },
+];
 
 export default function Shop() {
   const [memorials, setMemorials] = useState([]);
@@ -53,9 +60,9 @@ export default function Shop() {
           <div className="w-20 h-20 rounded-2xl mx-auto flex items-center justify-center mb-6" style={{ background: "#ecfdf5" }}>
             <Check className="w-10 h-10 text-green-600" />
           </div>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>Bestellung aufgenommen!</h2>
-          <p className="text-gray-500 mb-6">Wir fertigen Ihre Plakette innerhalb von 5–7 Werktagen und versenden sie an die angegebene Adresse.</p>
-          <Button onClick={() => window.location.href = createPageUrl("Dashboard")} className="text-white rounded-xl px-8" style={{ background: "#b45309" }}>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Bestellung aufgenommen!</h2>
+          <p className="text-gray-500 mb-6">Wir fertigen Ihr Produkt innerhalb von 5–7 Werktagen und versenden es an die angegebene Adresse.</p>
+          <Button onClick={() => window.location.href = createPageUrl("Dashboard")} className="text-white rounded-xl px-8" style={{ background: "#c9a96e" }}>
             Zum Dashboard
           </Button>
         </div>
@@ -67,9 +74,9 @@ export default function Shop() {
     <div className="min-h-screen pt-24 pb-16 px-4" style={{ background: "#FAFAF8" }}>
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-12">
-          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#b45309" }}>Erinnerungsstücke</p>
-          <h1 className="text-4xl font-semibold text-gray-800 mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
-            Physische Erinnerungsstücke
+          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>Erinnerungsstücke</p>
+          <h1 className="text-4xl font-semibold text-gray-800 mb-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            Erinnerungsstücke
           </h1>
           <p className="text-gray-500 font-light max-w-lg mx-auto">
             Hochwertige Plaketten und gedruckte Kondolenz­bücher als bleibendes Erinnerungsstück.
@@ -78,26 +85,21 @@ export default function Shop() {
 
         {/* Product selector */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-          {[
-            { id: "plaque_brass", icon: Package, label: "Messing-Plakette", desc: "Klassisch graviert, 20×11 cm", price: 89 },
-            { id: "plaque_slate", icon: Package, label: "Schiefer-Plakette", desc: "Natürlich & modern, 20×11 cm", price: 79 },
-            { id: "plaque_steel", icon: Package, label: "Edelstahl-Plakette", desc: "Zeitlos & rostfrei, 20×11 cm", price: 99 },
-            { id: "print_book", icon: BookOpen, label: "Kondolenzbuch (Print)", desc: "A4 Hardcover, alle Online-Einträge", price: 49 },
-          ].map((p) => (
+          {PRODUCTS.map((p) => (
             <div
               key={p.id}
               onClick={() => setProductType(p.id)}
               className="flex items-center gap-4 p-5 rounded-2xl border-2 cursor-pointer transition-all"
-              style={{ borderColor: productType === p.id ? "#b45309" : "#e5e7eb", background: productType === p.id ? "#fffbf5" : "white" }}
+              style={{ borderColor: productType === p.id ? "#c9a96e" : "#e5e7eb", background: productType === p.id ? "#fffbf5" : "white" }}
             >
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: productType === p.id ? "#fef3c7" : "#f5f5f4" }}>
-                <p.icon className="w-6 h-6" style={{ color: productType === p.id ? "#b45309" : "#9ca3af" }} />
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: productType === p.id ? "rgba(201,169,110,0.1)" : "#f5f5f4" }}>
+                <p.icon className="w-6 h-6" style={{ color: productType === p.id ? "#c9a96e" : "#9ca3af" }} />
               </div>
               <div className="flex-1">
                 <p className="font-semibold text-gray-800">{p.label}</p>
                 <p className="text-sm text-gray-500">{p.desc}</p>
               </div>
-              <p className="font-bold text-gray-800">€ {p.price}</p>
+              <p className="font-bold text-gray-800 flex-shrink-0">€ {p.price}</p>
             </div>
           ))}
         </div>
@@ -106,8 +108,7 @@ export default function Shop() {
           {/* Configurator */}
           {productType !== "print_book" && (
             <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
-              <h3 className="font-semibold text-gray-800 mb-5" style={{ fontFamily: "'Playfair Display', serif" }}>Vorschau & Konfiguration</h3>
-
+              <h3 className="font-semibold text-gray-800 mb-5" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Vorschau & Konfiguration</h3>
               {memorials.length > 0 && (
                 <div className="mb-5">
                   <Label>Gedenkseite wählen</Label>
@@ -120,14 +121,13 @@ export default function Shop() {
                   </select>
                 </div>
               )}
-
               <PlaqueConfigurator memorial={selectedMemorial} selected={productType} onSelect={setProductType} />
             </div>
           )}
 
           {/* Order form */}
           <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
-            <h3 className="font-semibold text-gray-800 mb-5" style={{ fontFamily: "'Playfair Display', serif" }}>Lieferadresse</h3>
+            <h3 className="font-semibold text-gray-800 mb-5" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Lieferadresse</h3>
             <div className="space-y-4">
               <div><Label>Vollständiger Name *</Label><Input value={form.customer_name} onChange={(e) => set("customer_name", e.target.value)} className="mt-1 rounded-xl" /></div>
               <div><Label>E-Mail *</Label><Input type="email" value={form.customer_email} onChange={(e) => set("customer_email", e.target.value)} className="mt-1 rounded-xl" /></div>
@@ -154,7 +154,7 @@ export default function Shop() {
                 onClick={handleOrder}
                 disabled={saving || !form.customer_name || !form.customer_email || !form.shipping_street || !form.shipping_city || !form.shipping_zip}
                 className="w-full rounded-xl text-white py-5"
-                style={{ background: "#b45309" }}
+                style={{ background: "#c9a96e", color: "#0f0e0c" }}
               >
                 {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Package className="w-4 h-4 mr-2" />}
                 Jetzt bestellen
