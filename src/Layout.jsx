@@ -20,9 +20,7 @@ export default function Layout({ children, currentPageName }) {
   useEffect(() => { setMenuOpen(false); }, [currentPageName]);
 
   const isMemorialPage = currentPageName === "MemorialProfile";
-  const isHomePage = currentPageName === "Home";
   if (isMemorialPage) return <>{children}</>;
-  if (isHomePage) return <div className="min-h-screen flex flex-col" style={{ fontFamily: "'Inter', sans-serif", background: "#FAFAF8" }}><main className="flex-1">{children}</main></div>;
 
   const navLinks = [
     { label: "Gedenkseiten", page: "Dashboard", href: "/Dashboard?tab=memorials", auth: true },
