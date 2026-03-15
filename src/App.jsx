@@ -4,6 +4,17 @@ import { queryClientInstance } from '@/lib/query-client'
 import { pagesConfig } from './pages.config'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
+import B2BRegister from './pages/B2BRegister';
+import B2BDashboard from './pages/B2BDashboard';
+import B2BCases from './pages/B2BCases';
+import B2BCaseDetail from './pages/B2BCaseDetail';
+import B2BCardWizard from './pages/B2BCardWizard';
+import B2BCards from './pages/B2BCards';
+import B2BMemorial from './pages/B2BMemorial';
+import B2BOrders from './pages/B2BOrders';
+import B2BAnalytics from './pages/B2BAnalytics';
+import B2BSettings from './pages/B2BSettings';
+import B2BPublicMemorial from './pages/B2BPublicMemorial';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
