@@ -68,6 +68,17 @@ const AuthenticatedApp = () => {
           }
         />
       ))}
+      <Route path="/B2BRegister" element={<B2BRegister />} />
+      <Route path="/B2BDashboard" element={<B2BDashboard />} />
+      <Route path="/B2BCases" element={<B2BCases />} />
+      <Route path="/B2BCaseDetail" element={<B2BCaseDetail />} />
+      <Route path="/B2BCardWizard" element={<B2BCardWizard />} />
+      <Route path="/B2BCards" element={<B2BCards />} />
+      <Route path="/B2BMemorial" element={<B2BMemorial />} />
+      <Route path="/B2BOrders" element={<B2BOrders />} />
+      <Route path="/B2BAnalytics" element={<B2BAnalytics />} />
+      <Route path="/B2BSettings" element={<B2BSettings />} />
+      <Route path="/B2BPublicMemorial" element={<B2BPublicMemorial />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
