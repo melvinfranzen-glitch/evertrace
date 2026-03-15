@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { X, BookOpen, Printer, Loader2, Check } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
+import { B2B_BOOK_TIERS, getB2BBookUnitPrice, fmtEur } from "@/components/pricing/pricingData";
 
 function fmtDate(d) {
   if (!d) return "";
@@ -15,6 +16,9 @@ export default function CondolenceBookPrintModal({ page, caseData, contributions
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
 
+  const unitPrice = getB2BBookUnitPrice(quantity);
+  const totalBookPrice = unitPrice * quantity;
+
   const submit = async () => {
     setSubmitting(true);
     await base44.entities.PrintOrder.create({
@@ -22,8 +26,8 @@ export default function CondolenceBookPrintModal({ page, caseData, contributions
       order_type: "Erinnerungsbuch",
       quantity,
       print_tier: "premium",
-      unit_price: 29.90,
-      total_price: parseFloat((29.90 * quantity).toFixed(2)),
+      unit_price: unitPrice,
+      total_price: totalBookPrice,
       status: "In Bearbeitung",
     });
     setSubmitting(false);
