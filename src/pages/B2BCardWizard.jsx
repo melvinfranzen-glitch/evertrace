@@ -164,7 +164,11 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
   }, [step]);
 
   const tier = PRINT_TIERS.find(t => t.id === printTier);
-  const totalPrice = tier ? (tier.basePrice * quantity).toFixed(2).replace(".", ",") : "0,00";
+  const addonInvPrice = addonInvitation ? ADDON_PRICES.invitation_bundle * quantity : 0;
+  const addonThkPrice = addonThankyou ? ADDON_PRICES.thankyou_bundle * quantity : 0;
+  const cardsSubtotal = tier ? tier.basePrice * quantity : 0;
+  const shipping = tier ? tier.shipping : 0;
+  const totalPrice = fmtEur(cardsSubtotal + addonInvPrice + addonThkPrice + shipping);
 
   const submitOrder = async () => {
     setSubmitting(true);
