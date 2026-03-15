@@ -104,9 +104,9 @@ export default function MemorialCard({ memorial, onDelete, onOpenPlaque }) {
             variant="outline"
             className="text-xs rounded-lg h-8"
             style={{ borderColor: "rgba(201,169,110,0.4)", color: "#c9a96e" }}
-            onClick={() => window.location.href = createPageUrl("Dashboard") + `?tab=plaque&memorial_id=${memorial.short_id}`}
+            onClick={() => window.location.href = createPageUrl("Dashboard") + `?tab=book`}
             >
-            <QrCode className="w-3.5 h-3.5 mr-1" /> Plakette
+            <BookOpen className="w-3.5 h-3.5 mr-1" /> Lebensbuch
             </Button>
             {!confirming ? (
               <Button
