@@ -477,11 +477,33 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
               </div>
 
               <div className="rounded-2xl p-5" style={{ background: "rgba(201,169,110,0.06)", border: "1px solid rgba(201,169,110,0.3)" }}>
-                <div className="flex items-center justify-between">
+                <div className="space-y-1.5 mb-3">
+                  <div className="flex justify-between text-sm">
+                    <span style={{ color: "#8a8278" }}>{quantity} × {tier?.label} Karten</span>
+                    <span style={{ color: "#f0ede8" }}>€ {fmtEur(cardsSubtotal)}</span>
+                  </div>
+                  {addonInvitation && (
+                    <div className="flex justify-between text-sm">
+                      <span style={{ color: "#8a8278" }}>+ Einladungskarten (€ {fmtEur(ADDON_PRICES.invitation_bundle)}/Stk.)</span>
+                      <span style={{ color: "#f0ede8" }}>€ {fmtEur(addonInvPrice)}</span>
+                    </div>
+                  )}
+                  {addonThankyou && (
+                    <div className="flex justify-between text-sm">
+                      <span style={{ color: "#8a8278" }}>+ Danksagungskarten (€ {fmtEur(ADDON_PRICES.thankyou_bundle)}/Stk.)</span>
+                      <span style={{ color: "#f0ede8" }}>€ {fmtEur(addonThkPrice)}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between text-sm">
+                    <span style={{ color: "#8a8278" }}>Versand ({tier?.label})</span>
+                    <span style={{ color: "#f0ede8" }}>€ {fmtEur(shipping)}</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between pt-3 border-t" style={{ borderColor: "rgba(201,169,110,0.3)" }}>
                   <span className="font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Gesamtbetrag</span>
                   <span className="text-2xl font-bold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#c9a96e" }}>€ {totalPrice}</span>
                 </div>
-                <p className="text-xs mt-1" style={{ color: "#5a554e" }}>{quantity} × {tier?.label} · zzgl. MwSt.</p>
+                <p className="text-xs mt-2" style={{ color: "#5a554e" }}>Alle Preise zzgl. MwSt. Die KI-Gestaltung und Personalisierung ist im Kartenpreis enthalten.</p>
               </div>
             </div>
           )}
