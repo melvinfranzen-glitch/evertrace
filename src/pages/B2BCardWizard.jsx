@@ -32,11 +32,9 @@ const MOTIFS = [
 ];
 
 const TONES = ["Förmlich & würdevoll", "Warm & persönlich", "Poetisch & lyrisch"];
-const PRINT_TIERS = [
-  { id: "standard", label: "Standard", desc: "300g Mattkunstdruck", delivery: "3–4 Werktage", basePrice: 0.85 },
-  { id: "premium", label: "Premium", desc: "Soft-Touch-Laminierung", delivery: "2–3 Werktage", basePrice: 1.20 },
-  { id: "express", label: "Express", desc: "Premium-Veredlung", delivery: "Nächster Tag bis 10 Uhr", basePrice: 1.85 },
-];
+import { PRINT_TIERS as TIER_DATA, ADDON_PRICES, DEFAULT_CARD_QUANTITY, fmtEur } from "@/components/pricing/pricingData";
+
+const PRINT_TIERS = TIER_DATA;
 
 const WIZARD_STEPS = ["Fall & Format", "Fragebogen", "KI-Vorschau", "Druckkonfiguration", "Bestellung"];
 
