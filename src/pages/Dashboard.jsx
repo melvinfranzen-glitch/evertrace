@@ -27,7 +27,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center pt-20">
-        <Loader2 className="w-8 h-8 animate-spin text-amber-700" />
+        <Loader2 className="w-8 h-8 animate-spin font-medium" />
       </div>
     );
   }
@@ -45,7 +45,7 @@ export default function Dashboard() {
           <Button
             onClick={() => window.location.href = createPageUrl("CreateMemorial")}
             className="text-white rounded-xl px-6"
-            style={{ background: "#b45309" }}
+            style={{ background: "#c9a96e" }}
           >
             <Plus className="w-4 h-4 mr-2" />
             Neue Gedenkseite
@@ -57,7 +57,7 @@ export default function Dashboard() {
         {memorials.length === 0 ? (
           <div className="text-center py-24">
             <div className="w-20 h-20 rounded-2xl mx-auto flex items-center justify-center mb-6" style={{ background: "#f5f0e8" }}>
-              <BookOpen className="w-10 h-10 text-amber-700" />
+              <BookOpen className="w-10 h-10 font-medium" />
             </div>
             <h2 className="text-xl font-semibold text-gray-700 mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Noch keine Gedenkseite
@@ -68,7 +68,7 @@ export default function Dashboard() {
             <Button
               onClick={() => window.location.href = createPageUrl("CreateMemorial")}
               className="text-white rounded-xl px-8"
-              style={{ background: "#b45309" }}
+              style={{ background: "#c9a96e" }}
             >
               <Plus className="w-4 h-4 mr-2" />
               Erste Gedenkseite erstellen

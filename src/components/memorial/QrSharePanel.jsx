@@ -82,7 +82,7 @@ export default function QrSharePanel({ memorial }) {
             <p className="text-xs text-gray-500 break-all">{url}</p>
             <button
               onClick={copyLink}
-              className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-amber-700 hover:text-amber-800 transition-colors"
+              className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium hover:opacity-80 transition-colors"
             >
               {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
               {copied ? "Kopiert!" : "Link kopieren"}

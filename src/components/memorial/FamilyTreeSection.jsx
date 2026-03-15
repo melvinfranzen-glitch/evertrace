@@ -36,7 +36,7 @@ function PersonNode({ person, isDeceased, onClick, linkedId }) {
               ? "w-16 h-16 text-white shadow-lg ring-2 ring-amber-500 ring-offset-2 text-base"
               : "w-11 h-11 text-stone-600 bg-stone-200 text-sm group-hover:ring-2 group-hover:ring-amber-400 group-hover:ring-offset-1"
           }`}
-          style={isDeceased ? { background: "linear-gradient(135deg,#92400e,#b45309)" } : {}}
+          style={isDeceased ? { background: "linear-gradient(135deg,#92400e,#c9a96e)" } : {}}
         >
           {person.photo_url
             ? <img src={person.photo_url} className="w-full h-full object-cover" alt={person.name} />
@@ -44,13 +44,13 @@ function PersonNode({ person, isDeceased, onClick, linkedId }) {
         </div>
         {hasLinked && (
           <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center shadow-sm"
-            style={{ background: "#b45309" }} title="Hat eigene Gedenkseite">
+            style={{ background: "#c9a96e" }} title="Hat eigene Gedenkseite">
             <ExternalLink className="w-2.5 h-2.5 text-white" />
           </div>
         )}
       </div>
       <div className="text-center max-w-[88px]">
-        <p className={`text-xs font-semibold leading-tight truncate group-hover:underline ${isDeceased ? "text-amber-800" : hasLinked ? "text-amber-700" : "text-gray-700"}`}>
+        <p className={`text-xs font-semibold leading-tight truncate group-hover:underline ${isDeceased ? "text-amber-800" : hasLinked ? "font-semibold" : "text-gray-700"}`}>
           {person.name}
         </p>
         {!isDeceased && (
@@ -116,7 +116,7 @@ export default function FamilyTreeSection({ memorial }) {
     <section className="py-20 px-6" style={{ background: "#FAF8F4" }}>
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-14">
-          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#b45309" }}>Familie</p>
+          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>Familie</p>
           <h2 className="text-3xl md:text-4xl font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
             Stammbaum
           </h2>
@@ -175,8 +175,8 @@ export default function FamilyTreeSection({ memorial }) {
             Auf ein Familienmitglied klicken, um das Kurzprofil anzuzeigen
           </p>
           {members.some(m => m.linked_memorial_short_id) && (
-            <div className="flex items-center gap-1.5 text-xs" style={{ color: "#b45309" }}>
-              <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ background: "#b45309" }}>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: "#c9a96e" }}>
+              <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ background: "#c9a96e" }}>
                 <ExternalLink className="w-2 h-2 text-white" />
               </div>
               <span>= eigene Gedenkseite vorhanden</span>
