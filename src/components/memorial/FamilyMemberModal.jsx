@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { X, Calendar, MapPin, Heart, MessageSquare } from "lucide-react";
+import { X, Calendar, Heart, MessageSquare, ExternalLink } from "lucide-react";
 
 const RELATION_LABEL = {
   vater: "Vater", mutter: "Mutter",
