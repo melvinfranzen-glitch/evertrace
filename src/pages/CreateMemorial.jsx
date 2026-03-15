@@ -134,6 +134,44 @@ export default function CreateMemorial() {
 
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
+  if (showShare) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4" style={{ background: "#FAFAF8" }}>
+        <div className="max-w-md w-full text-center space-y-6">
+          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 24, color: "#2c2419", fontWeight: 600 }}>
+            Möchten Sie den Link gleich teilen?
+          </h2>
+          <div className="flex items-center gap-2 rounded-xl border border-stone-200 bg-white px-4 py-3">
+            <input readOnly value={shareUrl} className="flex-1 text-sm outline-none bg-transparent" style={{ color: "#6b7280" }} />
+            <button onClick={copyShareLink} style={{ color: shareCopied ? "#16a34a" : "#c9a96e", fontSize: 12, whiteSpace: "nowrap" }}>
+              {shareCopied ? "✓ Kopiert" : "Kopieren"}
+            </button>
+          </div>
+          <div className="flex gap-3 justify-center">
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(`Gedenkseite für ${form.name}: ${shareUrl}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium"
+              style={{ background: "#25D366", color: "white" }}
+            >
+              WhatsApp teilen
+            </a>
+            <button onClick={copyShareLink}
+              className="flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium"
+              style={{ background: "rgba(201,169,110,0.12)", border: "1px solid rgba(201,169,110,0.3)", color: "#c9a96e" }}>
+              Link kopieren
+            </button>
+          </div>
+          <button onClick={() => { setShowShare(false); setCreated(true); }}
+            style={{ fontSize: 13, color: "#8a8278" }}>
+            Weiter zum Dashboard →
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (showSuccess) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: "linear-gradient(160deg, #1a1410, #231a0e)" }}>

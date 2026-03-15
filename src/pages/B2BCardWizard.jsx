@@ -407,19 +407,21 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
               </div>
 
               <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
-                <label className="block text-sm font-medium mb-3" style={{ color: "#8a8278" }}>Motivthema (Außenseite)</label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {MOTIFS.map(m => (
-                    <button key={m.id} onClick={() => setMotif(m.id)}
-                      className="p-3 rounded-xl text-center text-xs transition-all"
-                      style={{ background: motif === m.id ? `${m.color}20` : "#201e1a", border: `1px solid ${motif === m.id ? m.color : "#302d28"}`, color: motif === m.id ? m.color : "#8a8278" }}>
-                      {m.label}
-                    </button>
-                  ))}
-                </div>
+              <label className="block text-sm font-medium mb-3" style={{ color: "#8a8278" }}>Motivthema (Außenseite)</label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {MOTIFS.map(m => (
+                  <button key={m.id} onClick={() => setMotif(m.id)}
+                    className="p-3 rounded-xl text-center text-xs transition-all"
+                    style={{ background: motif === m.id ? `${m.color}20` : "#201e1a", border: `1px solid ${motif === m.id ? m.color : "#302d28"}`, color: motif === m.id ? m.color : "#8a8278" }}>
+                    {m.label}
+                  </button>
+                ))}
               </div>
-            </div>
-          )}
+              </div>
+              </>
+              )}
+              </div>
+              )}
 
           {/* Step 2 — AI preview */}
           {step === 2 && (
