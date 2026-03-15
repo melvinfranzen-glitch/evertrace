@@ -446,8 +446,8 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
               <div className="rounded-2xl p-5 md:p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
                 <h3 className="text-lg font-semibold mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Auflage</h3>
                 <div className="flex items-center gap-4 flex-wrap">
-                  <button onClick={() => setQuantity(q => Math.max(10, q - 10))} className="w-10 h-10 rounded-xl text-lg flex items-center justify-center" style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }}>−</button>
-                  <input type="number" value={quantity} onChange={e => setQuantity(Math.max(10, parseInt(e.target.value) || 10))}
+                  <button onClick={() => setQuantity(q => Math.max(25, q - 10))} className="w-10 h-10 rounded-xl text-lg flex items-center justify-center" style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }}>−</button>
+                  <input type="number" value={quantity} onChange={e => setQuantity(Math.max(25, parseInt(e.target.value) || 25))}
                     className="w-20 text-center py-2.5 rounded-xl text-lg font-semibold outline-none"
                     style={{ background: "#201e1a", border: "1px solid #c9a96e", color: "#f0ede8" }} />
                   <button onClick={() => setQuantity(q => q + 10)} className="w-10 h-10 rounded-xl text-lg flex items-center justify-center" style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }}>+</button>
