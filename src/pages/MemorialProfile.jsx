@@ -3,6 +3,22 @@ import { base44 } from "@/api/base44Client";
 import { Loader2, Lock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+
+// Curated tracks hardcoded array
+const CURATED_TRACKS = [
+  { id: "ct1", title: "Stille Momente", mood: "Ruhig & besinnlich", duration_hint: "3:24", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct2", title: "In Erinnerung", mood: "Warm & emotional", duration_hint: "4:12", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct3", title: "Abschied", mood: "Klassisch & würdevoll", duration_hint: "2:58", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct4", title: "Sanfte Wellen", mood: "Ruhig & besinnlich", duration_hint: "5:01", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct5", title: "Für immer", mood: "Warm & emotional", duration_hint: "3:47", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct6", title: "Das Licht bleibt", mood: "Klassisch & würdevoll", duration_hint: "4:33", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct7", title: "Frieden", mood: "Ruhig & besinnlich", duration_hint: "3:15", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct8", title: "Erinnerungen", mood: "Warm & emotional", duration_hint: "4:08", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct9", title: "Letzte Umarmung", mood: "Warm & emotional", duration_hint: "3:52", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct10", title: "Der Morgen danach", mood: "Klassisch & würdevoll", duration_hint: "5:20", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct11", title: "Weite", mood: "Ruhig & besinnlich", duration_hint: "6:04", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct12", title: "Geborgen", mood: "Warm & emotional", duration_hint: "3:38", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+];
 import HeroSection from "@/components/memorial/HeroSection";
 import TimelineSection from "@/components/memorial/TimelineSection";
 import CondolenceBook from "@/components/memorial/CondolenceBook";
@@ -196,7 +212,7 @@ export default function MemorialProfile() {
 
       <FamilyTreeSection memorial={memorial} />
 
-      <AudioSection tracks={audioTracks} />
+      <AudioSection tracks={audioTracks} curatedTracks={memorial.curated_track_ids ? CURATED_TRACKS.filter(t => memorial.curated_track_ids.includes(t.id)) : []} />
 
       {blogPosts.length > 0 && (
         <>
@@ -241,7 +257,7 @@ export default function MemorialProfile() {
         condolences={condolences}
       />
 
-      <FloatingMusicPlayer spotifyUrl={memorial.spotify_url} name={memorial.name} />
+      <FloatingMusicPlayer spotifyUrl={memorial.spotify_url} name={memorial.name} curatedTracks={memorial.curated_track_ids ? CURATED_TRACKS.filter(t => memorial.curated_track_ids.includes(t.id)) : []} />
 
       {/* Footer */}
       <div className="py-12 text-center border-t border-stone-100" style={{ background: "#1a1410" }}>
