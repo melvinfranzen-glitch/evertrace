@@ -17,9 +17,9 @@ export default function HomeNav() {
   }, []);
 
   const navLinks = [
-    { label: "Gedenkseiten", href: createPageUrl("Dashboard") },
-    { label: "Trauerkarten", href: createPageUrl("Dashboard") },
-    { label: "Grabplaketten mit QR-Code", href: createPageUrl("Shop") },
+    { label: "Gedenkseiten", href: createPageUrl("Dashboard") + "?tab=memorials" },
+    { label: "Trauerkarten", href: createPageUrl("Dashboard") + "?tab=cards" },
+    { label: "Lebensgeschichten", href: createPageUrl("Dashboard") + "?tab=book" },
   ];
 
   return (
