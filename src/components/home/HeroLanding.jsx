@@ -35,15 +35,15 @@ export default function HeroLanding() {
           className="text-4xl md:text-6xl font-semibold mb-7 leading-tight"
           style={{ fontFamily: "'Cormorant Garamond', serif", letterSpacing: "-0.01em" }}
         >
-          Jedes Leben
+          Ein würdevoller Ort
           <br />
-          <span style={{ color: "#c9a96e" }}>verdient ein würdiges Erbe.</span>
+          <span style={{ color: "#c9a96e" }}>für die Menschen,</span>
           <br />
-          Wir helfen, es zu bewahren.
+          die wir nie vergessen.
         </h1>
 
         <p className="text-base md:text-lg text-stone-300 max-w-2xl mx-auto mb-12 leading-relaxed font-light">
-          Evertrace verbindet Familien mit würdevollen Gedenkseiten, personalisierten Trauerkarten und bleibenden Erinnerungsstücken — für Privatpersonen und Bestattungshäuser.
+          Evertrace hilft Ihnen, die Geschichte eines geliebten Menschen dauerhaft zu bewahren — mit einer persönlichen Gedenkseite, individualisierten Trauerkarten und bleibenden Erinnerungsstücken.
         </p>
 
         {/* CTAs */}
@@ -60,25 +60,25 @@ export default function HeroLanding() {
             onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 4px 24px rgba(201,169,110,0.35)"; e.currentTarget.style.transform = "translateY(0)"; }}
           >
             <Heart className="w-4 h-4" />
-            Gedenkseite erstellen
+            Kostenlos starten
           </button>
-          <button
+          <a
+            href="/MemorialProfile?id=demo"
             className="px-10 py-4 rounded-full text-base font-medium transition-all duration-300 bg-transparent"
             style={{ border: "1px solid rgba(201,169,110,0.4)", color: "#c9a96e" }}
-            onClick={() => window.location.href = "/B2BRegister"}
             onMouseEnter={e => { e.currentTarget.style.background = "rgba(201,169,110,0.08)"; }}
             onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
           >
-            Für Bestatter →
-          </button>
+            Beispiel ansehen →
+          </a>
         </div>
 
         {/* Trust stats */}
         <div className="flex flex-wrap justify-center gap-8 md:gap-12">
           {[
-            { icon: Sparkles, label: "KI-Personalisierung", sub: "Für jeden Menschen einzigartig" },
-            { icon: Users, label: "B2B & Privat", sub: "Bestatter & Familien" },
-            { icon: ShieldCheck, label: "DSGVO-konform", sub: "Server in Deutschland" },
+            { icon: Heart, label: "Für Trauernde", sub: "Würdevoll, einfühlsam, persönlich" },
+            { icon: ShieldCheck, label: "DSGVO-konform", sub: "Daten sicher in Deutschland" },
+            { icon: Sparkles, label: "Einmalig zahlen", sub: "Gedenkseite bleibt für immer" },
           ].map(({ icon: Icon, label, sub }) => (
             <div key={label} className="flex items-center gap-3 text-left">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
