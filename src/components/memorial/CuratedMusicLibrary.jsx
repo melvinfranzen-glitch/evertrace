@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Play, Pause, Check } from "lucide-react";
 
 const CURATED_TRACKS = [
@@ -26,7 +26,7 @@ const MOOD_CATEGORIES = [
 export default function CuratedMusicLibrary({ selectedIds = [], onSelectionChange }) {
   const [playingId, setPlayingId] = useState(null);
   const [activeMoodFilter, setActiveMoodFilter] = useState("all");
-  const audioRef = React.useRef(null);
+  const audioRef = useRef(null);
 
   const filteredTracks = activeMoodFilter === "all"
     ? CURATED_TRACKS
