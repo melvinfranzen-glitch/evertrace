@@ -580,11 +580,13 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
                   ["Motiv", MOTIFS.find(m => m.id === motif)?.label || "—"],
                   ["Drucktier", tier?.label || "—"],
                   ["Auflage", `${quantity} Stk.`],
-                  ...(addonInvitation ? [["+ Einladungskarte", "Ja"]] : []),
-                  ...(addonThankyou ? [["+ Danksagungskarte", "Ja"]] : []),
+                  ["Karten", `€ ${fmtEur(cardsSubtotal)}`],
+                  ...(addonInvitation ? [["+ Einladungskarten", `€ ${fmtEur(addonInvPrice)}`]] : []),
+                  ...(addonThankyou ? [["+ Danksagungskarten", `€ ${fmtEur(addonThkPrice)}`]] : []),
                   ...(addonQr ? [["+ QR-Code", "Ja"]] : []),
+                  ["Versand", `€ ${fmtEur(shipping)}`],
                   ...(customerNotificationEmail ? [["Kunden-E-Mail", customerNotificationEmail]] : []),
-                  ["Gesamtbetrag", `€ ${totalPrice}`],
+                  ["Gesamtbetrag (netto)", `€ ${totalPrice}`],
                 ].map(([label, val]) => (
                   <div key={label} className="flex justify-between py-2 border-b text-sm last:border-0" style={{ borderColor: "#302d28" }}>
                     <span style={{ color: "#8a8278" }}>{label}</span>
