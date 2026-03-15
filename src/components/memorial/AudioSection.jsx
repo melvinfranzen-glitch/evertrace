@@ -186,7 +186,7 @@ function AudioTrack({ track }) {
   );
 }
 
-export default function AudioSection({ tracks }) {
+export default function AudioSection({ tracks, curatedTracks = [] }) {
   if (!tracks || tracks.length === 0) return null;
 
   const regularTracks = tracks.filter((t) => !t.is_letter);
