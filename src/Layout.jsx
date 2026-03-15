@@ -149,7 +149,7 @@ export default function Layout({ children, currentPageName }) {
                 (!link.auth || user) && (
                   <Link
                     key={link.page}
-                    to={createPageUrl(link.page)}
+                    to={link.href || createPageUrl(link.page)}
                     className="block px-4 py-3 rounded-xl text-sm"
                     style={{ fontFamily: "'DM Sans', sans-serif", color: "#8a8278" }}
                     onClick={() => setMenuOpen(false)}
