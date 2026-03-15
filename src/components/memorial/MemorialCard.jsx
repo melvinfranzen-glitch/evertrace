@@ -57,7 +57,7 @@ export default function MemorialCard({ memorial, onDelete }) {
           <img src={memorial.hero_image_url} alt={memorial.name} className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full flex items-center justify-center" style={{ background: "linear-gradient(135deg,#e7e0d4,#d6cfc5)" }}>
-            <span className="text-5xl font-semibold text-stone-400" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <span className="text-5xl font-semibold text-stone-400" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               {memorial.name?.[0] || "?"}
             </span>
           </div>
@@ -73,7 +73,7 @@ export default function MemorialCard({ memorial, onDelete }) {
       </div>
 
       <div className="p-5">
-        <h3 className="font-semibold text-gray-800 text-lg leading-tight mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>
+        <h3 className="font-semibold text-gray-800 text-lg leading-tight mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
           {memorial.name}
         </h3>
         <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-4">
@@ -92,12 +92,21 @@ export default function MemorialCard({ memorial, onDelete }) {
               <Eye className="w-3.5 h-3.5 mr-1" /> Ansehen
             </Button>
             <Button
-              size="sm"
-              variant="outline"
-              className="text-xs rounded-lg h-8"
-              onClick={() => window.location.href = createPageUrl(`EditMemorial`) + `?id=${memorial.id}`}
+            size="sm"
+            variant="outline"
+            className="text-xs rounded-lg h-8"
+            onClick={() => window.location.href = createPageUrl(`EditMemorial`) + `?id=${memorial.id}`}
             >
-              <Edit className="w-3.5 h-3.5 mr-1" /> Bearbeiten
+            <Edit className="w-3.5 h-3.5 mr-1" /> Bearbeiten
+            </Button>
+            <Button
+            size="sm"
+            variant="outline"
+            className="text-xs rounded-lg h-8"
+            style={{ borderColor: "rgba(201,169,110,0.4)", color: "#c9a96e" }}
+            onClick={() => window.location.href = createPageUrl("Dashboard") + `?tab=plaque&memorial_id=${memorial.short_id}`}
+            >
+            <QrCode className="w-3.5 h-3.5 mr-1" /> Plakette
             </Button>
             {!confirming ? (
               <Button
@@ -152,7 +161,7 @@ export default function MemorialCard({ memorial, onDelete }) {
           <div className="bg-white rounded-2xl p-8 shadow-2xl flex flex-col items-center gap-5 max-w-xs w-full"
             onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between w-full">
-              <p className="font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
+              <p className="font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 QR-Code · {memorial.name}
               </p>
               <button onClick={() => setQrOpen(false)} className="text-gray-400 hover:text-gray-600">
