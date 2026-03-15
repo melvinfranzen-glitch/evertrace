@@ -49,6 +49,40 @@ export default function B2BOrders() {
     await base44.entities.PrintOrder.update(orderId, { status: newStatus });
     setOrders(p => p.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
     if (selected?.id === orderId) setSelected(s => ({ ...s, status: newStatus }));
+
+    // Automatische E-Mail an Bestatter wenn "Versendet"
+    if (newStatus === "Versendet") {
+      const order = orders.find(o => o.id === orderId);
+      const u = await base44.auth.me();
+      if (u?.email) {
+        const caseName = getCase(order?.case_id);
+        const name = caseName ? `${caseName.deceased_first_name} ${caseName.deceased_last_name}` : "Unbekannt";
+        base44.integrations.Core.SendEmail({
+          to: u.email,
+          from_name: "Evertrace",
+          subject: `Bestellung versendet – ${name}`,
+          body: `Sehr geehrte/r ${funeralHome?.contact_person || "Damen und Herren"},\n\ndie Trauerkarten für den Fall "${name}" wurden soeben versandt.\n\nBestelldetails:\n- Art: ${order?.order_type}\n- Menge: ${order?.quantity} Stk.\n- Lieferung an: ${order?.delivery_name || "—"}, ${order?.delivery_street || ""}, ${order?.delivery_zip || ""} ${order?.delivery_city || ""}\n\nSie können die Bestellung in Ihrem Evertrace-Dashboard einsehen.\n\nMit freundlichen Grüßen\nIhr Evertrace-Team`,
+        }).catch(() => {});
+      }
+    }
+  };
+
+  const sendCustomerNotification = async (order) => {
+    if (!order.customer_notification_email) return;
+    setSendingNotification(true);
+    const caseName = getCase(order.case_id);
+    const name = caseName ? `${caseName.deceased_first_name} ${caseName.deceased_last_name}` : "die Bestattung";
+    await base44.integrations.Core.SendEmail({
+      to: order.customer_notification_email,
+      from_name: funeralHome?.name || "Evertrace",
+      subject: `Ihre Trauerkarten sind abholbereit`,
+      body: `Sehr geehrte Damen und Herren,\n\nwir freuen uns, Ihnen mitteilen zu können, dass Ihre Trauerkarten für ${name} nun fertiggestellt sind und zur Abholung bereitstehen.\n\nBitte kommen Sie zu unseren Geschäftszeiten vorbei oder wenden Sie sich an uns für weitere Informationen.\n\n${funeralHome?.name ? `Mit freundlichen Grüßen\n${funeralHome.name}` : "Mit freundlichen Grüßen\nIhr Bestattungsinstitut"}`,
+    });
+    await base44.entities.PrintOrder.update(order.id, { customer_notified_at: new Date().toISOString() });
+    setOrders(p => p.map(o => o.id === order.id ? { ...o, customer_notified_at: new Date().toISOString() } : o));
+    if (selected?.id === order.id) setSelected(s => ({ ...s, customer_notified_at: new Date().toISOString() }));
+    setNotificationSent(p => ({ ...p, [order.id]: true }));
+    setSendingNotification(false);
   };
 
   return (
