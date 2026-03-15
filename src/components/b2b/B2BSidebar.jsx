@@ -61,20 +61,20 @@ export default function B2BSidebar() {
 
   return (
     <>
-      {/* Desktop sidebar */}
+      {/* Sidebar — visible on md+ */}
       <div className="hidden md:flex flex-col w-56 min-h-screen fixed left-0 top-0 bottom-0 z-30" style={{ background: "#181714", borderRight: "1px solid #302d28" }}>
         <SidebarContent />
       </div>
 
-      {/* Mobile bottom bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 flex items-center justify-around px-2 py-2 border-t" style={{ background: "#181714", borderColor: "#302d28" }}>
-        {NAV.slice(0, 5).map(({ path, icon: Icon, label }) => {
+      {/* Mobile/Tablet bottom bar */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 flex items-center justify-around px-1 py-2 border-t safe-area-bottom" style={{ background: "#181714", borderColor: "#302d28" }}>
+        {NAV.map(({ path, icon: Icon, label }) => {
           const active = isActive(path);
           return (
-            <Link key={path} to={path} className="flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all"
+            <Link key={path} to={path} className="flex flex-col items-center gap-0.5 px-1.5 py-1 rounded-lg transition-all"
               style={{ color: active ? "#c9a96e" : "#5a554e" }}>
               <Icon className="w-5 h-5" />
-              <span className="text-xs">{label.split(" ")[0]}</span>
+              <span className="text-[10px]">{label.split(" ")[0]}</span>
             </Link>
           );
         })}
