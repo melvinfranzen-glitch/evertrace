@@ -246,8 +246,8 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
         ))}
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-5 gap-6 lg:gap-8">
-        <div className="xl:col-span-3 order-2 xl:order-1">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8">
+        <div className="lg:col-span-3 order-2 lg:order-1">
 
           {/* Step 0 */}
           {step === 0 && (
@@ -622,8 +622,8 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
         </div>
 
         {/* Live preview */}
-        <div className="xl:col-span-2 order-1 xl:order-2">
-          <div className="xl:sticky xl:top-8">
+        <div className="lg:col-span-2 order-1 lg:order-2">
+          <div className="lg:sticky lg:top-8">
             <div className="flex items-center gap-3 mb-3">
               <p className="text-xs uppercase tracking-widest" style={{ color: "#5a554e" }}>Vorschau</p>
               <div className="flex rounded-lg overflow-hidden border" style={{ borderColor: "#302d28" }}>

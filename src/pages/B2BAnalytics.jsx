@@ -82,7 +82,7 @@ export default function B2BAnalytics() {
   ].filter(f => f.value > 0);
 
   if (loading) {
-    return <B2BLayout title="Analysen"><div className="grid grid-cols-2 lg:grid-cols-4 gap-5">{[...Array(4)].map((_, i) => <div key={i} className="h-32 rounded-2xl animate-pulse" style={{ background: "#181714" }} />)}</div></B2BLayout>;
+    return <B2BLayout title="Analysen"><div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">{[...Array(4)].map((_, i) => <div key={i} className="h-32 rounded-2xl animate-pulse" style={{ background: "#181714" }} />)}</div></B2BLayout>;
   }
 
   return (

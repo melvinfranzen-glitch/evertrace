@@ -160,21 +160,30 @@ export default function EditMemorial() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 mb-6 overflow-x-auto pb-1">
-          {tabs.map((t) => (
-            <button
-              key={t.id}
-              onClick={() => setActiveTab(t.id)}
-              className="px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all"
+        <div className="relative mb-6">
+          <div className="flex gap-1 overflow-x-auto pb-1 scroll-smooth" style={{ scrollBehavior: 'smooth' }}>
+            {tabs.map((t) => (
+              <button
+                key={t.id}
+                onClick={() => {
+                  setActiveTab(t.id);
+                  setTimeout(() => {
+                    document.querySelector('[data-active-tab]')?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                  }, 0);
+                }}
+                data-active-tab={activeTab === t.id}
+                className="px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all flex-shrink-0"
               style={{
                 background: activeTab === t.id ? "#c9a96e" : "white",
                 color: activeTab === t.id ? "white" : "#6b7280",
                 border: `1px solid ${activeTab === t.id ? "#c9a96e" : "#e5e7eb"}`,
               }}
             >
-              {t.label}
-            </button>
-          ))}
+                {t.label}
+              </button>
+            ))}
+          </div>
+          <div className="absolute right-0 top-0 bottom-0 w-8 pointer-events-none md:hidden" style={{ background: 'linear-gradient(to left, #FAFAF8, transparent)' }} />
         </div>
 
         <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
