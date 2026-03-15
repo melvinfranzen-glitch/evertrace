@@ -12,6 +12,8 @@ function fmtDate(d) {
 
 export default function B2BPublicMemorial() {
   const [page, setPage] = useState(null);
+  const [caseData, setCaseData] = useState(null);
+  const [funeralHome, setFuneralHome] = useState(null);
   const [contributions, setContributions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({ contributor_name: "", message: "", is_candle: false });
@@ -19,16 +21,31 @@ export default function B2BPublicMemorial() {
   const [submitted, setSubmitted] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [photoUrl, setPhotoUrl] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const slug = new URLSearchParams(window.location.search).get("slug");
+  const pageUrl = window.location.href;
+
+  const copyUrl = () => {
+    navigator.clipboard.writeText(pageUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
 
   useEffect(() => {
     if (!slug) { setLoading(false); return; }
     base44.entities.B2BMemorialPage.filter({ slug }).then(async ([p]) => {
       if (!p) { setLoading(false); return; }
       setPage(p);
-      const contributions = await base44.entities.B2BContribution.filter({ memorial_page_id: p.id }, "-created_date");
+      const [contributions, cases, fhList] = await Promise.all([
+        base44.entities.B2BContribution.filter({ memorial_page_id: p.id }, "-created_date"),
+        p.case_id ? base44.entities.Case.filter({ id: p.case_id }) : Promise.resolve([]),
+        p.funeral_home_id ? base44.entities.FuneralHome.filter({ id: p.funeral_home_id }) : Promise.resolve([]),
+      ]);
       setContributions(contributions);
+      if (cases[0]) setCaseData(cases[0]);
+      if (fhList[0]) setFuneralHome(fhList[0]);
       // increment visit count
       base44.entities.B2BMemorialPage.update(p.id, { visit_count: (p.visit_count || 0) + 1 }).catch(() => {});
       setLoading(false);
