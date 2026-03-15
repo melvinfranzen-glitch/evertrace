@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
 import StatCard from "@/components/b2b/StatCard";
+import AnniversaryReminders from "@/components/dashboard/AnniversaryReminders";
 import { Users, CreditCard, Globe, Package, ArrowRight, Plus } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { format } from "date-fns";
@@ -23,11 +24,18 @@ export default function B2BDashboard() {
   const [cards, setCards] = useState([]);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  // AnniversaryReminders expects Memorial-like objects with birth_date, death_date, name
+  const caseAsMemorials = cases.map(c => ({
+    id: c.id,
+    name: `${c.deceased_first_name} ${c.deceased_last_name}`,
+    birth_date: c.date_of_birth,
+    death_date: c.date_of_death,
+  }));
 
   useEffect(() => {
     base44.auth.me().then(u => {
       Promise.all([
-        base44.entities.Case.filter({ created_by: u.email }, "-created_date", 20),
+        base44.entities.Case.filter({ created_by: u.email }, "-created_date", 100),
         base44.entities.MourningCard.filter({ created_by: u.email }, "-created_date", 50),
         base44.entities.PrintOrder.filter({ created_by: u.email }, "-created_date", 50),
       ]).then(([c, k, o]) => {
@@ -79,6 +87,9 @@ export default function B2BDashboard() {
         <StatCard label="Gedenkseiten" value={activeMemorials} icon={Globe} sub="aktiv & öffentlich" />
         <StatCard label="Offene Bestellungen" value={pendingOrders} icon={Package} sub="in Bearbeitung" />
       </div>
+
+      {/* Anniversary reminders */}
+      <AnniversaryReminders memorials={caseAsMemorials} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Chart */}

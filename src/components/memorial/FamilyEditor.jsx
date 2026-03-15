@@ -14,7 +14,7 @@ const RELATION_LABEL = {
   sohn: "Sohn", tochter: "Tochter",
 };
 
-const EMPTY = { name: "", relation: "vater", birth_year: "", death_year: "" };
+const EMPTY = { name: "", relation: "vater", birth_year: "", death_year: "", linked_memorial_short_id: "" };
 
 export default function FamilyEditor({ memorialId }) {
   const [members, setMembers] = useState([]);
@@ -104,6 +104,11 @@ export default function FamilyEditor({ memorialId }) {
           <div>
             <Label className="text-xs">Todesjahr</Label>
             <Input value={form.death_year} onChange={(e) => setForm((p) => ({ ...p, death_year: e.target.value }))} placeholder="z.B. 2010" className="mt-1" />
+          </div>
+          <div className="col-span-2">
+            <Label className="text-xs">Eigene Gedenkseite (Kurz-ID, optional)</Label>
+            <Input value={form.linked_memorial_short_id} onChange={(e) => setForm((p) => ({ ...p, linked_memorial_short_id: e.target.value.trim() }))} placeholder="z.B. abc123" className="mt-1" />
+            <p className="text-xs text-gray-400 mt-1">Verknüpft dieses Mitglied mit einer bestehenden Gedenkseite.</p>
           </div>
         </div>
         <Button
