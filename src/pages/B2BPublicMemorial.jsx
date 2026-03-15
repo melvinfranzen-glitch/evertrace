@@ -305,21 +305,7 @@ export default function B2BPublicMemorial() {
         </div>
       </section>
 
-      {/* Print book — shown to logged-in users who own this memorial page */}
-      {user && page && (
-        <section className="py-10 px-6 text-center" style={{ background: "#f0ebe1" }}>
-          <div className="max-w-md mx-auto">
-            <p className="text-xs uppercase tracking-[0.3em] mb-3" style={{ color: "#c9a96e" }}>Für das Bestattungshaus</p>
-            <button onClick={() => setShowPrintModal(true)}
-              className="flex items-center gap-2 mx-auto px-6 py-3 rounded-xl text-sm font-medium transition-all"
-              style={{ background: "#2c2419", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.4)" }}>
-              <BookOpen className="w-4 h-4" />
-              Gedenkbuch drucken
-            </button>
-            <p className="text-xs mt-2" style={{ color: "#8a8278" }}>{contributions.length} Beiträge · Hardcover Premium-Druck</p>
-          </div>
-        </section>
-      )}
+
 
       {showPrintModal && (
         <CondolenceBookPrintModal
@@ -334,8 +320,8 @@ export default function B2BPublicMemorial() {
       <div className="py-8 text-center" style={{ background: "#1a1410" }}>
         {funeralHome?.whitelabel_enabled ? (
           <div className="flex flex-col items-center gap-2">
-            {funeralHome.logo_url && <img src={funeralHome.logo_url} alt={funeralHome.name} className="h-8 object-contain" />}
-            <p className="text-sm font-medium" style={{ color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>{funeralHome.name}</p>
+            {funeralHome.logo_url && <img src={funeralHome.logo_url} alt={funeralHome.name} className="object-contain" style={{ maxHeight: 32 }} />}
+            {funeralHome.name && <p className="text-sm font-medium" style={{ color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>{funeralHome.name}</p>}
           </div>
         ) : (
           <p className="text-xs" style={{ color: "#5a554e", fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic" }}>
