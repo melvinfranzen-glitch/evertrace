@@ -113,7 +113,7 @@ export default function EditMemorial() {
               <ArrowLeft className="w-5 h-5" />
             </button>
             <div>
-              <h1 className="text-2xl font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>{memorial.name}</h1>
+              <h1 className="text-2xl font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{memorial.name}</h1>
               <p className="text-gray-500 text-sm">Gedenkseite bearbeiten</p>
             </div>
           </div>
@@ -135,7 +135,7 @@ export default function EditMemorial() {
             <Button variant="outline" size="sm" className="rounded-xl" onClick={() => window.open(`/MemorialProfile?id=${memorial.short_id}`, "_blank")}>
               <Eye className="w-4 h-4 mr-1" /> Vorschau
             </Button>
-            <Button size="sm" onClick={save} disabled={saving} className="rounded-xl text-white" style={{ background: "#b45309" }}>
+            <Button size="sm" onClick={save} disabled={saving} className="rounded-xl text-white" style={{ background: "#c9a96e" }}>
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4 mr-1" />} Speichern
             </Button>
           </div>
@@ -149,9 +149,9 @@ export default function EditMemorial() {
               onClick={() => setActiveTab(t.id)}
               className="px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all"
               style={{
-                background: activeTab === t.id ? "#b45309" : "white",
+                background: activeTab === t.id ? "#c9a96e" : "white",
                 color: activeTab === t.id ? "white" : "#6b7280",
-                border: `1px solid ${activeTab === t.id ? "#b45309" : "#e5e7eb"}`,
+                border: `1px solid ${activeTab === t.id ? "#c9a96e" : "#e5e7eb"}`,
               }}
             >
               {t.label}
@@ -182,7 +182,7 @@ export default function EditMemorial() {
                 <Label>Rohfakten & Erinnerungen</Label>
                 <Textarea value={memorial.biography_raw_input || ""} onChange={(e) => set("biography_raw_input", e.target.value)} className="mt-1 h-28 resize-none" placeholder={`Erzählen Sie uns von besonderen Momenten im Leben von ${memorial.name}. Beruf, Leidenschaften, Lieblingsplätze, unvergessliche Erlebnisse...`} />
               </div>
-              <Button onClick={generateBio} disabled={generating || !memorial.biography_raw_input} className="w-full text-white rounded-xl" style={{ background: "#b45309" }}>
+              <Button onClick={generateBio} disabled={generating || !memorial.biography_raw_input} className="w-full text-white rounded-xl" style={{ background: "#c9a96e" }}>
                 {generating ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Wird verfasst...</> : <><Sparkles className="w-4 h-4 mr-2" /> Lebensgeschichte neu verfassen</>}
               </Button>
               <div>
@@ -260,7 +260,7 @@ export default function EditMemorial() {
             <div className="space-y-4">
               <div className="flex items-center gap-3 p-4 rounded-xl border border-stone-200 cursor-pointer" onClick={() => set("is_private", !memorial.is_private)}>
                 <div className="w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all"
-                  style={{ borderColor: memorial.is_private ? "#b45309" : "#d1d5db", background: memorial.is_private ? "#b45309" : "white" }}>
+                  style={{ borderColor: memorial.is_private ? "#c9a96e" : "#d1d5db", background: memorial.is_private ? "#c9a96e" : "white" }}>
                   {memorial.is_private && <span className="text-white text-xs">✓</span>}
                 </div>
                 <div><p className="text-sm font-medium text-gray-700">Private Gedenkseite</p><p className="text-xs text-gray-400">Passwortgeschützt</p></div>
