@@ -45,7 +45,7 @@ export default function Layout({ children, currentPageName }) {
           <Link to={createPageUrl("Home")} className="flex items-center gap-2.5 shrink-0">
             <div
               className="w-9 h-9 rounded-full flex items-center justify-center shadow-sm"
-              style={{ background: "linear-gradient(135deg,#92400e,#b45309)" }}
+              style={{ background: "linear-gradient(135deg,#a07830,#c9a96e)" }}
             >
               <svg width="18" height="13" viewBox="0 0 36 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6 12C6 12 5 5 11 5C15 5 17.5 9 18 12C18.5 15 21 19 25 19C31 19 33 12 33 12C33 12 31 5 25 5C21 5 18.5 9 18 12C17.5 15 15 19 11 19C5 19 3 12 3 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -125,7 +125,7 @@ export default function Layout({ children, currentPageName }) {
                   size="sm"
                   onClick={() => base44.auth.redirectToLogin(createPageUrl("Dashboard"))}
                   className="text-white shadow-sm"
-                  style={{ background: "#b45309" }}
+                  style={{ background: "#c9a96e" }}
                 >
                   Kostenlos starten
                 </Button>
@@ -205,7 +205,7 @@ export default function Layout({ children, currentPageName }) {
                   </Button>
                   <Button
                     className="w-full text-white"
-                    style={{ background: "#b45309" }}
+                    style={{ background: "#c9a96e" }}
                     onClick={() => { setMenuOpen(false); base44.auth.redirectToLogin(createPageUrl("Dashboard")); }}
                   >
                     Kostenlos starten
@@ -224,7 +224,7 @@ export default function Layout({ children, currentPageName }) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             <div>
               <Link to={createPageUrl("Home")} className="flex items-center gap-2 mb-4">
-                <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: "linear-gradient(135deg,#92400e,#b45309)" }}>
+                <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: "linear-gradient(135deg,#a07830,#c9a96e)" }}>
                   <svg width="14" height="10" viewBox="0 0 36 24" fill="none">
                     <path d="M6 12C6 12 5 5 11 5C15 5 17.5 9 18 12C18.5 15 21 19 25 19C31 19 33 12 33 12C33 12 31 5 25 5C21 5 18.5 9 18 12C17.5 15 15 19 11 19C5 19 3 12 3 12" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
                     <circle cx="32" cy="12" r="1.8" fill="#c9a84c"/>
