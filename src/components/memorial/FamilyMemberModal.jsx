@@ -104,6 +104,20 @@ export default function FamilyMemberModal({ person, memorialId, isDeceased, onCl
             )}
           </div>
 
+          {/* Link to own memorial page */}
+          {person.linked_memorial_short_id && (
+            <a
+              href={`/MemorialProfile?id=${person.linked_memorial_short_id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all"
+              style={{ background: "#fef3c7", color: "#92400e", border: "1px solid #fde68a" }}
+            >
+              <ExternalLink className="w-4 h-4" />
+              Zur Gedenkseite von {person.name.split(" ")[0]}
+            </a>
+          )}
+
           {/* Related Memories */}
           {!isDeceased && !loadingMemories && memories.length > 0 && (
             <div className="mt-6 w-full">
