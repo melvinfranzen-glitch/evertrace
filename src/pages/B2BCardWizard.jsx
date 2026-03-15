@@ -464,11 +464,12 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
                       <div>
                         <p className="font-semibold" style={{ color: "#f0ede8", fontFamily: "'Cormorant Garamond', serif" }}>{t.label}</p>
                         <p className="text-sm mt-0.5" style={{ color: "#8a8278" }}>{t.desc}</p>
-                        <p className="text-xs mt-1" style={{ color: "#5a554e" }}>Lieferzeit: {t.delivery}</p>
+                        <p className="text-xs mt-1" style={{ color: "#5a554e" }}>Lieferzeit: {t.delivery} · Mind. {t.minQty} Stk.</p>
                       </div>
                       <div className="text-right flex-shrink-0">
-                        <p className="font-semibold" style={{ color: "#c9a96e" }}>€ {t.basePrice.toFixed(2).replace(".", ",")} / Stk.</p>
-                        <p className="text-sm mt-1" style={{ color: "#8a8278" }}>€ {(t.basePrice * quantity).toFixed(2).replace(".", ",")}</p>
+                        <p className="font-semibold" style={{ color: "#c9a96e" }}>€ {fmtEur(t.basePrice)} / Stk.</p>
+                        <p className="text-sm mt-0.5" style={{ color: "#8a8278" }}>€ {fmtEur(t.basePrice * quantity)} Karten</p>
+                        <p className="text-xs mt-0.5" style={{ color: "#5a554e" }}>+ € {fmtEur(t.shipping)} Versand</p>
                       </div>
                     </div>
                   </button>
