@@ -54,7 +54,7 @@ export default function Layout({ children, currentPageName }) {
             </div>
             <span
               className="text-lg sm:text-xl font-semibold tracking-wide"
-              style={{ fontFamily: "'Playfair Display', serif", color: "#2c1a0e", letterSpacing: "0.02em" }}
+              style={{ fontFamily: "'Cormorant Garamond', serif", color: "#2c1a0e", letterSpacing: "0.02em" }}
             >
               Ever<span style={{ color: "#b45309" }}>trace</span>
             </span>
@@ -230,7 +230,7 @@ export default function Layout({ children, currentPageName }) {
                     <circle cx="32" cy="12" r="1.8" fill="#c9a84c"/>
                   </svg>
                 </div>
-                <span className="text-lg" style={{ fontFamily: "'Playfair Display', serif", color: "#e5d5c0" }}>
+                <span className="text-lg" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#e5d5c0" }}>
                   Ever<span style={{ color: "#c9a84c" }}>trace</span>
                 </span>
               </Link>

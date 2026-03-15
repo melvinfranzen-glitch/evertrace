@@ -98,7 +98,7 @@ export default function MemorialProfile() {
     return (
       <div className="min-h-screen flex items-center justify-center text-center px-4" style={{ background: "#FAFAF8" }}>
         <div>
-          <h2 className="text-2xl font-semibold text-gray-600 mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <h2 className="text-2xl font-semibold text-gray-600 mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             Gedenkseite nicht gefunden
           </h2>
           <p className="text-gray-400">Der Link ist möglicherweise abgelaufen oder ungültig.</p>
