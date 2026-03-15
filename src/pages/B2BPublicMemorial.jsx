@@ -124,12 +124,19 @@ export default function B2BPublicMemorial() {
     <div style={{ background: "#f7f3ed", fontFamily: "'DM Sans', sans-serif", minHeight: "100vh" }}>
 
       {/* White-label top banner */}
-      {funeralHome?.whitelabel_enabled && (
-        <div className="flex items-center justify-center gap-3 px-6" style={{ height: 44, background: "#1a1410" }}>
-          {funeralHome.logo_url && <img src={funeralHome.logo_url} alt={funeralHome.name} className="h-6 object-contain" />}
-          <span className="text-sm font-medium" style={{ color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>{funeralHome.name}</span>
-        </div>
-      )}
+      {/* Top banner — always visible */}
+      <div className="flex items-center justify-center gap-3 px-6" style={{ height: 40, background: "rgba(15,14,12,0.95)", borderBottom: "1px solid rgba(201,169,110,0.15)" }}>
+        {funeralHome?.whitelabel_enabled ? (
+          <>
+            {funeralHome.logo_url && <img src={funeralHome.logo_url} alt={funeralHome.name} className="object-contain" style={{ maxHeight: 22 }} />}
+            <span className="text-sm font-medium" style={{ color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>{funeralHome.name}</span>
+          </>
+        ) : (
+          <span style={{ fontFamily: "'Cormorant Garamond', serif", color: "#c9a96e", fontSize: 15, letterSpacing: "0.02em" }}>
+            ✦ <span style={{ color: "#f0ede8" }}>Ever</span>trace
+          </span>
+        )}
+      </div>
 
       {/* Hero */}
       <div className="relative min-h-[60vh] flex flex-col items-center justify-center text-center px-6 py-20"
@@ -161,24 +168,26 @@ export default function B2BPublicMemorial() {
         </div>
       </div>
 
-      {/* Share section */}
+      {/* QR Share Panel */}
       <section className="py-8 px-6" style={{ background: "#f0ebe1", borderBottom: "1px solid #e8dfd0" }}>
-        <div className="max-w-lg mx-auto flex flex-col sm:flex-row items-center justify-center gap-4">
-          <button onClick={copyUrl}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all w-full sm:w-auto justify-center"
-            style={{ background: copied ? "rgba(74,222,128,0.1)" : "white", border: `1px solid ${copied ? "#4ade80" : "#e8dfd0"}`, color: copied ? "#4ade80" : "#4a3f35" }}>
-            {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-            {copied ? "Link kopiert!" : "Link kopieren"}
-          </button>
-          <a href={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(pageUrl)}`}
-            target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all w-full sm:w-auto justify-center"
-            style={{ background: "white", border: "1px solid #e8dfd0", color: "#4a3f35" }}>
-            <img src={`https://api.qrserver.com/v1/create-qr-code/?size=24x24&data=${encodeURIComponent(pageUrl)}`} alt="QR" className="w-5 h-5" />
-            QR-Code anzeigen
-          </a>
+        <div className="max-w-2xl mx-auto">
+          <QrSharePanel memorial={{
+            short_id: slug,
+            name: caseData ? `${caseData.deceased_first_name} ${caseData.deceased_last_name}` : "Gedenkseite"
+          }} />
         </div>
       </section>
+
+      {/* Management bar — visible only to logged-in users */}
+      {user && (
+        <div className="px-6 py-3 flex items-center justify-end gap-3" style={{ background: "#181714", border: "1px solid #302d28" }}>
+          <button onClick={() => setShowPrintModal(true)}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium"
+            style={{ background: "#c9a96e", color: "#0f0e0c" }}>
+            <BookOpen className="w-4 h-4" /> Gedenkbuch drucken
+          </button>
+        </div>
+      )}
 
       {/* Biography */}
       {page.biography && (
