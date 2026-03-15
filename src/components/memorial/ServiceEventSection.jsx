@@ -47,7 +47,7 @@ export default function ServiceEventSection({ events }) {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a84c" }}>Veranstaltungen</p>
-          <h2 className="text-3xl md:text-4xl font-semibold" style={{ fontFamily: "'Playfair Display', serif", color: "#e5d5c0" }}>
+          <h2 className="text-3xl md:text-4xl font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#e5d5c0" }}>
             Trauerfeier & Gedenken
           </h2>
         </div>
@@ -62,7 +62,7 @@ export default function ServiceEventSection({ events }) {
                     style={{ background: "rgba(201,168,76,0.15)", color: "#c9a84c" }}>
                     {EVENT_TYPE_LABELS[event.event_type] || event.event_type}
                   </span>
-                  <h3 className="font-semibold text-xl mb-3" style={{ fontFamily: "'Playfair Display', serif", color: "#e5d5c0" }}>
+                  <h3 className="font-semibold text-xl mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#e5d5c0" }}>
                     {event.title}
                   </h3>
                   <div className="space-y-2">
@@ -94,7 +94,7 @@ export default function ServiceEventSection({ events }) {
                         <Check className="w-4 h-4" /> Angemeldet
                       </div>
                     ) : (
-                      <Button onClick={() => setRsvpEvent(event)} className="text-white rounded-xl" style={{ background: "#b45309" }}>
+                      <Button onClick={() => setRsvpEvent(event)} className="text-white rounded-xl" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
                         <Users className="w-4 h-4 mr-2" /> Anmelden
                       </Button>
                     )}
@@ -131,7 +131,7 @@ export default function ServiceEventSection({ events }) {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Button onClick={submitRsvp} disabled={submitting || !rsvpForm.name} className="text-white rounded-xl" style={{ background: "#b45309" }}>
+                    <Button onClick={submitRsvp} disabled={submitting || !rsvpForm.name} className="text-white rounded-xl" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
                       {submitting && <Loader2 className="w-4 h-4 animate-spin mr-1" />} Jetzt anmelden
                     </Button>
                     <Button variant="outline" onClick={() => setRsvpEvent(null)} className="rounded-xl border-white/10 text-stone-400">
