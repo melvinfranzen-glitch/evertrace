@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Loader2, Heart, Feather, Upload, Flame, Copy, Check } from "lucide-react";
+import { Loader2, Heart, Feather, Upload, Flame, Copy, Check, BookOpen, MessageSquare } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
+import CondolenceBookPrintModal from "@/components/b2b/CondolenceBookPrintModal";
 
 function fmtDate(d) {
   if (!d) return "";
@@ -22,6 +23,12 @@ export default function B2BPublicMemorial() {
   const [uploading, setUploading] = useState(false);
   const [photoUrl, setPhotoUrl] = useState("");
   const [copied, setCopied] = useState(false);
+  const [user, setUser] = useState(null);
+  const [showPrintModal, setShowPrintModal] = useState(false);
+
+  useEffect(() => {
+    base44.auth.me().then(setUser).catch(() => {});
+  }, []);
 
   const slug = new URLSearchParams(window.location.search).get("slug");
   const pageUrl = window.location.href;
