@@ -240,6 +240,7 @@ export default function B2BSettings() {
               <div>
                 <p className="font-semibold" style={{ color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>{plan.name}</p>
                 <p className="text-sm mt-0.5" style={{ color: "#8a8278" }}>{plan.limits}</p>
+                <p className="text-xs mt-1" style={{ color: "#5a554e" }}>{plan.price} · zzgl. MwSt.</p>
               </div>
               {form.plan !== "enterprise" && (
                 <a href="/B2BRegister" className="text-sm px-4 py-2 rounded-xl" style={{ background: "#c9a96e", color: "#0f0e0c" }}>Upgraden</a>
@@ -251,8 +252,8 @@ export default function B2BSettings() {
             <h3 className="text-lg font-semibold mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Nutzungslimits</h3>
             <div className="space-y-4">
               {[
-                { label: "Fälle diesen Monat", current: home?.cases_this_month || 0, max: form.plan === "free" ? 3 : form.plan === "premium" ? 50 : Infinity },
-                { label: "KI-Karten diesen Monat", current: home?.cards_this_month || 0, max: form.plan === "free" ? 5 : form.plan === "premium" ? 50 : Infinity },
+                { label: "Fälle diesen Monat", current: home?.cases_this_month || 0, max: limits.cases },
+                { label: "KI-Karten diesen Monat", current: home?.cards_this_month || 0, max: limits.cards },
               ].map(({ label, current, max }) => {
                 const pct = max === Infinity ? 0 : Math.min(100, Math.round((current / max) * 100));
                 return (
@@ -269,6 +270,40 @@ export default function B2BSettings() {
               })}
             </div>
           </div>
+
+          {/* Upgrade plan grid */}
+          {form.plan !== "enterprise" && (
+            <div className="rounded-2xl p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
+              <h3 className="text-lg font-semibold mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Verfügbare Tarife</h3>
+              <div className="space-y-3">
+                {[
+                  { id: "starter", name: "Starter", price: "€ 39 / Monat", desc: "15 Fälle · 20 Karten · White-Label · Print-on-Demand" },
+                  { id: "premium", name: "Premium", price: "€ 99 / Monat", desc: "50 Fälle · 75 Karten · Analytics · QR-Code · Team", badge: "Empfohlen" },
+                  { id: "enterprise", name: "Enterprise", price: "Ab € 299 / Monat", desc: "Unbegrenzt · API · Dedizierter Manager · SLA" },
+                ].map(p => (
+                  <div key={p.id} className="flex items-center justify-between p-4 rounded-xl"
+                    style={{ background: "#201e1a", border: `1px solid ${p.id === "premium" ? "#c9a96e" : "#302d28"}` }}>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-semibold" style={{ color: "#f0ede8" }}>{p.name}</p>
+                        {p.badge && <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "rgba(201,169,110,0.2)", color: "#c9a96e" }}>{p.badge}</span>}
+                      </div>
+                      <p className="text-xs mt-0.5" style={{ color: "#5a554e" }}>{p.desc}</p>
+                    </div>
+                    <div className="text-right flex-shrink-0 ml-4">
+                      <p className="text-sm font-semibold" style={{ color: "#c9a96e" }}>{p.price}</p>
+                      <p className="text-xs" style={{ color: "#5a554e" }}>zzgl. MwSt.</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <a href="/B2BRegister"
+                className="mt-4 flex items-center justify-center w-full py-3 rounded-xl text-sm font-medium"
+                style={{ background: "#c9a96e", color: "#0f0e0c" }}>
+                Tarif upgraden →
+              </a>
+            </div>
+          )}
         </div>
       )}
     </B2BLayout>
