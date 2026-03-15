@@ -35,14 +35,14 @@ export default function CondolenceBook({ memorialId, condolences }) {
     <section className="py-20 px-6" style={{ background: "#F5F0E8" }}>
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-14">
-          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#b45309" }}>Worte des Trostes</p>
+          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>Worte des Trostes</p>
           <h2
             className="text-3xl md:text-4xl font-semibold text-gray-800 mb-3"
-            style={{ fontFamily: "'Playfair Display', serif" }}
+            style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
             Gedenkbuch
           </h2>
-          <p className="text-gray-400 text-sm font-light max-w-xs mx-auto" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <p className="text-gray-400 text-sm font-light max-w-xs mx-auto" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             Hinterlassen Sie eine Nachricht — für die Familie und für die Ewigkeit.
           </p>
         </div>
@@ -56,7 +56,7 @@ export default function CondolenceBook({ memorialId, condolences }) {
                   <div className="flex items-center gap-3">
                     <div
                       className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm flex-shrink-0"
-                      style={{ background: "linear-gradient(135deg,#b45309,#92400e)" }}
+                      style={{ background: "linear-gradient(135deg,#c9a96e,#a07840)" }}
                     >
                       {entry.author_name?.[0]?.toUpperCase() || "?"}
                     </div>
@@ -66,7 +66,7 @@ export default function CondolenceBook({ memorialId, condolences }) {
                     </div>
                   </div>
                 </div>
-                <p className="text-gray-600 text-sm leading-relaxed ml-13 italic" style={{ fontFamily: "'Playfair Display', serif" }}>
+                <p className="text-gray-600 text-sm leading-relaxed ml-13 italic" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                   „{entry.message}"
                 </p>
               </div>
@@ -85,7 +85,7 @@ export default function CondolenceBook({ memorialId, condolences }) {
               </svg>
               <div className="h-px w-8 bg-amber-400/40" />
             </div>
-            <h3 className="font-semibold text-gray-800 mb-2 text-lg" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <h3 className="font-semibold text-gray-800 mb-2 text-lg" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Vielen Dank für Ihre Worte
             </h3>
             <p className="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto">
@@ -93,7 +93,7 @@ export default function CondolenceBook({ memorialId, condolences }) {
             </p>
             <button
               className="mt-6 text-sm underline-offset-4 hover:underline transition-all"
-              style={{ color: "#b45309" }}
+              style={{ color: "#c9a96e" }}
               onClick={() => setSubmitted(false)}
             >
               Weitere Nachricht schreiben
@@ -102,8 +102,8 @@ export default function CondolenceBook({ memorialId, condolences }) {
         ) : (
           <div className="bg-white rounded-2xl p-8 border border-stone-100 shadow-sm">
             <div className="flex items-center gap-2 mb-6">
-              <Feather className="w-4 h-4 text-amber-700" />
-              <h3 className="font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
+              <Feather className="w-4 h-4" style={{ color: "#c9a96e" }} />
+              <h3 className="font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 Ihre Worte an die Familie
               </h3>
             </div>
@@ -133,7 +133,7 @@ export default function CondolenceBook({ memorialId, condolences }) {
                 onClick={submit}
                 disabled={!form.name.trim() || !form.message.trim() || loading}
                 className="w-full text-white rounded-xl py-5"
-                style={{ background: "#b45309" }}
+                style={{ background: "#c9a96e" }}
               >
                 {loading
                   ? <Loader2 className="w-4 h-4 mr-2 animate-spin" />

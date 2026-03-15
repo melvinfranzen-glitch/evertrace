@@ -44,7 +44,7 @@ export default function HeroSection({ memorial }) {
 
         <h1
           className="text-5xl md:text-7xl font-semibold mb-5 leading-tight"
-          style={{ fontFamily: "'Playfair Display', serif", textShadow: "0 2px 24px rgba(0,0,0,0.5)" }}
+          style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: "0 2px 24px rgba(0,0,0,0.5)" }}
         >
           {memorial.name}
         </h1>
@@ -60,7 +60,7 @@ export default function HeroSection({ memorial }) {
         {memorial.subtitle && (
           <p
             className="text-xl md:text-2xl text-stone-200/90 font-light italic max-w-xl mx-auto"
-            style={{ fontFamily: "'Playfair Display', serif", textShadow: "0 1px 12px rgba(0,0,0,0.4)" }}
+            style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: "0 1px 12px rgba(0,0,0,0.4)" }}
           >
             „{memorial.subtitle}"
           </p>
@@ -69,7 +69,7 @@ export default function HeroSection({ memorial }) {
 
       {/* Scroll invitation */}
       <div className="relative pb-10 flex flex-col items-center gap-3 text-white/50">
-        <p className="text-xs tracking-[0.25em] uppercase" style={{ fontFamily: "'Playfair Display', serif" }}>
+        <p className="text-xs tracking-[0.25em] uppercase" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
           Eine Reise durch das Leben
         </p>
         <div className="w-px h-8 bg-white/25 animate-bounce" />

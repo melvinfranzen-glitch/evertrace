@@ -61,7 +61,7 @@ export default function VirtualCandleSection({ memorialId, candles, onNewCandle 
 
         <h2
           className="text-3xl md:text-4xl font-semibold mb-3"
-          style={{ fontFamily: "'Playfair Display', serif", color: "#e5d5c0" }}
+          style={{ fontFamily: "'Cormorant Garamond', serif", color: "#e5d5c0" }}
         >
           Ein Licht entzünden
         </h2>
@@ -71,7 +71,7 @@ export default function VirtualCandleSection({ memorialId, candles, onNewCandle 
             : "Entzünden Sie eine Kerze — als stilles Zeichen Ihrer Verbundenheit."}
         </p>
         {candles.length === 0 && (
-          <p className="text-sm italic mb-8" style={{ color: "#6b5a44", fontFamily: "'Playfair Display', serif" }}>
+          <p className="text-sm italic mb-8" style={{ color: "#6b5a44", fontFamily: "'Cormorant Garamond', serif" }}>
             „Ein kleines Licht vertreibt viel Dunkel."
           </p>
         )}
@@ -88,7 +88,7 @@ export default function VirtualCandleSection({ memorialId, candles, onNewCandle 
         {done && (
           <div
             className="mb-8 px-6 py-3 rounded-full inline-block text-sm"
-            style={{ background: "rgba(201,168,76,0.12)", color: "#c9a84c", fontFamily: "'Playfair Display', serif" }}
+            style={{ background: "rgba(201,169,110,0.12)", color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}
           >
             Ihre Kerze brennt nun — herzlichen Dank.
           </div>
@@ -98,7 +98,7 @@ export default function VirtualCandleSection({ memorialId, candles, onNewCandle 
           <Button
             onClick={() => setShowing(true)}
             className="rounded-full px-8 py-5 text-white text-sm tracking-wide"
-            style={{ background: "linear-gradient(135deg,#b45309,#92400e)" }}
+            style={{ background: "linear-gradient(135deg,#c9a96e,#a07840)" }}
           >
             Kerze entzünden
           </Button>
@@ -123,7 +123,7 @@ export default function VirtualCandleSection({ memorialId, candles, onNewCandle 
                 onClick={light}
                 disabled={!form.name.trim() || loading}
                 className="flex-1 text-white rounded-xl"
-                style={{ background: "#b45309" }}
+                style={{ background: "#c9a96e" }}
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Kerze entzünden"}
               </Button>
