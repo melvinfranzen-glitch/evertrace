@@ -32,7 +32,7 @@ export default function B2BMemorial() {
   const params = new URLSearchParams(window.location.search);
   const preselectedCaseId = params.get("case_id");
 
-  const EMPTY = { case_id: preselectedCaseId || "", biography: "", funeral_date: "", funeral_location: "", privacy: "public", main_photo_url: "" };
+  const EMPTY = { case_id: preselectedCaseId || "", biography: "", funeral_date: "", funeral_location: "", privacy: "public", main_photo_url: "", linked_memorial_short_id: "" };
   const [form, setForm] = useState(EMPTY);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
