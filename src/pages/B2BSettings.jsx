@@ -34,8 +34,10 @@ export default function B2BSettings() {
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    base44.entities.FuneralHome.list("-created_date", 1).then(([h]) => {
-      if (h) { setHome(h); setForm(h); }
+    base44.auth.me().then(u => {
+      base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1).then(([h]) => {
+        if (h) { setHome(h); setForm(h); }
+      });
     });
   }, []);
 

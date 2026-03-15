@@ -27,12 +27,14 @@ export default function B2BAnalytics() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([
-      base44.entities.Case.list("-created_date", 200),
-      base44.entities.MourningCard.list("-created_date", 200),
-      base44.entities.B2BMemorialPage.list("-created_date", 200),
-      base44.entities.PrintOrder.list("-created_date", 200),
-    ]).then(([c, k, p, o]) => { setCases(c); setCards(k); setPages(p); setOrders(o); setLoading(false); });
+    base44.auth.me().then(u => {
+      Promise.all([
+        base44.entities.Case.filter({ created_by: u.email }, "-created_date", 200),
+        base44.entities.MourningCard.filter({ created_by: u.email }, "-created_date", 200),
+        base44.entities.B2BMemorialPage.filter({ created_by: u.email }, "-created_date", 200),
+        base44.entities.PrintOrder.filter({ created_by: u.email }, "-created_date", 200),
+      ]).then(([c, k, p, o]) => { setCases(c); setCards(k); setPages(p); setOrders(o); setLoading(false); });
+    });
   }, []);
 
   const now = new Date();
