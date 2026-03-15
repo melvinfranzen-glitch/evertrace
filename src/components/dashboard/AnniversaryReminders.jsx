@@ -108,14 +108,15 @@ export default function AnniversaryReminders({ memorials }) {
     <>
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-4">
-          <Bell className="w-4 h-4 text-amber-600" />
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-amber-700">Bevorstehende Jahrestage</h2>
+          <Bell className="w-4 h-4" style={{ color: "#c9a96e" }} />
+          <h2 className="text-sm font-semibold uppercase tracking-widest" style={{ color: "#c9a96e" }}>Bevorstehende Jahrestage</h2>
         </div>
         <div className="space-y-3">
           {visibleReminders.map((r) => (
             <div
               key={r.key}
-              className="flex items-start gap-4 bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4"
+              className="flex items-start gap-4 rounded-2xl px-5 py-4"
+              style={{ background: "rgba(201,169,110,0.08)", border: "1px solid rgba(201,169,110,0.25)" }}
             >
               <div className="mt-0.5">
                 {r.occasion === "geburtstag"
