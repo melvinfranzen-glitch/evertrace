@@ -133,30 +133,59 @@ export default function B2BCases() {
           </div>
         ) : (
           filtered.map((c, i) => (
-            <div key={c.id} className="grid grid-cols-12 gap-4 px-5 py-4 items-center transition-all border-b"
-              style={{ background: i % 2 === 0 ? "#181714" : "#1a1917", borderColor: "#302d28" }}>
-              <div className="col-span-3">
-                <Link to={`/B2BCaseDetail?id=${c.id}`} className="font-medium text-sm hover:underline" style={{ color: "#f0ede8" }}>
-                  {c.deceased_first_name} {c.deceased_last_name}
-                </Link>
-                <p className="text-xs mt-0.5" style={{ color: "#5a554e" }}>* {fmtDate(c.date_of_birth)}</p>
+            <div key={c.id}>
+              {/* Desktop row (md+) */}
+              <div className="hidden md:grid grid-cols-12 gap-4 px-5 py-4 items-center transition-all border-b"
+                style={{ background: i % 2 === 0 ? "#181714" : "#1a1917", borderColor: "#302d28" }}>
+                <div className="col-span-3">
+                  <Link to={`/B2BCaseDetail?id=${c.id}`} className="font-medium text-sm hover:underline" style={{ color: "#f0ede8" }}>
+                    {c.deceased_first_name} {c.deceased_last_name}
+                  </Link>
+                  <p className="text-xs mt-0.5" style={{ color: "#5a554e" }}>* {fmtDate(c.date_of_birth)}</p>
+                </div>
+                <div className="col-span-2 text-sm" style={{ color: "#8a8278" }}>{fmtDate(c.date_of_death)}</div>
+                <div className="col-span-2 text-sm" style={{ color: "#8a8278" }}>{c.burial_type || "—"}</div>
+                <div className="col-span-2 flex gap-2">
+                  {c.has_card && <span title="Trauerkarte"><CreditCard className="w-4 h-4" style={{ color: "#c9a96e" }} /></span>}
+                  {c.has_memorial && <span title="Gedenkseite"><Globe className="w-4 h-4" style={{ color: "#4ade80" }} /></span>}
+                  {c.has_order && <span title="Bestellung"><Package className="w-4 h-4" style={{ color: "#60a5fa" }} /></span>}
+                </div>
+                <div className="col-span-2">
+                  <span className="text-xs px-2.5 py-1 rounded-full" style={{ background: `${STATUS_COLORS[c.status]}20`, color: STATUS_COLORS[c.status] }}>
+                    {c.status}
+                  </span>
+                </div>
+                <div className="col-span-1 flex justify-end">
+                  <button onClick={() => setDeleteId(c.id)} className="p-1.5 rounded-lg transition-all" style={{ color: "#5a554e" }}>
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
-              <div className="col-span-2 text-sm" style={{ color: "#8a8278" }}>{fmtDate(c.date_of_death)}</div>
-              <div className="col-span-2 text-sm" style={{ color: "#8a8278" }}>{c.burial_type || "—"}</div>
-              <div className="col-span-2 flex gap-2">
-                {c.has_card && <span title="Trauerkarte"><CreditCard className="w-4 h-4" style={{ color: "#c9a96e" }} /></span>}
-                {c.has_memorial && <span title="Gedenkseite"><Globe className="w-4 h-4" style={{ color: "#4ade80" }} /></span>}
-                {c.has_order && <span title="Bestellung"><Package className="w-4 h-4" style={{ color: "#60a5fa" }} /></span>}
-              </div>
-              <div className="col-span-2">
-                <span className="text-xs px-2.5 py-1 rounded-full" style={{ background: `${STATUS_COLORS[c.status]}20`, color: STATUS_COLORS[c.status] }}>
-                  {c.status}
-                </span>
-              </div>
-              <div className="col-span-1 flex justify-end">
-                <button onClick={() => setDeleteId(c.id)} className="p-1.5 rounded-lg transition-all" style={{ color: "#5a554e" }}>
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
+
+              {/* Mobile card (below md) */}
+              <div className="md:hidden p-4 border-b" style={{ background: i % 2 === 0 ? "#181714" : "#1a1917", borderColor: "#302d28" }}>
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <Link to={`/B2BCaseDetail?id=${c.id}`} className="font-semibold text-base hover:underline leading-tight" style={{ color: "#f0ede8", fontFamily: "'Cormorant Garamond', serif" }}>
+                    {c.deceased_first_name} {c.deceased_last_name}
+                  </Link>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <span className="text-xs px-2.5 py-1 rounded-full" style={{ background: `${STATUS_COLORS[c.status]}20`, color: STATUS_COLORS[c.status] }}>
+                      {c.status}
+                    </span>
+                    <button onClick={() => setDeleteId(c.id)} className="p-1.5 rounded-lg" style={{ color: "#5a554e" }}>
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 text-xs mb-2" style={{ color: "#8a8278" }}>
+                  {c.date_of_death && <span>† {fmtDate(c.date_of_death)}</span>}
+                  {c.burial_type && <span>{c.burial_type}</span>}
+                </div>
+                <div className="flex gap-2">
+                  {c.has_card && <span title="Trauerkarte"><CreditCard className="w-4 h-4" style={{ color: "#c9a96e" }} /></span>}
+                  {c.has_memorial && <span title="Gedenkseite"><Globe className="w-4 h-4" style={{ color: "#4ade80" }} /></span>}
+                  {c.has_order && <span title="Bestellung"><Package className="w-4 h-4" style={{ color: "#60a5fa" }} /></span>}
+                </div>
               </div>
             </div>
           ))
