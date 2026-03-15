@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
 import StatCard from "@/components/b2b/StatCard";
 import AnniversaryReminders from "@/components/dashboard/AnniversaryReminders";
+import OnboardingFlow from "@/components/b2b/OnboardingFlow";
 import { Users, CreditCard, Globe, Package, ArrowRight, Plus } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { format } from "date-fns";
@@ -23,6 +24,7 @@ export default function B2BDashboard() {
   const [cases, setCases] = useState([]);
   const [cards, setCards] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [funeralHome, setFuneralHome] = useState(null);
   const [loading, setLoading] = useState(true);
   // AnniversaryReminders expects Memorial-like objects with birth_date, death_date, name
   const caseAsMemorials = cases.map(c => ({
@@ -38,8 +40,9 @@ export default function B2BDashboard() {
         base44.entities.Case.filter({ created_by: u.email }, "-created_date", 100),
         base44.entities.MourningCard.filter({ created_by: u.email }, "-created_date", 50),
         base44.entities.PrintOrder.filter({ created_by: u.email }, "-created_date", 50),
-      ]).then(([c, k, o]) => {
-        setCases(c); setCards(k); setOrders(o); setLoading(false);
+        base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1),
+      ]).then(([c, k, o, fh]) => {
+        setCases(c); setCards(k); setOrders(o); setFuneralHome(fh[0] || null); setLoading(false);
       });
     });
   }, []);
@@ -70,7 +73,11 @@ export default function B2BDashboard() {
     );
   }
 
+  const showOnboarding = funeralHome && funeralHome.onboarding_completed === false;
+
   return (
+    <>
+    {showOnboarding && <OnboardingFlow funeralHome={funeralHome} onComplete={() => setFuneralHome(p => ({ ...p, onboarding_completed: true }))} />}
     <B2BLayout
       title="Übersicht"
       subtitle={`${format(new Date(), "EEEE, dd. MMMM yyyy", { locale: de })}`}
@@ -141,5 +148,6 @@ export default function B2BDashboard() {
         </div>
       </div>
     </B2BLayout>
+    </>
   );
 }
