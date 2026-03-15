@@ -37,7 +37,9 @@ export default function B2BCases() {
   const [sortDir, setSortDir] = useState(-1);
 
   useEffect(() => {
-    base44.entities.Case.list("-created_date", 100).then(d => { setCases(d); setLoading(false); });
+    base44.auth.me().then(u => {
+      base44.entities.Case.filter({ created_by: u.email }, "-created_date", 100).then(d => { setCases(d); setLoading(false); });
+    });
   }, []);
 
   const set = (k, v) => { setForm(p => ({ ...p, [k]: v })); setErrors(p => ({ ...p, [k]: "" })); };

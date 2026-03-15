@@ -38,10 +38,12 @@ export default function B2BMemorial() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    Promise.all([
-      base44.entities.B2BMemorialPage.list("-created_date", 50),
-      base44.entities.Case.list("-created_date", 100),
-    ]).then(([p, c]) => { setPages(p); setCases(c); setLoading(false); });
+    base44.auth.me().then(u => {
+      Promise.all([
+        base44.entities.B2BMemorialPage.filter({ created_by: u.email }, "-created_date", 50),
+        base44.entities.Case.filter({ created_by: u.email }, "-created_date", 100),
+      ]).then(([p, c]) => { setPages(p); setCases(c); setLoading(false); });
+    });
     if (preselectedCaseId) setShowModal(true);
   }, []);
 
