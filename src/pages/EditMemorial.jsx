@@ -10,9 +10,26 @@ import FamilyEditor from "@/components/memorial/FamilyEditor";
 import TimelineEditor from "@/components/memorial/TimelineEditor";
 import QrSharePanel from "@/components/memorial/QrSharePanel";
 import AudioUploader from "@/components/memorial/AudioUploader";
+import CuratedMusicLibrary from "@/components/memorial/CuratedMusicLibrary";
 import LegacyEditor from "@/components/memorial/LegacyEditor";
 import ServiceEventEditor from "@/components/memorial/ServiceEventEditor";
 import MemoryWallModerator from "@/components/memorial/MemoryWallModerator";
+
+// Curated tracks array
+const CURATED_TRACKS = [
+  { id: "ct1", title: "Stille Momente", mood: "Ruhig & besinnlich", duration_hint: "3:24", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct2", title: "In Erinnerung", mood: "Warm & emotional", duration_hint: "4:12", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct3", title: "Abschied", mood: "Klassisch & würdevoll", duration_hint: "2:58", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct4", title: "Sanfte Wellen", mood: "Ruhig & besinnlich", duration_hint: "5:01", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct5", title: "Für immer", mood: "Warm & emotional", duration_hint: "3:47", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct6", title: "Das Licht bleibt", mood: "Klassisch & würdevoll", duration_hint: "4:33", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct7", title: "Frieden", mood: "Ruhig & besinnlich", duration_hint: "3:15", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct8", title: "Erinnerungen", mood: "Warm & emotional", duration_hint: "4:08", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct9", title: "Letzte Umarmung", mood: "Warm & emotional", duration_hint: "3:52", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct10", title: "Der Morgen danach", mood: "Klassisch & würdevoll", duration_hint: "5:20", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct11", title: "Weite", mood: "Ruhig & besinnlich", duration_hint: "6:04", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+  { id: "ct12", title: "Geborgen", mood: "Warm & emotional", duration_hint: "3:38", audio_url: "REPLACE_WITH_PIXABAY_URL" },
+];
 
 export default function EditMemorial() {
   const [memorial, setMemorial] = useState(null);
@@ -23,6 +40,7 @@ export default function EditMemorial() {
   const [generating, setGenerating] = useState(false);
   const [activeTab, setActiveTab] = useState("info");
   const [newEvent, setNewEvent] = useState({ year: "", title: "", description: "" });
+  const [musicTabView, setMusicTabView] = useState("spotify");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -172,7 +190,6 @@ export default function EditMemorial() {
                 <div><Label>Sterbeort</Label><Input value={memorial.death_place || ""} onChange={(e) => set("death_place", e.target.value)} className="mt-1" /></div>
               </div>
               <div><Label>Leitspruch</Label><Input value={memorial.subtitle || ""} onChange={(e) => set("subtitle", e.target.value)} className="mt-1" /></div>
-              <div><Label>Spotify-URL</Label><Input value={memorial.spotify_url || ""} onChange={(e) => set("spotify_url", e.target.value)} placeholder="https://open.spotify.com/playlist/..." className="mt-1" /></div>
             </div>
           )}
 
@@ -231,7 +248,63 @@ export default function EditMemorial() {
               </div>
 
               <div className="border-t border-stone-200 pt-6">
-                <AudioUploader memorialId={memorial.id} />
+                <Label className="block mb-4">Musik & Audio</Label>
+                <div className="flex gap-2 mb-6">
+                  {["spotify", "curated", "uploads"].map(v => (
+                    <button
+                      key={v}
+                      onClick={() => setMusicTabView(v)}
+                      className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
+                      style={{
+                        background: musicTabView === v ? "#c9a96e" : "white",
+                        color: musicTabView === v ? "white" : "#6b7280",
+                        border: `1px solid ${musicTabView === v ? "#c9a96e" : "#e5e7eb"}`,
+                      }}
+                    >
+                      {v === "spotify" ? "Spotify-Playlist" : v === "curated" ? "Trauermusik-Bibliothek" : "Eigene Aufnahmen"}
+                    </button>
+                  ))}
+                </div>
+
+                {musicTabView === "spotify" && (
+                  <div>
+                    <Label>Spotify-Playlist verknüpfen</Label>
+                    <p style={{ fontSize: 12, color: "#8a8278", fontFamily: "'DM Sans', sans-serif", marginTop: 4, marginBottom: 8 }}>
+                      Fügen Sie den Link zu einer öffentlichen Spotify-Playlist ein. Die Musik wird direkt auf der Gedenkseite eingebettet. Hörer benötigen keinen Spotify-Account für 30-Sekunden-Vorschauen.
+                    </p>
+                    <Input value={memorial.spotify_url || ""} onChange={(e) => set("spotify_url", e.target.value)} placeholder="https://open.spotify.com/playlist/..." className="mt-2" />
+                    {memorial.spotify_url && (
+                      <div className="mt-4 rounded-xl overflow-hidden" style={{ border: "1px solid #e5e7eb" }}>
+                        <iframe
+                          src={(() => {
+                            const match = memorial.spotify_url.match(/spotify\.com\/(playlist|track)\/([a-zA-Z0-9]+)/);
+                            if (!match) return "";
+                            const [, type, id] = match;
+                            return `https://open.spotify.com/embed/${type}/${id}`;
+                          })()}
+                          width="100%"
+                          height={152}
+                          frameBorder="0"
+                          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                          style={{ borderRadius: 12, border: "none" }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {musicTabView === "curated" && (
+                  <div>
+                    <CuratedMusicLibrary 
+                      selectedIds={memorial.curated_track_ids || []}
+                      onSelectionChange={(ids) => set("curated_track_ids", ids)}
+                    />
+                  </div>
+                )}
+
+                {musicTabView === "uploads" && (
+                  <AudioUploader memorialId={memorial.id} />
+                )}
               </div>
             </div>
           )}
