@@ -12,7 +12,7 @@ export default function TestimonialsSection() {
           className="text-4xl md:text-5xl font-semibold text-white mb-5 leading-tight"
           style={{ fontFamily: "'Cormorant Garamond', serif" }}
         >
-          Werden Sie Teil der ersten Gemeinschaft
+          Werden Sie Teil unserer wachsenden Gemeinschaft
         </h2>
         <p className="text-stone-400 font-light max-w-xl mx-auto leading-relaxed text-base mb-12">
           Evertrace befindet sich im Aufbau. Wir suchen die ersten Familien und Bestattungshäuser, die gemeinsam mit uns eine neue Form des digitalen Gedenkens gestalten möchten.

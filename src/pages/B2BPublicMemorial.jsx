@@ -309,7 +309,7 @@ export default function B2BPublicMemorial() {
 
       {/* Footer */}
       <div className="py-8 text-center" style={{ background: "#1a1410" }}>
-        {funeralHome?.whitelabel_enabled ? (
+        {funeralHome?.whitelabel_enabled && funeralHome?.logo_url ? (
           <div className="flex flex-col items-center gap-2">
             {funeralHome.logo_url && <img src={funeralHome.logo_url} alt={funeralHome.name} className="object-contain" style={{ maxHeight: 32 }} />}
             {funeralHome.name && <p className="text-sm font-medium" style={{ color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>{funeralHome.name}</p>}

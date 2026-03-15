@@ -22,17 +22,17 @@ export default function B2BRegister() {
   const set = (k, v) => { setForm(p => ({ ...p, [k]: v })); setErrors(p => ({ ...p, [k]: "" })); };
 
   const validateStep = () => {
-    const e = {};
-    if (step === 1) {
-      if (!form.name.trim()) e.name = "Firmenname ist erforderlich.";
-      if (!form.company_address.trim()) e.company_address = "Adresse ist erforderlich.";
-      if (!form.vat_number.trim()) e.vat_number = "Steuernummer ist erforderlich.";
-    }
-    if (step === 2) {
-      if (!form.contact_person.trim()) e.contact_person = "Ansprechpartner ist erforderlich.";
-      if (!form.contact_email.trim() || !form.contact_email.includes("@")) e.contact_email = "Gültige E-Mail-Adresse erforderlich.";
-      if (!form.contact_phone.trim()) e.contact_phone = "Telefonnummer ist erforderlich.";
-    }
+   const e = {};
+   if (step === 0) {
+     if (!form.name.trim()) e.name = "Firmenname ist erforderlich.";
+     if (!form.company_address.trim()) e.company_address = "Adresse ist erforderlich.";
+   }
+   if (step === 1) {
+     if (!form.contact_person.trim()) e.contact_person = "Ansprechpartner ist erforderlich.";
+     if (!form.contact_email.trim() || !form.contact_email.includes("@")) e.contact_email = "Gültige E-Mail-Adresse erforderlich.";
+     if (!form.contact_phone.trim()) e.contact_phone = "Telefonnummer ist erforderlich.";
+   }
+   if (step === 2) {}
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -40,10 +40,12 @@ export default function B2BRegister() {
   const next = () => { if (validateStep()) setStep(s => s + 1); };
 
   const submit = async () => {
-    setLoading(true);
-    await base44.entities.FuneralHome.create({ ...form, plan: selectedPlan, verified: false });
-    setLoading(false);
-    setDone(true);
+   setLoading(true);
+   await base44.entities.FuneralHome.create({ ...form, plan: selectedPlan, verified: false });
+   setLoading(false);
+   setTimeout(() => {
+     base44.auth.redirectToLogin(createPageUrl("B2BDashboard"));
+   }, 2000);
   };
 
   if (done) {
@@ -106,35 +108,29 @@ export default function B2BRegister() {
           ))}
         </div>
 
-        {/* Step 0 — Plan */}
+        {/* Step 0 — Plan & Company */}
         {step === 0 && (
           <div>
             <h1 className="text-4xl font-semibold text-center mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>
               Tarif wählen
             </h1>
-            <p className="text-center mb-12" style={{ color: "#8a8278" }}>Starten Sie kostenlos oder wählen Sie direkt den vollen Funktionsumfang. Alle Preise zzgl. MwSt.</p>
+            <p className="text-center mb-8" style={{ color: "#8a8278" }}>Starten Sie kostenlos oder wählen Sie direkt den vollen Funktionsumfang. Alle Preise zzgl. MwSt.</p>
             <B2BPricingGrid selectedPlan={selectedPlan} onSelect={setSelectedPlan} />
-            <div className="flex justify-center mt-10">
-              <button onClick={next} className="flex items-center gap-2 px-8 py-3 rounded-xl font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
-                Weiter <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Step 1 — Company */}
-        {step === 1 && (
-          <div className="max-w-lg mx-auto">
-            <h1 className="text-3xl font-semibold text-center mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Unternehmensdaten</h1>
+            
+            <div className="mt-12 max-w-lg mx-auto">
+            <h2 className="text-3xl font-semibold text-center mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Unternehmensdaten</h2>
             <p className="text-center mb-10" style={{ color: "#8a8278" }}>Angaben zu Ihrem Bestattungsunternehmen.</p>
             <div className="space-y-5">
               {[
                 { k: "name", label: "Firmenname", icon: Building2, placeholder: "Bestattungshaus Müller GmbH" },
                 { k: "company_address", label: "Adresse", icon: MapPin, placeholder: "Musterstraße 12, 80331 München" },
-                { k: "vat_number", label: "Steuernummer / USt-IdNr.", icon: FileText, placeholder: "DE 123 456 789" },
-              ].map(({ k, label, icon: Icon, placeholder }) => (
+                { k: "vat_number", label: "Steuernummer / USt-IdNr.", icon: FileText, placeholder: "DE 123 456 789", optional: true },
+              ].map(({ k, label, icon: Icon, placeholder, optional }) => (
                 <div key={k}>
-                  <label className="block text-sm mb-1.5" style={{ color: "#8a8278" }}>{label}</label>
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <label className="block text-sm" style={{ color: "#8a8278" }}>{label}</label>
+                    {optional && <span style={{ fontSize: 11, color: "#8a8278" }}>(optional)</span>}
+                  </div>
                   <div className="relative">
                     <Icon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "#5a554e" }} />
                     <input value={form[k]} onChange={e => set(k, e.target.value)} placeholder={placeholder}
@@ -146,16 +142,16 @@ export default function B2BRegister() {
               ))}
             </div>
             <div className="flex gap-3 mt-8">
-              <button onClick={() => setStep(0)} className="flex-1 py-3 rounded-xl text-sm font-medium border transition-all" style={{ borderColor: "#302d28", color: "#8a8278" }}>Zurück</button>
               <button onClick={next} className="flex-1 py-3 rounded-xl text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>Weiter</button>
+            </div>
             </div>
           </div>
         )}
 
-        {/* Step 2 — Contact */}
-        {step === 2 && (
+        {/* Step 1 — Contact */}
+        {step === 1 && (
           <div className="max-w-lg mx-auto">
-            <h1 className="text-3xl font-semibold text-center mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Kontaktdaten</h1>
+            <h2 className="text-3xl font-semibold text-center mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Kontaktdaten</h2>
             <p className="text-center mb-10" style={{ color: "#8a8278" }}>Angaben zum verantwortlichen Ansprechpartner.</p>
             <div className="space-y-5">
               {[
@@ -176,16 +172,16 @@ export default function B2BRegister() {
               ))}
             </div>
             <div className="flex gap-3 mt-8">
-              <button onClick={() => setStep(1)} className="flex-1 py-3 rounded-xl text-sm font-medium border" style={{ borderColor: "#302d28", color: "#8a8278" }}>Zurück</button>
+              <button onClick={() => setStep(0)} className="flex-1 py-3 rounded-xl text-sm font-medium border" style={{ borderColor: "#302d28", color: "#8a8278" }}>Zurück</button>
               <button onClick={next} className="flex-1 py-3 rounded-xl text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>Weiter</button>
             </div>
           </div>
         )}
 
-        {/* Step 3 — Confirm */}
-        {step === 3 && (
+        {/* Step 2 — Confirm */}
+        {step === 2 && (
           <div className="max-w-lg mx-auto">
-            <h1 className="text-3xl font-semibold text-center mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Zusammenfassung</h1>
+            <h2 className="text-3xl font-semibold text-center mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Zusammenfassung</h2>
             <p className="text-center mb-10" style={{ color: "#8a8278" }}>Bitte überprüfen Sie Ihre Angaben.</p>
             <div className="rounded-2xl p-6 space-y-4" style={{ background: "#181714", border: "1px solid #302d28" }}>
               {[
@@ -205,7 +201,7 @@ export default function B2BRegister() {
             </div>
             <p className="text-xs text-center mt-4" style={{ color: "#5a554e" }}>Mit der Registrierung stimmen Sie unseren AGB und der Datenschutzerklärung zu.</p>
             <div className="flex gap-3 mt-6">
-              <button onClick={() => setStep(2)} className="flex-1 py-3 rounded-xl text-sm font-medium border" style={{ borderColor: "#302d28", color: "#8a8278" }}>Zurück</button>
+              <button onClick={() => setStep(1)} className="flex-1 py-3 rounded-xl text-sm font-medium border" style={{ borderColor: "#302d28", color: "#8a8278" }}>Zurück</button>
               <button onClick={submit} disabled={loading} className="flex-1 py-3 rounded-xl text-sm font-medium flex items-center justify-center gap-2" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
                 {loading ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" /> : null}
                 Registrierung abschicken
