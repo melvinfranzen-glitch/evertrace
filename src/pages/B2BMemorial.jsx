@@ -211,6 +211,22 @@ export default function B2BMemorial() {
               </div>
 
               <div>
+                <label className="text-xs mb-1.5 block" style={{ color: "#8a8278" }}>
+                  Verknüpfte B2C-Gedenkseite (optional)
+                </label>
+                <input
+                  value={form.linked_memorial_short_id}
+                  onChange={e => set("linked_memorial_short_id", e.target.value.trim())}
+                  placeholder="Kurz-ID der Gedenkseite, z.B. abc123"
+                  className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
+                  style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }}
+                />
+                <p className="text-xs mt-1" style={{ color: "#5a554e" }}>
+                  Die Kurz-ID findet sich in der URL: /MemorialProfile?id=<span style={{ color: "#c9a96e" }}>KURZ-ID</span>
+                </p>
+              </div>
+
+              <div>
                 <label className="text-xs mb-1.5 block" style={{ color: "#8a8278" }}>Datenschutz</label>
                 <div className="grid grid-cols-3 gap-2">
                   {Object.entries(PRIVACY_CONFIG).map(([key, cfg]) => {
