@@ -149,8 +149,8 @@ export default function B2BMemorial() {
                       style={{ background: "#201e1a", color: "#c9a96e", border: "1px solid #302d28" }}>
                       <ExternalLink className="w-3 h-3" /> B2B-Seite
                     </a>
-                    {c?.short_id ? (
-                      <a href={`/MemorialProfile?id=${c.short_id}`} target="_blank" rel="noopener noreferrer"
+                    {(page.linked_memorial_short_id || c?.short_id) ? (
+                      <a href={`/MemorialProfile?id=${page.linked_memorial_short_id || c?.short_id}`} target="_blank" rel="noopener noreferrer"
                         className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs transition-all"
                         style={{ background: "rgba(201,169,110,0.08)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}>
                         <ExternalLink className="w-3 h-3" /> Gedenkseite
