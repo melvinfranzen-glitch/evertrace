@@ -16,8 +16,8 @@ export default function LegacySection({ entries }) {
     <section className="py-20 px-6" style={{ background: "white" }}>
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-14">
-          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#b45309" }}>Vermächtnis</p>
-          <h2 className="text-3xl md:text-4xl font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>Vermächtnis</p>
+          <h2 className="text-3xl md:text-4xl font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             Lebenswerk & Werte
           </h2>
         </div>
@@ -35,7 +35,7 @@ export default function LegacySection({ entries }) {
                   </div>
                   <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">{cat.label}</span>
                 </div>
-                <h3 className="font-semibold text-gray-800 mb-2 text-base" style={{ fontFamily: "'Playfair Display', serif" }}>
+                <h3 className="font-semibold text-gray-800 mb-2 text-base" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                   {entry.title}
                 </h3>
                 {entry.description && (

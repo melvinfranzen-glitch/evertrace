@@ -24,8 +24,8 @@ export default function TimelineSection({ events }) {
     <section className="py-20 px-6" style={{ background: "#F5F0E8" }}>
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-14">
-          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#b45309" }}>Lebensweg</p>
-          <h2 className="text-3xl md:text-4xl font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>Lebensweg</p>
+          <h2 className="text-3xl md:text-4xl font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             Stationen des Lebens
           </h2>
         </div>
@@ -43,7 +43,7 @@ export default function TimelineSection({ events }) {
                 <div key={event.id} className={`relative flex flex-col md:flex-row items-start gap-6 ${isLeft ? "" : "md:flex-row-reverse"}`}>
                   {/* Year bubble */}
                   <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 w-14 h-14 rounded-full items-center justify-center z-10 flex-col gap-0.5 shadow-md"
-                    style={{ background: "linear-gradient(135deg,#b45309,#92400e)" }}>
+                    style={{ background: "linear-gradient(135deg,#c9a96e,#a07840)" }}>
                     <Icon className="w-4 h-4 text-white opacity-80" />
                     <span className="text-white text-[10px] font-bold text-center leading-tight px-1">{event.year}</span>
                   </div>
@@ -52,7 +52,7 @@ export default function TimelineSection({ events }) {
                   <div className={`md:w-5/12 bg-white rounded-2xl p-6 shadow-sm border border-stone-100 ${isLeft ? "md:mr-auto" : "md:ml-auto"}`}>
                     {/* Mobile: type badge + year */}
                     <div className="md:hidden flex items-center gap-2 mb-3">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold text-white" style={{ background: "#b45309" }}>
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold text-white" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
                         <Icon className="w-3 h-3" /> {event.year}
                       </span>
                       <span className="text-xs text-gray-400">{type.label}</span>
@@ -72,7 +72,7 @@ export default function TimelineSection({ events }) {
                       </span>
                     </div>
 
-                    <h3 className="font-semibold text-gray-800 text-lg mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    <h3 className="font-semibold text-gray-800 text-lg mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                       {event.title}
                     </h3>
                     {event.description && (

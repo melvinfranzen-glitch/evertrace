@@ -37,11 +37,11 @@ export default function MemoryWallSection({ memorialId, entries }) {
     <section className="py-20 px-6" style={{ background: "#F5F0E8" }}>
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-14">
-          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#b45309" }}>Gemeinsam erinnern</p>
-          <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>Gemeinsam erinnern</p>
+          <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             Erinnerungswand
           </h2>
-          <p className="text-gray-400 text-sm font-light max-w-sm mx-auto" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <p className="text-gray-400 text-sm font-light max-w-sm mx-auto" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             Teilen Sie eine persönliche Geschichte, ein Foto oder einen Moment, der Ihnen am Herzen liegt.
           </p>
 
@@ -49,7 +49,7 @@ export default function MemoryWallSection({ memorialId, entries }) {
             <Button
               onClick={() => setShowForm(true)}
               className="mt-6 text-white rounded-full px-7"
-              style={{ background: "#b45309" }}
+              style={{ background: "#c9a96e" }}
             >
               <Heart className="w-4 h-4 mr-2" /> Eine Erinnerung teilen
             </Button>
@@ -57,7 +57,7 @@ export default function MemoryWallSection({ memorialId, entries }) {
           {submitted && (
             <div
               className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm"
-              style={{ background: "rgba(180,83,9,0.08)", color: "#92400e", fontFamily: "'Playfair Display', serif" }}
+              style={{ background: "rgba(201,169,110,0.08)", color: "#a07840", fontFamily: "'Cormorant Garamond', serif" }}
             >
               ✦ Danke — Ihre Erinnerung wird nach Prüfung hier erscheinen.
             </div>
@@ -67,7 +67,7 @@ export default function MemoryWallSection({ memorialId, entries }) {
         {showForm && (
           <div className="bg-white rounded-2xl border border-stone-100 p-7 mb-10 shadow-sm">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
+              <h3 className="font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 Ihre persönliche Erinnerung
               </h3>
               <button onClick={() => setShowForm(false)} className="text-gray-300 hover:text-gray-500 transition-colors">
@@ -117,8 +117,8 @@ export default function MemoryWallSection({ memorialId, entries }) {
                 onClick={submit}
                 disabled={submitting || !form.author_name || !form.message}
                 className="w-full text-white rounded-xl py-5"
-                style={{ background: "#b45309" }}
-              >
+                style={{ background: "#c9a96e" }}
+                >
                 {submitting
                   ? <Loader2 className="w-4 h-4 animate-spin mr-2" />
                   : <Send className="w-4 h-4 mr-2" />}
@@ -136,12 +136,12 @@ export default function MemoryWallSection({ memorialId, entries }) {
                   <img src={entry.photo_url} alt="" className="w-full h-40 object-cover rounded-xl mb-5" />
                 )}
                 <p className="text-gray-600 text-sm leading-relaxed italic mb-5"
-                  style={{ fontFamily: "'Playfair Display', serif" }}>
+                  style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                   „{entry.message}"
                 </p>
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-                    style={{ background: "linear-gradient(135deg,#b45309,#92400e)" }}>
+                    style={{ background: "linear-gradient(135deg,#c9a96e,#a07840)" }}>
                     {entry.author_name[0]}
                   </div>
                   <div>
@@ -156,7 +156,7 @@ export default function MemoryWallSection({ memorialId, entries }) {
           !showForm && (
             <div className="text-center text-gray-300 py-8">
               <Camera className="w-7 h-7 mx-auto mb-2 opacity-30" />
-              <p className="text-sm" style={{ fontFamily: "'Playfair Display', serif" }}>
+              <p className="text-sm" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 Noch keine Erinnerungen geteilt — seien Sie der Erste.
               </p>
             </div>
