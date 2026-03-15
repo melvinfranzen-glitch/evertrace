@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Loader2, Heart, Feather, Upload, Flame } from "lucide-react";
+import { Loader2, Heart, Feather, Upload, Flame, Copy, Check } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 

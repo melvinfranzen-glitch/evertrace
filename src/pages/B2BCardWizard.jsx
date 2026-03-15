@@ -142,7 +142,12 @@ Zitat: ${quote || "keines angegeben"}
 Ausrichtung: ${religion || "nicht religiös"}
 Ton: ${tone}
 
-Erstelle fließenden Text ohne Aufzählungen, max. 100 Wörter. Persönlich und würdevoll.`;
+Struktur (drei Teile, max. 100 Wörter insgesamt):
+1. Eröffnungssatz: Beschreibe den Charakter und die Persönlichkeit der verstorbenen Person.
+2. Mittelteil: Verknüpfe ihre Leidenschaften und ihren Beruf zu einem fließenden Absatz.
+3. Abschlusssatz: Integriere das Zitat oder den Spruch als würdigen Abschluss.
+
+Kein Aufzählung, fließender Text, warm und persönlich.`;
 
     const result = await base44.integrations.Core.InvokeLLM({ prompt });
     setGeneratedText(result);
