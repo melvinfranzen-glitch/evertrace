@@ -56,12 +56,16 @@ export default function EditMemorial() {
     });
   }, []);
 
-  const set = (k, v) => setMemorial((p) => ({ ...p, [k]: v }));
+  const [isDirty, setIsDirty] = useState(false);
+  const [showGuidance, setShowGuidance] = useState(true);
+
+  const set = (k, v) => { setMemorial((p) => ({ ...p, [k]: v })); setIsDirty(true); };
 
   const save = async () => {
     setSaving(true);
     await base44.entities.Memorial.update(memorial.id, memorial);
     setSaving(false);
+    setIsDirty(false);
   };
 
   const uploadHero = async (e) => {
@@ -110,17 +114,31 @@ export default function EditMemorial() {
   if (loading) return <div className="min-h-screen flex items-center justify-center pt-20"><Loader2 className="w-8 h-8 animate-spin" style={{ color: "#c9a96e" }} /></div>;
   if (!memorial) return null;
 
+  const TAB_GUIDANCE = {
+    info: "Name, Daten und Leitspruch der verstorbenen Person.",
+    bio: "Erzählen Sie uns Erinnerungen — die KI verfasst daraus eine würdevolle Geschichte.",
+    media: "Laden Sie Fotos hoch und verknüpfen Sie Lieblingsmusik.",
+    timeline: "Wichtige Momente und Stationen aus dem Leben der Person.",
+    legacy: "Was hat diese Person für andere Menschen bedeutet?",
+    events: "Informationen zur Trauerfeier, die Besucher sehen können.",
+    wall: "Nachrichten von Freunden und Familie — Sie entscheiden, was sichtbar ist.",
+    family: "Familienmitglieder und ihr Stammbaum.",
+    settings: "Sichtbarkeit, Passwortschutz und QR-Code Ihrer Gedenkseite.",
+  };
+
   const tabs = [
-    { id: "info", label: "Grunddaten" },
-    { id: "bio", label: "Biografie" },
-    { id: "media", label: "Medien" },
-    { id: "timeline", label: "Timeline" },
-    { id: "legacy", label: "Lebenswerk" },
-    { id: "events", label: "Veranstaltungen" },
-    { id: "wall", label: "Erinnerungswand" },
-    { id: "family", label: "Stammbaum" },
+    { id: "info", label: "Steckbrief" },
+    { id: "bio", label: "Lebensgeschichte" },
+    { id: "media", label: "Fotos & Musik" },
+    { id: "timeline", label: "Lebensstationen" },
+    { id: "legacy", label: "Besonderes Erbe" },
+    { id: "events", label: "Trauerfeier" },
+    { id: "wall", label: "Erinnerungen" },
+    { id: "family", label: "Familie" },
     { id: "settings", label: "Einstellungen" },
   ];
+
+  const showGuidanceBanner = showGuidance && !memorial.biography?.trim() && (memorial.gallery_images?.length || 0) < 2;
 
   return (
     <div className="min-h-screen pt-24 pb-16 px-4" style={{ background: "#FAFAF8" }}>
@@ -131,8 +149,8 @@ export default function EditMemorial() {
               <ArrowLeft className="w-5 h-5" />
             </button>
             <div>
-              <h1 className="text-2xl font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{memorial.name}</h1>
-              <p className="text-gray-500 text-sm">Gedenkseite bearbeiten</p>
+              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, color: "#2c2419", fontWeight: 600 }}>{memorial.name}</h1>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#8a8278" }}>Alles, was Sie hinzufügen, macht die Erinnerung reicher.</p>
             </div>
           </div>
           <div className="flex gap-2 flex-wrap">
@@ -153,8 +171,10 @@ export default function EditMemorial() {
             <Button variant="outline" size="sm" className="rounded-xl" onClick={() => window.open(`/MemorialProfile?id=${memorial.short_id}`, "_blank")}>
               <Eye className="w-4 h-4 mr-1" /> Vorschau
             </Button>
-            <Button size="sm" onClick={save} disabled={saving} className="rounded-xl text-white" style={{ background: "#c9a96e" }}>
-              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4 mr-1" />} Speichern
+            <Button size="sm" onClick={save} disabled={saving} className="rounded-xl text-white flex items-center gap-1.5" style={{ background: "#c9a96e" }}>
+              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+              Änderungen speichern
+              {isDirty && !saving && <span className="w-2 h-2 rounded-full bg-amber-400 flex-shrink-0" />}
             </Button>
           </div>
         </div>
@@ -186,7 +206,36 @@ export default function EditMemorial() {
           <div className="absolute right-0 top-0 bottom-0 w-8 pointer-events-none md:hidden" style={{ background: 'linear-gradient(to left, #FAFAF8, transparent)' }} />
         </div>
 
+        {/* Guidance banner */}
+        {showGuidanceBanner && (
+          <div className="mb-4 relative rounded-xl p-5" style={{ background: "rgba(201,169,110,0.08)", border: "1px solid rgba(201,169,110,0.2)" }}>
+            <button onClick={() => setShowGuidance(false)} className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-lg leading-none">×</button>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#c9a96e", fontWeight: 500, marginBottom: 12 }}>Empfohlene nächste Schritte</p>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0" style={{ background: "rgba(201,169,110,0.2)", color: "#c9a96e" }}>1</div>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#2c2419" }}>Lebensgeschichte verfassen lassen</span>
+                </div>
+                <button onClick={() => setActiveTab("bio")} style={{ fontSize: 12, color: "#c9a96e", background: "none", border: "none", cursor: "pointer", whiteSpace: "nowrap" }}>Jetzt starten →</button>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0" style={{ background: "rgba(201,169,110,0.2)", color: "#c9a96e" }}>2</div>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#2c2419" }}>Fotos hochladen</span>
+                </div>
+                <button onClick={() => setActiveTab("media")} style={{ fontSize: 12, color: "#c9a96e", background: "none", border: "none", cursor: "pointer", whiteSpace: "nowrap" }}>Fotos hinzufügen →</button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
+          {/* Tab guidance text */}
+          {TAB_GUIDANCE[activeTab] && (
+            <p style={{ fontSize: 13, color: "#8a8278", fontStyle: "italic", marginBottom: 16 }}>{TAB_GUIDANCE[activeTab]}</p>
+          )}
+
           {activeTab === "info" && (
             <div className="space-y-4">
               <div><Label>Vollständiger Name</Label><Input value={memorial.name || ""} onChange={(e) => set("name", e.target.value)} className="mt-1" /></div>
@@ -205,15 +254,19 @@ export default function EditMemorial() {
           {activeTab === "bio" && (
             <div className="space-y-4">
               <div>
-                <Label>Rohfakten & Erinnerungen</Label>
-                <Textarea value={memorial.biography_raw_input || ""} onChange={(e) => set("biography_raw_input", e.target.value)} className="mt-1 h-28 resize-none" placeholder={`Erzählen Sie uns von besonderen Momenten im Leben von ${memorial.name}. Beruf, Leidenschaften, Lieblingsplätze, unvergessliche Erlebnisse...`} />
+                <Label>Was sollen Menschen über ihn/sie wissen?</Label>
+                <Textarea value={memorial.biography_raw_input || ""} onChange={(e) => set("biography_raw_input", e.target.value)} className="mt-1 h-28 resize-none"
+                  placeholder="Schreiben Sie einfach, was Ihnen einfällt — zum Beispiel: Wo er/sie aufgewachsen ist, was ihn/sie begeistert hat, was er/sie geliebt hat, welche Eigenschaften ihn/sie besonders gemacht haben. Auch kurze Notizen sind vollkommen ausreichend." />
               </div>
               <Button onClick={generateBio} disabled={generating || !memorial.biography_raw_input} className="w-full text-white rounded-xl" style={{ background: "#c9a96e" }}>
-                {generating ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Wird verfasst...</> : <><Sparkles className="w-4 h-4 mr-2" /> Lebensgeschichte neu verfassen</>}
+                {generating ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Wir schreiben gerade die Lebensgeschichte…</> : <>✦ Lebensgeschichte neu verfassen lassen</>}
               </Button>
               <div>
-                <Label>Biografie</Label>
-                <Textarea value={memorial.biography || ""} onChange={(e) => set("biography", e.target.value)} className="mt-1 h-64 resize-none" placeholder="Biografie hier eingeben oder generieren..." />
+                <div className="flex items-center gap-2 mb-1">
+                  <Label>Lebensgeschichte (bearbeitbar)</Label>
+                </div>
+                <p style={{ fontSize: 11, color: "#8a8278", marginBottom: 4 }}>Sie können den Text direkt hier anpassen.</p>
+                <Textarea value={memorial.biography || ""} onChange={(e) => set("biography", e.target.value)} className="mt-1 h-64 resize-none" placeholder="Biografie hier eingeben oder von der KI verfassen lassen..." />
               </div>
             </div>
           )}
@@ -221,7 +274,7 @@ export default function EditMemorial() {
           {activeTab === "media" && (
             <div className="space-y-6">
               <div>
-                <Label>Portrait-Foto</Label>
+                <Label>Ein Foto, das ihn/sie zeigt wie er/sie war</Label>
                 <div className="mt-2 border-2 border-dashed border-stone-300 rounded-xl p-5 text-center hover:border-amber-400 transition-colors">
                   {memorial.hero_image_url ? (
                     <div>
@@ -239,7 +292,7 @@ export default function EditMemorial() {
               </div>
 
               <div>
-                <Label>Galerie</Label>
+                <Label>Weitere Fotos</Label>
                 <div className="mt-2 grid grid-cols-3 gap-3">
                   {(memorial.gallery_images || []).map((url, i) => (
                     <div key={i} className="relative aspect-square rounded-lg overflow-hidden group">
@@ -250,10 +303,11 @@ export default function EditMemorial() {
                     </div>
                   ))}
                   <label className="aspect-square rounded-lg border-2 border-dashed border-stone-300 flex flex-col items-center justify-center cursor-pointer hover:border-amber-400 transition-colors">
-                    {uploading ? <Loader2 className="w-5 h-5 animate-spin text-stone-400" /> : <><Plus className="w-5 h-5 text-stone-400" /><span className="text-xs text-stone-400 mt-1">Hinzufügen</span></>}
+                    {uploading ? <Loader2 className="w-5 h-5 animate-spin text-stone-400" /> : <><Plus className="w-5 h-5 text-stone-400" /><span className="text-xs text-stone-400 mt-1">+ Foto hinzufügen</span></>}
                     <input type="file" accept="image/*" multiple className="hidden" onChange={uploadGallery} disabled={uploading} />
                   </label>
                 </div>
+                <p style={{ fontSize: 11, color: "#8a8278", marginTop: 8 }}>Alle Fotos werden sicher gespeichert. Sie können die Reihenfolge durch Ziehen ändern.</p>
               </div>
 
               <div className="border-t border-stone-200 pt-6">
@@ -345,7 +399,7 @@ export default function EditMemorial() {
                   style={{ borderColor: memorial.is_private ? "#c9a96e" : "#d1d5db", background: memorial.is_private ? "#c9a96e" : "white" }}>
                   {memorial.is_private && <span className="text-white text-xs">✓</span>}
                 </div>
-                <div><p className="text-sm font-medium text-gray-700">Private Gedenkseite</p><p className="text-xs text-gray-400">Passwortgeschützt</p></div>
+                <div><p className="text-sm font-medium text-gray-700">Gedenkseite schützen</p><p className="text-xs text-gray-400">Nur Personen mit dem Passwort können die Seite sehen.</p></div>
               </div>
               {memorial.is_private && (
                 <div><Label>Passwort</Label><Input value={memorial.access_password || ""} onChange={(e) => set("access_password", e.target.value)} className="mt-1" /></div>

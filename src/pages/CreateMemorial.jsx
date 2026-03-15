@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Loader2, Upload, Sparkles, ChevronRight, ChevronLeft, Check, QrCode, ArrowLeft } from "lucide-react";
+import { Loader2, Upload, Sparkles, ChevronRight, ChevronLeft, Check, ArrowLeft, Copy } from "lucide-react";
 
 const STYLES = [
-  { id: "poetisch", label: "Poetisch", desc: "Gefühlvoll und bildreich – ein literarisches Denkmal" },
-  { id: "chronologisch", label: "Chronologisch", desc: "Strukturiert und klar – das Leben in seiner ganzen Breite" },
-  { id: "lebensfroh", label: "Lebensfroh", desc: "Warm und positiv – voller schöner Momente und Lebensfreude" },
+  { id: "poetisch", label: "Poetisch", desc: "Gefühlvoll und bildreich — ein literarisches Denkmal" },
+  { id: "chronologisch", label: "Erzählend", desc: "Strukturiert und klar — das Leben in seiner ganzen Breite, von Anfang bis Ende." },
+  { id: "lebensfroh", label: "Lebensfroh", desc: "Warm und positiv — voller schöner Momente und Lebensfreude" },
 ];
 
 function StepDot({ n, current }) {
@@ -21,14 +21,14 @@ function StepDot({ n, current }) {
       <div
         className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all"
         style={{
-          background: done || active ? "#b45309" : "#e7e5e4",
+          background: done || active ? "#c9a96e" : "#e7e5e4",
           color: done || active ? "white" : "#9ca3af",
         }}
       >
         {done ? <Check className="w-4 h-4" /> : n}
       </div>
       {n < 3 && (
-        <div className="w-16 h-0.5 rounded" style={{ background: done ? "#b45309" : "#e7e5e4" }} />
+        <div className="w-12 sm:w-16 h-0.5 rounded" style={{ background: done ? "#c9a96e" : "#e7e5e4" }} />
       )}
     </div>
   );
@@ -39,6 +39,8 @@ export default function CreateMemorial() {
   const [uploading, setUploading] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -91,8 +93,42 @@ export default function CreateMemorial() {
     await base44.entities.Memorial.create(data);
     setSaving(false);
     setCreatedShortId(form.short_id);
-    setCreated(true);
+    setShowSuccess(true);
+    setTimeout(() => {
+      setShowSuccess(false);
+      setCreated(true);
+    }, 3000);
   };
+
+  const memorialUrl = `${window.location.origin}/MemorialProfile?id=${form.short_id}`;
+  const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(memorialUrl)}`;
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(memorialUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+
+  if (showSuccess) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: "linear-gradient(160deg, #1a1410, #231a0e)" }}>
+        <div className="text-center px-6">
+          <div className="w-20 h-20 rounded-full mx-auto flex items-center justify-center mb-6"
+            style={{ background: "rgba(201,169,110,0.15)", border: "2px solid #c9a96e" }}>
+            <Check className="w-10 h-10" style={{ color: "#c9a96e" }} />
+          </div>
+          <h2 className="mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, color: "white", fontWeight: 600 }}>
+            Die Gedenkseite ist fertig.
+          </h2>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, color: "#c9a96e" }}>
+            Sie können sie jetzt mit Ihrer Familie teilen.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (created) {
     return (
@@ -108,8 +144,6 @@ export default function CreateMemorial() {
           <Button onClick={() => window.location.href = createPageUrl("Dashboard")} className="text-white rounded-xl px-8" style={{ background: "#c9a96e" }}>
             Zum Dashboard
           </Button>
-
-          {/* Upsell card */}
           <div className="text-left" style={{ background: "#181714", border: "1px solid rgba(201,169,110,0.25)", borderRadius: 14, padding: 24 }}>
             <span className="inline-block text-xs font-semibold px-2.5 py-1 rounded-full mb-3" style={{ background: "rgba(201,169,110,0.15)", color: "#c9a96e" }}>
               Empfehlung
@@ -133,18 +167,25 @@ export default function CreateMemorial() {
     );
   }
 
-  const memorialUrl = `${window.location.origin}/MemorialProfile?id=${form.short_id}`;
-  const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(memorialUrl)}`;
-
   return (
     <div className="min-h-screen pt-24 pb-16 px-4" style={{ background: "#FAFAF8" }}>
       <div className="max-w-2xl mx-auto">
         <button
           onClick={() => window.location.href = createPageUrl("Dashboard")}
-          className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 mb-8"
+          className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 mb-6"
         >
           <ArrowLeft className="w-4 h-4" /> Zurück zum Dashboard
         </button>
+
+        {/* Warm introduction */}
+        <div className="text-center mb-8">
+          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, color: "#2c2419", fontWeight: 600 }}>
+            Sie schaffen gerade etwas Bleibendes.
+          </h2>
+          <p className="mt-1" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#8a8278" }}>
+            Das dauert etwa 10 Minuten. Wir führen Sie Schritt für Schritt.
+          </p>
+        </div>
 
         {/* Step indicator */}
         <div className="flex justify-center mb-10">
@@ -153,61 +194,72 @@ export default function CreateMemorial() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl border border-stone-200 p-8 shadow-sm">
+        <div className="bg-white rounded-2xl border border-stone-200 p-6 sm:p-8 shadow-sm">
+
           {/* ── Step 1 ── */}
           {step === 1 && (
             <div className="space-y-5">
               <div className="mb-6">
-                <h1 className="text-2xl font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
-                  Persönliche Daten
+                <h1 className="font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26 }}>
+                  Wer soll erinnert werden?
                 </h1>
-                <p className="text-gray-500 text-sm mt-1">Grundlegende Informationen zur verstorbenen Person</p>
+                <p className="text-sm mt-1" style={{ color: "#8a8278" }}>
+                  Beginnen Sie mit dem Namen und einem Foto — alles andere können Sie auch später noch ergänzen.
+                </p>
               </div>
 
               <div>
-                <Label className="text-sm font-medium">Vollständiger Name *</Label>
-                <Input value={form.name} onChange={(e) => set("name", e.target.value)} placeholder="Maria Elisabeth Müller" className="mt-1" />
+                <div className="flex items-center gap-2 mb-1">
+                  <Label className="text-sm font-medium">Name der verstorbenen Person</Label>
+                  <span style={{ fontSize: 11, color: "#8a8278" }}>(Pflichtfeld)</span>
+                </div>
+                <Input value={form.name} onChange={(e) => set("name", e.target.value)}
+                  placeholder="Vollständiger Name, so wie Sie ihn kennen" className="mt-1" />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="text-sm font-medium">Geburtsdatum</Label>
                   <Input type="date" value={form.birth_date} onChange={(e) => set("birth_date", e.target.value)} className="mt-1" />
+                  <p style={{ fontSize: 11, color: "#8a8278", marginTop: 4 }}>Falls unbekannt, lassen Sie das Feld frei.</p>
                 </div>
                 <div>
                   <Label className="text-sm font-medium">Sterbedatum</Label>
                   <Input type="date" value={form.death_date} onChange={(e) => set("death_date", e.target.value)} className="mt-1" />
+                  <p style={{ fontSize: 11, color: "#8a8278", marginTop: 4 }}>Dieses Datum erscheint auf der Gedenkseite.</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="text-sm font-medium">Geburtsort</Label>
-                  <Input value={form.birth_place} onChange={(e) => set("birth_place", e.target.value)} placeholder="München" className="mt-1" />
+                  <Input value={form.birth_place} onChange={(e) => set("birth_place", e.target.value)}
+                    placeholder="Stadt, in der er/sie aufgewachsen ist" className="mt-1" />
                 </div>
                 <div>
-                  <Label className="text-sm font-medium">Sterbeort</Label>
-                  <Input value={form.death_place} onChange={(e) => set("death_place", e.target.value)} placeholder="Berlin" className="mt-1" />
+                  <Label className="text-sm font-medium">Ort des Abschieds</Label>
+                  <Input value={form.death_place} onChange={(e) => set("death_place", e.target.value)}
+                    placeholder="Stadt oder Ort des Sterbens" className="mt-1" />
                 </div>
               </div>
 
               <div>
-                <Label className="text-sm font-medium">Leitspruch oder Lieblingszitat</Label>
+                <Label className="text-sm font-medium">Ein Lieblingszitat oder Satz, der zu ihm/ihr passte</Label>
                 <Input
                   value={form.subtitle}
                   onChange={(e) => set("subtitle", e.target.value)}
-                  placeholder='„In Liebe und Dankbarkeit"'
+                  placeholder='„Nicht trauern, dass es vorbei ist — sondern lächeln, dass es war."'
                   className="mt-1"
                 />
               </div>
 
               <div>
-                <Label className="text-sm font-medium">Portrait-Foto</Label>
+                <Label className="text-sm font-medium">Ein Foto, das ihn/sie zeigt wie er/sie war</Label>
                 <div className="mt-1 border-2 border-dashed border-stone-300 rounded-xl p-6 text-center hover:border-amber-400 transition-colors">
                   {form.hero_image_url ? (
                     <div>
                       <img src={form.hero_image_url} className="w-28 h-28 object-cover rounded-full mx-auto" alt="Portrait" />
-                      <p className="mt-2 text-sm font-medium" style={{ color: "#16a34a" }}>✓ Bild hochgeladen</p>
+                      <p className="mt-2 text-sm font-medium" style={{ color: "#16a34a" }}>✓ Foto hochgeladen</p>
                       <button className="mt-1 text-xs text-gray-400 hover:text-gray-600" onClick={() => set("hero_image_url", "")}>Entfernen</button>
                     </div>
                   ) : (
@@ -217,23 +269,28 @@ export default function CreateMemorial() {
                       ) : (
                         <>
                           <Upload className="w-8 h-8 mx-auto text-stone-400 mb-2" />
-                          <p className="text-sm text-gray-500">Klicken zum Hochladen (JPG, PNG)</p>
+                          <p className="text-sm text-gray-500">
+                            {isMobile ? "Tippen Sie hier, um ein Foto von Ihrem Handy auszuwählen" : "Klicken Sie hier, um ein Foto hochzuladen"}
+                          </p>
                         </>
                       )}
                       <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} disabled={uploading} />
                     </label>
                   )}
                 </div>
+                <p style={{ fontSize: 11, color: "#8a8278", marginTop: 6 }}>
+                  Das Foto wird sicher gespeichert und ist nur für Personen sichtbar, denen Sie den Link teilen.
+                </p>
               </div>
 
               <div className="flex justify-end pt-2">
                 <Button
                   onClick={() => setStep(2)}
                   disabled={!form.name.trim()}
-                  className="text-white rounded-xl px-6"
-                  style={{ background: "#b45309" }}
+                  className="text-white rounded-xl px-6 w-full sm:w-auto"
+                  style={{ background: "#c9a96e", color: "#0f0e0c" }}
                 >
-                  Weiter <ChevronRight className="w-4 h-4 ml-1" />
+                  Weiter → Lebensgeschichte <ChevronRight className="w-4 h-4 ml-1" />
                 </Button>
               </div>
             </div>
@@ -243,14 +300,18 @@ export default function CreateMemorial() {
           {step === 2 && (
             <div className="space-y-5">
               <div className="mb-6">
-                <h1 className="text-2xl font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
-                  Die Lebensgeschichte festhalten
+                <h1 className="font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26 }}>
+                  Erzählen Sie uns von ihm/ihr.
                 </h1>
-                <p className="text-gray-500 text-sm mt-1">Erzählen Sie uns von besonderen Momenten — wir helfen dabei, daraus eine fließende Geschichte zu weben.</p>
+                <p className="text-sm mt-1" style={{ color: "#8a8278" }}>
+                  Schreiben Sie einfach drauflos — ganz ohne Perfektion. Unsere KI fasst daraus eine würdevolle Geschichte zusammen.
+                </p>
               </div>
 
               <div>
-                <Label className="text-sm font-medium mb-3 block">Biografie-Stil wählen</Label>
+                <p className="mb-3" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#5a554e", fontWeight: 500 }}>
+                  Wie soll die Geschichte klingen?
+                </p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {STYLES.map((s) => (
                     <div
@@ -258,7 +319,7 @@ export default function CreateMemorial() {
                       onClick={() => set("biography_style", s.id)}
                       className="p-4 rounded-xl border-2 cursor-pointer transition-all"
                       style={{
-                        borderColor: form.biography_style === s.id ? "#b45309" : "#e7e5e4",
+                        borderColor: form.biography_style === s.id ? "#c9a96e" : "#e7e5e4",
                         background: form.biography_style === s.id ? "#fffbf5" : "white",
                       }}
                     >
@@ -270,39 +331,49 @@ export default function CreateMemorial() {
               </div>
 
               <div>
-                <Label className="text-sm font-medium">Besondere Momente & Erinnerungen *</Label>
+                <Label className="text-sm font-medium">Was sollen Menschen über ihn/sie wissen?</Label>
                 <Textarea
                   value={form.biography_raw_input}
                   onChange={(e) => set("biography_raw_input", e.target.value)}
-                  placeholder={`Erzählen Sie uns ein wenig über das Leben von ${form.name || "dieser Person"}. Was hat sie/ihn besonders gemacht? Beruf, Leidenschaften, Lieblingsplätze, Familie, unvergessliche Momente — alles ist willkommen.`}
-                  className="mt-1 h-36 resize-none"
+                  placeholder={`Schreiben Sie einfach, was Ihnen einfällt — zum Beispiel: Wo er/sie aufgewachsen ist, was ihn/sie begeistert hat, was er/sie geliebt hat, welche Eigenschaften ihn/sie besonders gemacht haben. Auch kurze Notizen sind vollkommen ausreichend.`}
+                  className="mt-1 h-44 resize-none"
                 />
               </div>
 
-              <Button
-                onClick={generateBio}
-                disabled={!form.biography_raw_input.trim() || generating}
-                className="w-full rounded-xl text-white py-5"
-                style={{ background: generating ? "#9a7252" : "#b45309" }}
-              >
-                {generating ? (
-                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Biografie wird verfasst...</>
-                ) : (
-                  <><Sparkles className="w-4 h-4 mr-2" /> Lebensgeschichte verfassen</>
-                )}
-              </Button>
+              <div>
+                <Button
+                  onClick={generateBio}
+                  disabled={!form.biography_raw_input.trim() || generating}
+                  className="w-full rounded-xl text-white py-5"
+                  style={{ background: generating ? "#a07830" : "#c9a96e" }}
+                >
+                  {generating ? (
+                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Wir schreiben gerade die Lebensgeschichte — einen Moment bitte…</>
+                  ) : (
+                    <>✦ Lebensgeschichte von der KI verfassen lassen</>
+                  )}
+                </Button>
+                <p style={{ fontSize: 11, color: "#8a8278", marginTop: 6, textAlign: "center" }}>
+                  Die KI erstellt einen Entwurf, den Sie danach frei bearbeiten können.
+                </p>
+              </div>
 
               {form.biography && (
                 <div className="rounded-xl p-6 border border-stone-200" style={{ background: "#fafaf8" }}>
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "#b45309" }}>
-                      Entwurf der Lebensgeschichte
+                    <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "#c9a96e" }}>
+                      Ihr Entwurf — bitte lesen und bei Bedarf anpassen
                     </p>
                     <button className="text-xs text-gray-400 hover:text-gray-600 underline" onClick={() => set("biography", "")}>
-                      Neu verfassen
+                      ↺ Neu schreiben lassen
                     </button>
                   </div>
-                  <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">{form.biography}</p>
+                  <textarea
+                    value={form.biography}
+                    onChange={(e) => set("biography", e.target.value)}
+                    style={{ background: "transparent", border: "none", outline: "none", resize: "none", width: "100%", fontSize: 14, color: "#374151", lineHeight: 1.8 }}
+                    rows={Math.max(6, form.biography.split("\n").length + 2)}
+                  />
                 </div>
               )}
 
@@ -314,9 +385,9 @@ export default function CreateMemorial() {
                   onClick={() => setStep(3)}
                   disabled={!form.biography.trim()}
                   className="text-white rounded-xl px-6"
-                  style={{ background: "#b45309" }}
+                  style={{ background: "#c9a96e" }}
                 >
-                  Weiter <ChevronRight className="w-4 h-4 ml-1" />
+                  Weiter → Abschließen <ChevronRight className="w-4 h-4 ml-1" />
                 </Button>
               </div>
             </div>
@@ -326,21 +397,37 @@ export default function CreateMemorial() {
           {step === 3 && (
             <div className="space-y-5">
               <div className="mb-6">
-                <h1 className="text-2xl font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
-                  Fertigstellen
+                <h1 className="font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26 }}>
+                  Fast geschafft — noch zwei Schritte.
                 </h1>
-                <p className="text-gray-500 text-sm mt-1">Ihr persönlicher QR-Code & letzte Einstellungen</p>
+                <p className="text-sm mt-1" style={{ color: "#8a8278" }}>
+                  Ihre Gedenkseite ist gleich fertig. Darunter sehen Sie bereits Ihren persönlichen QR-Code.
+                </p>
               </div>
 
               <div className="rounded-xl border border-stone-200 p-6 text-center" style={{ background: "#fafaf8" }}>
-                <QrCode className="w-7 h-7 mx-auto mb-3 text-amber-700" />
-                <p className="font-medium text-gray-800 mb-4">Ihr persönlicher QR-Code</p>
-                <img src={qrSrc} alt="QR Code" className="mx-auto rounded-lg" style={{ width: 140, height: 140 }} />
-                <p className="text-xs text-gray-400 mt-3 break-all">{memorialUrl}</p>
+                <p className="font-medium text-gray-800 mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 17 }}>
+                  Ihr persönlicher QR-Code ist bereit
+                </p>
+                <img src={qrSrc} alt="QR Code" className="mx-auto rounded-lg mb-3" style={{ width: 140, height: 140 }} />
+                <p className="mb-4" style={{ fontSize: 13, color: "#6b5a44", lineHeight: 1.6 }}>
+                  Diesen Code können Sie ausdrucken und ans Grab stellen. Wer ihn scannt, gelangt direkt zur Gedenkseite.
+                </p>
+                <button
+                  onClick={copyLink}
+                  className="flex items-center gap-2 mx-auto px-5 py-2.5 rounded-xl text-sm font-medium transition-all"
+                  style={{ background: copied ? "rgba(74,222,128,0.1)" : "rgba(201,169,110,0.1)", border: `1px solid ${copied ? "#4ade80" : "rgba(201,169,110,0.4)"}`, color: copied ? "#16a34a" : "#c9a96e" }}
+                >
+                  {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  {copied ? "✓ Kopiert!" : "Link kopieren"}
+                </button>
               </div>
 
               <div>
-                <Label className="text-sm font-medium">Spotify-URL (optional)</Label>
+                <Label className="text-sm font-medium">Lieblingsmusik hinzufügen (optional)</Label>
+                <p style={{ fontSize: 11, color: "#8a8278", marginTop: 4, marginBottom: 6 }}>
+                  Falls die verstorbene Person eine Lieblingsplaylist auf Spotify hatte, können Sie hier den Link einfügen. Die Musik wird dann auf der Gedenkseite abgespielt.
+                </p>
                 <Input
                   value={form.spotify_url || ""}
                   onChange={(e) => set("spotify_url", e.target.value)}
@@ -356,13 +443,13 @@ export default function CreateMemorial() {
               >
                 <div
                   className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0 border-2 transition-all"
-                  style={{ borderColor: form.is_private ? "#b45309" : "#d1d5db", background: form.is_private ? "#b45309" : "white" }}
+                  style={{ borderColor: form.is_private ? "#c9a96e" : "#d1d5db", background: form.is_private ? "#c9a96e" : "white" }}
                 >
                   {form.is_private && <Check className="w-3 h-3 text-white" />}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-700">Private Gedenkseite</p>
-                  <p className="text-xs text-gray-400">Nur mit Passwort zugänglich</p>
+                  <p className="text-sm font-medium text-gray-700">Gedenkseite schützen</p>
+                  <p className="text-xs text-gray-400">Nur Personen mit dem Passwort können die Seite sehen.</p>
                 </div>
               </div>
 
@@ -387,12 +474,15 @@ export default function CreateMemorial() {
                   onClick={handleSave}
                   disabled={saving}
                   className="text-white rounded-xl px-6"
-                  style={{ background: "#b45309" }}
+                  style={{ background: "#c9a96e", color: "#0f0e0c", height: 52, fontFamily: "'Cormorant Garamond', serif", fontSize: 17, borderRadius: 12 }}
                 >
-                  {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Check className="w-4 h-4 mr-2" />}
-                  Gedenkseite erstellen
+                  {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : "✦"}&nbsp;
+                  {saving ? "Wird veröffentlicht…" : "Gedenkseite jetzt veröffentlichen"}
                 </Button>
               </div>
+              <p style={{ fontSize: 11, color: "#8a8278", textAlign: "center" }}>
+                Sie können die Gedenkseite jederzeit bearbeiten und erweitern.
+              </p>
             </div>
           )}
         </div>

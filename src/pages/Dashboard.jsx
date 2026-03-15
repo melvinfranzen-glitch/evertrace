@@ -838,6 +838,10 @@ export default function Dashboard() {
     );
   }
 
+  const hour = new Date().getHours();
+  const firstName = user?.full_name?.split(" ")[0] || user?.email || "";
+  const greeting = hour < 12 ? `Guten Morgen, ${firstName}.` : hour < 17 ? `Guten Tag, ${firstName}.` : `Guten Abend, ${firstName}.`;
+
   const TABS = [
     { id: "memorials", label: "Gedenkseiten" },
     { id: "cards", label: "Trauerkarten" },
@@ -849,17 +853,20 @@ export default function Dashboard() {
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-7">
           <div>
-            <h1 className="text-3xl font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              Mein Dashboard
+            <h1 className="font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 30, color: "#2c2419" }}>
+              Meine Erinnerungsorte
             </h1>
-            <p className="text-gray-500 mt-1" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14 }}>
-              Willkommen zurück, {user?.full_name || user?.email}
+            <p className="mt-1" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#6b7280" }}>
+              {greeting}
             </p>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#8a8278" }}>Ihre Gedenkseiten:</p>
           </div>
-          <Button onClick={() => window.location.href = createPageUrl("CreateMemorial")}
-            className="text-white rounded-xl px-6" style={{ background: "#c9a96e" }}>
-            <Plus className="w-4 h-4 mr-2" /> Neue Gedenkseite
-          </Button>
+          <button
+            onClick={() => window.location.href = createPageUrl("CreateMemorial")}
+            style={{ background: "#c9a96e", color: "#0f0e0c", borderRadius: 10, padding: "10px 20px", fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 500, border: "none", cursor: "pointer", whiteSpace: "nowrap" }}
+          >
+            ＋ Neue Gedenkseite erstellen
+          </button>
         </div>
 
         <TabBar tabs={TABS} active={activeTab} onChange={setActiveTab} />
@@ -869,20 +876,34 @@ export default function Dashboard() {
           <>
             <AnniversaryReminders memorials={memorials} />
             {memorials.length === 0 ? (
-              <div className="text-center py-24">
-                <div className="w-20 h-20 rounded-2xl mx-auto flex items-center justify-center mb-6" style={{ background: "#f5f0e8" }}>
-                  <BookOpen className="w-10 h-10" style={{ color: "#c9a96e" }} />
+              <div className="px-0 sm:px-0">
+                <div className="rounded-2xl text-center"
+                  style={{ background: "linear-gradient(160deg, #fdf9f3, #faf5ec)", border: "1px solid #e8dfd0", padding: "40px 32px" }}>
+                  <div className="w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-5"
+                    style={{ background: "rgba(201,169,110,0.12)", border: "1px solid rgba(201,169,110,0.25)" }}>
+                    <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, color: "#c9a96e", lineHeight: 1 }}>✦</span>
+                  </div>
+                  <h2 className="mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, color: "#2c2419", fontWeight: 600 }}>
+                    Ein Ort der Erinnerung, der bleibt.
+                  </h2>
+                  <p className="mb-8 max-w-lg mx-auto leading-relaxed" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, color: "#6b5a44" }}>
+                    Hier entstehen digitale Gedenkseiten für Menschen, die uns verlassen haben — mit ihrer Geschichte, ihren Fotos und den Worten derer, die sie liebten.
+                  </p>
+                  <button
+                    onClick={() => window.location.href = createPageUrl("CreateMemorial")}
+                    style={{ background: "#c9a96e", color: "#0f0e0c", borderRadius: 12, padding: "14px 32px", fontSize: 16, fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, border: "none", cursor: "pointer" }}
+                  >
+                    Jetzt Gedenkseite erstellen
+                  </button>
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mt-7">
+                    {["Kostenlos starten", "Keine technischen Kenntnisse nötig", "In 10 Minuten fertig"].map(t => (
+                      <div key={t} className="flex items-center gap-1.5">
+                        <span style={{ color: "#c9a96e", fontSize: 10 }}>●</span>
+                        <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#8a8278" }}>{t}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <h2 className="text-xl font-semibold text-gray-700 mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                  Noch keine Gedenkseite
-                </h2>
-                <p className="text-gray-500 mb-6 max-w-sm mx-auto" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                  Erstellen Sie Ihre erste digitale Gedenkseite und bewahren Sie die Erinnerung an einen geliebten Menschen.
-                </p>
-                <Button onClick={() => window.location.href = createPageUrl("CreateMemorial")}
-                  className="text-white rounded-xl px-8" style={{ background: "#c9a96e" }}>
-                  <Plus className="w-4 h-4 mr-2" /> Erste Gedenkseite erstellen
-                </Button>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
