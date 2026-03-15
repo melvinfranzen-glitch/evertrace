@@ -236,9 +236,9 @@ export default function Layout({ children, currentPageName }) {
             <div>
               <p className="text-xs uppercase tracking-widest text-stone-600 mb-4">Rechtliches</p>
               <ul className="space-y-2.5 text-sm">
-                <li><span className="hover:text-stone-300 transition-colors cursor-pointer">Datenschutz (DSGVO)</span></li>
-                <li><span className="hover:text-stone-300 transition-colors cursor-pointer">Impressum</span></li>
-                <li><span className="hover:text-stone-300 transition-colors cursor-pointer">AGB</span></li>
+                <li><Link to="/Legal?section=datenschutz" className="hover:text-stone-300 transition-colors">Datenschutz (DSGVO)</Link></li>
+                <li><Link to="/Legal?section=impressum" className="hover:text-stone-300 transition-colors">Impressum</Link></li>
+                <li><Link to="/Legal?section=agb" className="hover:text-stone-300 transition-colors">AGB</Link></li>
               </ul>
               <div className="mt-6 flex items-center gap-2 text-xs text-stone-600">
                 <svg className="w-3.5 h-3.5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

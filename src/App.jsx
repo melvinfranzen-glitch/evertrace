@@ -15,6 +15,7 @@ import B2BOrders from './pages/B2BOrders';
 import B2BAnalytics from './pages/B2BAnalytics';
 import B2BSettings from './pages/B2BSettings';
 import B2BPublicMemorial from './pages/B2BPublicMemorial';
+import Legal from './pages/Legal';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
@@ -79,6 +80,7 @@ const AuthenticatedApp = () => {
       <Route path="/B2BAnalytics" element={<B2BAnalytics />} />
       <Route path="/B2BSettings" element={<B2BSettings />} />
       <Route path="/B2BPublicMemorial" element={<B2BPublicMemorial />} />
+      <Route path="/Legal" element={<LayoutWrapper currentPageName="Legal"><Legal /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
