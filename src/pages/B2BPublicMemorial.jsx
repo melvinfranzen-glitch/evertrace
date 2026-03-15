@@ -23,7 +23,6 @@ export default function B2BPublicMemorial() {
   const [submitted, setSubmitted] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [photoUrl, setPhotoUrl] = useState("");
-  const [copied, setCopied] = useState(false);
   const [user, setUser] = useState(null);
   const [showPrintModal, setShowPrintModal] = useState(false);
 
@@ -32,14 +31,6 @@ export default function B2BPublicMemorial() {
   }, []);
 
   const slug = new URLSearchParams(window.location.search).get("slug");
-  const pageUrl = window.location.href;
-
-  const copyUrl = () => {
-    navigator.clipboard.writeText(pageUrl).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  };
 
   useEffect(() => {
     if (!slug) { setLoading(false); return; }
