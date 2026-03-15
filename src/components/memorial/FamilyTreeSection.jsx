@@ -12,7 +12,7 @@ const RELATION_LABEL = {
   sohn: "Sohn", tochter: "Tochter",
 };
 
-function PersonNode({ person, isDeceased, onClick }) {
+function PersonNode({ person, isDeceased, onClick, linkedId }) {
   const initials = person.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
   const hasLinked = !!person.linked_memorial_short_id;
   return (

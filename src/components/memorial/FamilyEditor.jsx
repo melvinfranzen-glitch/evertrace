@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, Users } from "lucide-react";
+import { Plus, Trash2, Users, Link2, ExternalLink } from "lucide-react";
 
 const RELATION_LABEL = {
   vater: "Vater", mutter: "Mutter",

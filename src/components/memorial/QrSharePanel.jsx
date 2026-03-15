@@ -122,7 +122,7 @@ export default function QrSharePanel({ memorial }) {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between w-full">
-              <p className="font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
+              <p className="font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 QR-Code
               </p>
               <button onClick={() => setQrOpen(false)} className="text-gray-400 hover:text-gray-600">
