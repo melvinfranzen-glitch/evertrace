@@ -152,17 +152,17 @@ export default function MemorialCard({ memorial, onDelete, onOpenPlaque }) {
             </button>
           )}
         </div>
-      {/* Plaque upsell bar */}
+      {/* Book upsell bar */}
       <div className="flex items-center justify-between px-4 py-2.5"
         style={{ borderTop: "1px solid #f0ede8", background: "linear-gradient(135deg, #fdf9f3, #faf5ec)" }}>
         <div className="flex items-center gap-1.5">
-          <QrCode style={{ width: 14, height: 14, color: "#c9a96e", flexShrink: 0 }} />
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#8a8278" }}>Grabplakette mit QR-Code bestellen</span>
+          <BookOpen style={{ width: 14, height: 14, color: "#c9a96e", flexShrink: 0 }} />
+          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#8a8278" }}>Lebensgeschichten-Buch bestellen</span>
         </div>
         <button
-          onClick={() => onOpenPlaque ? onOpenPlaque(memorial) : window.location.href = `/Dashboard?memorial_id=${memorial.short_id}`}
+          onClick={() => window.location.href = `/Dashboard?tab=book`}
           style={{ background: "transparent", border: "1px solid rgba(201,169,110,0.35)", color: "#c9a96e", borderRadius: 6, padding: "4px 10px", fontSize: 11, fontFamily: "'DM Sans', sans-serif", cursor: "pointer", whiteSpace: "nowrap" }}>
-          Ab € 129,–
+          Ab € 39,–
         </button>
       </div>
       </div>
