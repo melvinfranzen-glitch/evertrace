@@ -86,18 +86,41 @@ export default function CreateMemorial() {
   const [created, setCreated] = useState(false);
   const [createdShortId, setCreatedShortId] = useState("");
 
+  const [showShare, setShowShare] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
+
   const handleSave = async () => {
     setSaving(true);
     const data = { ...form };
     if (!data.access_password) delete data.access_password;
     await base44.entities.Memorial.create(data);
+    // Send confirmation email
+    try {
+      const u = await base44.auth.me();
+      if (u?.email) {
+        await base44.integrations.Core.SendEmail({
+          to: u.email,
+          subject: `Ihre Gedenkseite für ${form.name} ist fertig`,
+          body: `Ihre Gedenkseite ist jetzt erreichbar.\n\n${window.location.origin}/MemorialProfile?id=${form.short_id}\n\nTeilen Sie diesen Link mit Ihrer Familie und Ihren Freunden.`,
+        });
+      }
+    } catch {
+      // TODO: send confirmation email via SendEmail integration
+    }
     setSaving(false);
     setCreatedShortId(form.short_id);
     setShowSuccess(true);
     setTimeout(() => {
       setShowSuccess(false);
-      setCreated(true);
+      setShowShare(true);
     }, 3000);
+  };
+
+  const shareUrl = `${window.location.origin}/MemorialProfile?id=${form.short_id}`;
+  const copyShareLink = () => {
+    navigator.clipboard.writeText(shareUrl);
+    setShareCopied(true);
+    setTimeout(() => setShareCopied(false), 2000);
   };
 
   const memorialUrl = `${window.location.origin}/MemorialProfile?id=${form.short_id}`;
