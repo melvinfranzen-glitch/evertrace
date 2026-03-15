@@ -493,12 +493,12 @@ Erstelle fließenden Text ohne Aufzählungen, max. 100 Wörter. Persönlich und 
                   {[
                     { mode: "funeral_home", icon: Building2, label: "An Bestattungshaus", desc: funeralHome?.name || "Ihre Geschäftsadresse" },
                     { mode: "customer", icon: User, label: "Direkt an Kunden", desc: selectedCase?.next_of_kin_name || "Angehörige/r" },
-                  ].map(({ mode, icon: Icon, label, desc }) => (
+                  ].map(({ mode, icon: ModeIcon, label, desc }) => (
                     <button key={mode} onClick={() => setDeliveryMode(mode)}
                       className="flex items-center gap-3 p-4 rounded-xl text-left transition-all"
                       style={{ background: deliveryMode === mode ? "rgba(201,169,110,0.1)" : "#201e1a", border: `1.5px solid ${deliveryMode === mode ? "#c9a96e" : "#302d28"}` }}>
                       <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: deliveryMode === mode ? "rgba(201,169,110,0.2)" : "#302d28" }}>
-                        <Icon className="w-4 h-4" style={{ color: deliveryMode === mode ? "#c9a96e" : "#5a554e" }} />
+                        <ModeIcon className="w-4 h-4" style={{ color: deliveryMode === mode ? "#c9a96e" : "#5a554e" }} />
                       </div>
                       <div className="min-w-0">
                         <p className="text-sm font-medium" style={{ color: "#f0ede8" }}>{label}</p>
@@ -514,6 +514,11 @@ Erstelle fließenden Text ohne Aufzählungen, max. 100 Wörter. Persönlich und 
                     { k: "deliveryZip", label: "PLZ", val: deliveryZip, set: setDeliveryZip },
                     { k: "deliveryCity", label: "Ort", val: deliveryCity, set: setDeliveryCity },
                   ].map(({ k, label, val, set: setter }) => (
+                    <div key={k}>
+                      <label className="text-xs mb-1 block" style={{ color: "#8a8278" }}>{label}</label>
+                      <input value={val} onChange={e => setter(e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
+                        style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }} />
+                    </div>
                   ))}
                 </div>
               </div>
@@ -521,7 +526,7 @@ Erstelle fließenden Text ohne Aufzählungen, max. 100 Wörter. Persönlich und 
               {/* Customer notification email */}
               <div className="rounded-2xl p-5 md:p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
                 <h3 className="text-lg font-semibold mb-1" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Kunden-Benachrichtigung</h3>
-                <p className="text-xs mb-4" style={{ color: "#5a554e" }}>Sobald die Karten fertig sind, können Sie dem Kunden automatisch eine E-Mail senden.</p>
+                <p className="text-xs mb-4" style={{ color: "#5a554e" }}>Sobald die Karten fertig sind, können Sie dem Kunden per Knopfdruck benachrichtigen.</p>
                 <label className="text-xs mb-1 block" style={{ color: "#8a8278" }}>E-Mail-Adresse des Kunden (optional)</label>
                 <input
                   type="email"
@@ -541,16 +546,6 @@ Erstelle fließenden Text ohne Aufzählungen, max. 100 Wörter. Persönlich und 
                   </button>
                 )}
               </div>
-              {/* Dummy spacer to close the map above cleanly */}
-              {[].map(({ k, label, val, set: setter }) => (
-                    <div key={k}>
-                      <label className="text-xs mb-1 block" style={{ color: "#8a8278" }}>{label}</label>
-                      <input value={val} onChange={e => setter(e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
-                        style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }} />
-                    </div>
-                  ))}
-                </div>
-              </div>
 
               <div className="rounded-2xl p-5 md:p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
                 <h3 className="text-lg font-semibold mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Bestellübersicht</h3>
@@ -563,6 +558,7 @@ Erstelle fließenden Text ohne Aufzählungen, max. 100 Wörter. Persönlich und 
                   ...(addonInvitation ? [["+ Einladungskarte", "Ja"]] : []),
                   ...(addonThankyou ? [["+ Danksagungskarte", "Ja"]] : []),
                   ...(addonQr ? [["+ QR-Code", "Ja"]] : []),
+                  ...(customerNotificationEmail ? [["Kunden-E-Mail", customerNotificationEmail]] : []),
                   ["Gesamtbetrag", `€ ${totalPrice}`],
                 ].map(([label, val]) => (
                   <div key={label} className="flex justify-between py-2 border-b text-sm last:border-0" style={{ borderColor: "#302d28" }}>
