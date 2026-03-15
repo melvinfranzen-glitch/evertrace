@@ -143,11 +143,20 @@ export default function B2BMemorial() {
                       </span>
                     </div>
                   </div>
-                  <a href={`/B2BPublicMemorial?slug=${page.slug}`} target="_blank" rel="noopener noreferrer"
-                    className="mt-3 flex items-center justify-center gap-2 py-2 rounded-xl text-xs transition-all"
-                    style={{ background: "#201e1a", color: "#c9a96e", border: "1px solid #302d28" }}>
-                    <ExternalLink className="w-3 h-3" /> Gedenkseite anzeigen
-                  </a>
+                  <div className="mt-3 flex gap-2">
+                    <a href={`/B2BPublicMemorial?slug=${page.slug}`} target="_blank" rel="noopener noreferrer"
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs transition-all"
+                      style={{ background: "#201e1a", color: "#c9a96e", border: "1px solid #302d28" }}>
+                      <ExternalLink className="w-3 h-3" /> B2B-Seite
+                    </a>
+                    {c?.short_id ? (
+                      <a href={`/MemorialProfile?id=${c.short_id}`} target="_blank" rel="noopener noreferrer"
+                        className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs transition-all"
+                        style={{ background: "rgba(201,169,110,0.08)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}>
+                        <ExternalLink className="w-3 h-3" /> Gedenkseite
+                      </a>
+                    ) : null}
+                  </div>
                 </div>
               </div>
             );
