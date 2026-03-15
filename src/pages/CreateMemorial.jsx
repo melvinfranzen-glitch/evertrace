@@ -1,6 +1,17 @@
 import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
+
+// Fix 2: Prompt Injection Sanitization
+function sanitizePromptInput(str, maxLength = 500) {
+  if (!str || typeof str !== "string") return "";
+  return str
+    .replace(/[<>\"\'`]/g, "")
+    .replace(/\b(ignore|system|assistant|instructions|prompt|override|jailbreak|disregard)\b/gi, "")
+    .replace(/\s{3,}/g, " ")
+    .trim()
+    .slice(0, maxLength);
+}
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
