@@ -128,7 +128,7 @@ export default function FamilyTreeSection({ memorial }) {
             {grandparents.length > 0 && (
               <>
                 <GenRow label="Großeltern">
-                  {grandparents.map((m) => <PersonNode key={m.id} person={m} onClick={() => setSelected({ person: m, isDeceased: false })} />)}
+                  {grandparents.map((m) => <PersonNode key={m.id} person={m} linkedId={m.linked_memorial_short_id} onClick={() => setSelected({ person: m, isDeceased: false })} />)}
                 </GenRow>
                 <VLine />
               </>
@@ -137,7 +137,7 @@ export default function FamilyTreeSection({ memorial }) {
             {parents.length > 0 && (
               <>
                 <GenRow label="Eltern">
-                  {parents.map((m) => <PersonNode key={m.id} person={m} onClick={() => setSelected({ person: m, isDeceased: false })} />)}
+                  {parents.map((m) => <PersonNode key={m.id} person={m} linkedId={m.linked_memorial_short_id} onClick={() => setSelected({ person: m, isDeceased: false })} />)}
                 </GenRow>
                 <VLine />
               </>
@@ -146,11 +146,11 @@ export default function FamilyTreeSection({ memorial }) {
             {/* Center row: siblings – deceased – spouse */}
             {hasSibsOrSpouse ? (
               <GenRow>
-                {siblings.map((m) => <PersonNode key={m.id} person={m} onClick={() => setSelected({ person: m, isDeceased: false })} />)}
+                {siblings.map((m) => <PersonNode key={m.id} person={m} linkedId={m.linked_memorial_short_id} onClick={() => setSelected({ person: m, isDeceased: false })} />)}
                 {siblings.length > 0 && <HLine />}
                 <PersonNode person={deceased} isDeceased onClick={() => setSelected({ person: deceased, isDeceased: true })} />
                 {spouses.length > 0 && <HLine />}
-                {spouses.map((m) => <PersonNode key={m.id} person={m} onClick={() => setSelected({ person: m, isDeceased: false })} />)}
+                {spouses.map((m) => <PersonNode key={m.id} person={m} linkedId={m.linked_memorial_short_id} onClick={() => setSelected({ person: m, isDeceased: false })} />)}
               </GenRow>
             ) : (
               <GenRow>
@@ -162,7 +162,7 @@ export default function FamilyTreeSection({ memorial }) {
               <>
                 <VLine />
                 <GenRow label="Kinder">
-                  {children.map((m) => <PersonNode key={m.id} person={m} onClick={() => setSelected({ person: m, isDeceased: false })} />)}
+                  {children.map((m) => <PersonNode key={m.id} person={m} linkedId={m.linked_memorial_short_id} onClick={() => setSelected({ person: m, isDeceased: false })} />)}
                 </GenRow>
               </>
             )}
