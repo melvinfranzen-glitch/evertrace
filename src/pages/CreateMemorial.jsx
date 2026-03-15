@@ -88,7 +88,7 @@ export default function CreateMemorial() {
     setGenerating(true);
     const style = STYLES.find((s) => s.id === form.biography_style);
     const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `Erstelle eine ${style.label.toLowerCase()} Biografie auf Deutsch für ${form.name} (geboren: ${form.birth_date || "unbekannt"} in ${form.birth_place || "unbekannt"}, gestorben: ${form.death_date || "unbekannt"} in ${form.death_place || "unbekannt"}). Basiere auf diesen Erinnerungen und Fakten: "${form.biography_raw_input}". Schreibe 3–4 würdevolle Absätze im Stil: ${style.desc}. Beginne direkt mit der Biografie ohne Überschrift.`,
+     prompt: `Erstelle eine ${style.label.toLowerCase()} Biografie auf Deutsch für ${form.name} (geboren: ${form.birth_date || "unbekannt"} in ${form.birth_place || "unbekannt"}, gestorben: ${form.death_date || "unbekannt"} in ${form.death_place || "unbekannt"}). Basiere auf diesen Erinnerungen und Fakten: "${sanitizePromptInput(form.biography_raw_input)}". Schreibe 3–4 würdevolle Absätze im Stil: ${style.desc}. Beginne direkt mit der Biografie ohne Überschrift.`,
     });
     set("biography", result);
     setGenerating(false);

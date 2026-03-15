@@ -104,7 +104,7 @@ export default function EditMemorial() {
     if (!memorial.biography_raw_input) return;
     setGenerating(true);
     const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `Erstelle eine ${memorial.biography_style || "chronologisch"} Biografie auf Deutsch für ${memorial.name} (geboren: ${memorial.birth_date || "unbekannt"}, gestorben: ${memorial.death_date || "unbekannt"}). Basiere auf: "${memorial.biography_raw_input}". 3–4 Absätze, würdevoll. Beginne direkt.`,
+     prompt: `Erstelle eine ${memorial.biography_style || "chronologisch"} Biografie auf Deutsch für ${memorial.name} (geboren: ${memorial.birth_date || "unbekannt"}, gestorben: ${memorial.death_date || "unbekannt"}). Basiere auf: "${sanitizePromptInput(memorial.biography_raw_input)}". 3–4 Absätze, würdevoll. Beginne direkt.`,
     });
     set("biography", result);
     setGenerating(false);
