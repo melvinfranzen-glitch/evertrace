@@ -218,9 +218,9 @@ export default function Layout({ children, currentPageName }) {
             </div>
 
             <div>
-              <p className="text-xs uppercase tracking-widest text-stone-600 mb-4">Navigation</p>
+              <p className="text-xs uppercase tracking-widest text-stone-600 mb-4">Produkte</p>
               <ul className="space-y-2.5 text-sm">
-                {[["Startseite", "Home"], ["Dashboard", "Dashboard"], ["Shop", "Shop"]].map(([label, page]) => (
+                {[["Gedenkseiten", "Dashboard?tab=memorials"], ["Gedenkbücher", "Dashboard?tab=book"], ["Trauerkarten", "Dashboard?tab=cards"], ["Startseite", "Home"]].map(([label, page]) => (
                   <li key={page}>
                     <Link to={createPageUrl(page)} className="hover:text-stone-300 transition-colors">{label}</Link>
                   </li>
