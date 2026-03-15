@@ -188,6 +188,30 @@ export default function B2BOrders() {
               ))}
             </div>
           </div>
+
+          {/* Kunden-Benachrichtigung */}
+          {selected.customer_notification_email && (
+            <div className="mt-5 pt-5 border-t" style={{ borderColor: "#302d28" }}>
+              <p className="text-xs mb-1" style={{ color: "#8a8278" }}>Kunden-E-Mail</p>
+              <p className="text-sm mb-3 break-all" style={{ color: "#f0ede8" }}>{selected.customer_notification_email}</p>
+              {selected.customer_notified_at ? (
+                <div className="flex items-center gap-2 text-xs px-3 py-2 rounded-xl" style={{ background: "rgba(74,222,128,0.1)", color: "#4ade80" }}>
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  Benachrichtigt am {fmtDate(selected.customer_notified_at)}
+                </div>
+              ) : (
+                <button
+                  onClick={() => sendCustomerNotification(selected)}
+                  disabled={sendingNotification || notificationSent[selected.id]}
+                  className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium disabled:opacity-50 transition-all"
+                  style={{ background: "rgba(201,169,110,0.15)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.4)" }}
+                >
+                  {sendingNotification ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
+                  {notificationSent[selected.id] ? "E-Mail gesendet ✓" : "Kunden benachrichtigen"}
+                </button>
+              )}
+            </div>
+          )}
         </div>
       )}
     </B2BLayout>
