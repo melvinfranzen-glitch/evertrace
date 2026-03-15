@@ -118,12 +118,18 @@ export default function B2BPublicMemorial() {
             <div className="h-px w-10" style={{ background: "rgba(201,169,110,0.5)" }} />
           </div>
           <p className="text-xs uppercase tracking-[0.3em] mb-3" style={{ color: "#c9a96e" }}>In liebevoller Erinnerung</p>
-          <h1 className="text-5xl md:text-6xl font-semibold mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            {/* Case name would need to be fetched — show page data */}
-            Gedenkseite
+          <h1 className="text-5xl md:text-6xl font-semibold mb-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            {caseData ? `${caseData.deceased_first_name} ${caseData.deceased_last_name}` : "Gedenkseite"}
           </h1>
+          {(caseData?.date_of_birth || caseData?.date_of_death) && (
+            <p className="text-base text-stone-300 mb-2" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic" }}>
+              {caseData.date_of_birth && `* ${fmtDate(caseData.date_of_birth)}`}
+              {caseData.date_of_birth && caseData.date_of_death && " · "}
+              {caseData.date_of_death && `† ${fmtDate(caseData.date_of_death)}`}
+            </p>
+          )}
           {page.funeral_date && (
-            <p className="text-base tracking-widest text-stone-300">
+            <p className="text-sm tracking-widest text-stone-400">
               Trauerfeier: {fmtDate(page.funeral_date)}
               {page.funeral_location ? ` · ${page.funeral_location}` : ""}
             </p>
