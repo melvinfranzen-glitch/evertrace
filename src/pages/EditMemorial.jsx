@@ -89,7 +89,7 @@ export default function EditMemorial() {
     setTimeline((p) => p.filter((e) => e.id !== id));
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center pt-20"><Loader2 className="w-8 h-8 animate-spin text-amber-700" /></div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center pt-20"><Loader2 className="w-8 h-8 animate-spin" style={{ color: "#c9a96e" }} /></div>;
   if (!memorial) return null;
 
   const tabs = [
@@ -121,7 +121,7 @@ export default function EditMemorial() {
             <Button
               variant="outline" size="sm" className="rounded-xl text-xs"
               onClick={() => window.location.href = createPageUrl("CardDesigner") + `?id=${memorial.id}`}
-              style={{ borderColor: "#c9a84c", color: "#a07830" }}
+              style={{ borderColor: "rgba(201,169,110,0.4)", color: "#c9a96e" }}
             >
               <CreditCard className="w-3.5 h-3.5 mr-1" /> Trauerkarte gestalten
             </Button>
