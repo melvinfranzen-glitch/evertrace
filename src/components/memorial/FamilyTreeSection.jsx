@@ -15,11 +15,19 @@ const RELATION_LABEL = {
 function PersonNode({ person, isDeceased, onClick, linkedId }) {
   const initials = person.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
   const hasLinked = !!person.linked_memorial_short_id;
+  const handleClick = () => {
+    if (linkedId) {
+      window.location.href = `/MemorialProfile?id=${linkedId}`;
+    } else {
+      onClick();
+    }
+  };
+
   return (
     <button
-      onClick={onClick}
+      onClick={handleClick}
       className="flex flex-col items-center gap-2 group focus:outline-none relative"
-      title={`${person.name} – Profil anzeigen`}
+      title={linkedId ? `Zur Gedenkseite von ${person.name}` : `${person.name} – Profil anzeigen`}
     >
       <div className="relative">
         <div

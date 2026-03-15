@@ -106,16 +106,45 @@ export default function FamilyEditor({ memorialId }) {
             <Input value={form.death_year} onChange={(e) => setForm((p) => ({ ...p, death_year: e.target.value }))} placeholder="z.B. 2010" className="mt-1" />
           </div>
           <div className="col-span-2">
-            <Label className="text-xs">Eigene Gedenkseite (Kurz-ID, optional)</Label>
-            <Input value={form.linked_memorial_short_id} onChange={(e) => setForm((p) => ({ ...p, linked_memorial_short_id: e.target.value.trim() }))} placeholder="z.B. abc123" className="mt-1" />
-            <p className="text-xs text-gray-400 mt-1">Verknüpft dieses Mitglied mit einer bestehenden Gedenkseite.</p>
+            <Label className="text-xs">Gedenkseite verknüpfen (optional)</Label>
+            <div className="flex gap-2 mt-1">
+              <button
+                type="button"
+                onClick={() => setForm((p) => ({ ...p, _showLinkInput: !p._showLinkInput }))}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium border border-stone-200 hover:bg-stone-50 transition-all"
+                style={{ color: "#b45309" }}
+              >
+                <Link2 className="w-3.5 h-3.5" /> Bestehende Seite verknüpfen
+              </button>
+              {form.name && (
+                <button
+                  type="button"
+                  onClick={() => window.open(`/CreateMemorial?prefill_name=${encodeURIComponent(form.name)}`, "_blank")}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium border border-stone-200 hover:bg-stone-50 transition-all"
+                  style={{ color: "#6b7280" }}
+                >
+                  <ExternalLink className="w-3.5 h-3.5" /> Neue Gedenkseite erstellen →
+                </button>
+              )}
+            </div>
+            {form._showLinkInput && (
+              <div className="mt-2">
+                <Input
+                  value={form.linked_memorial_short_id}
+                  onChange={(e) => setForm((p) => ({ ...p, linked_memorial_short_id: e.target.value.trim() }))}
+                  placeholder="Kurz-ID der Gedenkseite, z.B. abc123"
+                  className="mt-1"
+                />
+                <p className="text-xs text-gray-400 mt-1">Die Kurz-ID finden Sie in der URL der Gedenkseite (?id=...).</p>
+              </div>
+            )}
           </div>
         </div>
         <Button
           onClick={add}
           disabled={adding || !form.name}
           className="rounded-xl text-white"
-          style={{ background: "#b45309" }}
+          style={{ background: "#c9a96e" }}
         >
           <Plus className="w-4 h-4 mr-1" /> Hinzufügen
         </Button>
