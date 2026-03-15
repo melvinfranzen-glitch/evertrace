@@ -115,27 +115,44 @@ export default function CondolenceBookPrintModal({ page, caseData, contributions
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-4 border-t flex items-center justify-between gap-4 flex-shrink-0" style={{ borderColor: "#302d28" }}>
-              <div>
-                <p className="text-xs mb-1" style={{ color: "#8a8278" }}>Anzahl Exemplare</p>
-                <div className="flex items-center gap-2">
-                  <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }}>−</button>
-                  <span className="w-8 text-center font-semibold" style={{ color: "#f0ede8" }}>{quantity}</span>
-                  <button onClick={() => setQuantity(q => q + 1)} className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }}>+</button>
+            <div className="px-6 py-4 border-t flex-shrink-0" style={{ borderColor: "#302d28" }}>
+              {/* Volume pricing table */}
+              <div className="rounded-xl overflow-hidden mb-4" style={{ border: "1px solid #302d28" }}>
+                <div className="grid grid-cols-3 text-xs px-3 py-2" style={{ background: "#201e1a", color: "#5a554e" }}>
+                  <span>Menge</span><span className="text-center">Preis / Stk.</span><span className="text-right">zzgl. MwSt.</span>
                 </div>
+                {B2B_BOOK_TIERS.map((tier, i) => (
+                  <div key={i} className="grid grid-cols-3 text-xs px-3 py-2 border-t" style={{ borderColor: "#302d28", background: getB2BBookUnitPrice(i === 0 ? 1 : i === 1 ? 2 : 5) === unitPrice && quantity >= (i === 0 ? 1 : i === 1 ? 2 : 5) && quantity < (i === 1 ? 5 : Infinity) ? "rgba(201,169,110,0.06)" : "transparent" }}>
+                    <span style={{ color: "#d4c5a9" }}>{tier.label}</span>
+                    <span className="text-center font-semibold" style={{ color: "#c9a96e" }}>€ {fmtEur(tier.unitPrice)}</span>
+                    <span className="text-right" style={{ color: "#5a554e" }}>zzgl. MwSt.</span>
+                  </div>
+                ))}
               </div>
-              <div className="text-right">
-                <p className="text-xs mb-0.5" style={{ color: "#5a554e" }}>€ 29,90 / Stk.</p>
-                <p className="text-xl font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#c9a96e" }}>
-                  € {(29.90 * quantity).toFixed(2).replace(".", ",")}
-                </p>
+              <p className="text-xs mb-3" style={{ color: "#5a554e" }}>Premium Soft-Touch-Qualität · Lieferzeit: 5–7 Werktage</p>
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-xs mb-1" style={{ color: "#8a8278" }}>Anzahl Exemplare</p>
+                  <div className="flex items-center gap-2">
+                    <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }}>−</button>
+                    <span className="w-8 text-center font-semibold" style={{ color: "#f0ede8" }}>{quantity}</span>
+                    <button onClick={() => setQuantity(q => q + 1)} className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }}>+</button>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs mb-0.5" style={{ color: "#5a554e" }}>€ {fmtEur(unitPrice)} / Stk.</p>
+                  <p className="text-xl font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#c9a96e" }}>
+                    € {fmtEur(totalBookPrice)}
+                  </p>
+                  <p className="text-xs" style={{ color: "#5a554e" }}>zzgl. MwSt.</p>
+                </div>
+                <button onClick={submit} disabled={submitting}
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-medium disabled:opacity-50"
+                  style={{ background: "#c9a96e", color: "#0f0e0c" }}>
+                  {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Printer className="w-4 h-4" />}
+                  Bestellen
+                </button>
               </div>
-              <button onClick={submit} disabled={submitting}
-                className="flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-medium disabled:opacity-50"
-                style={{ background: "#c9a96e", color: "#0f0e0c" }}>
-                {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Printer className="w-4 h-4" />}
-                Bestellen
-              </button>
             </div>
           </>
         )}
