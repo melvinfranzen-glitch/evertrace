@@ -1,5 +1,5 @@
 import { createPageUrl } from "@/utils";
-import { Heart, Mail } from "lucide-react";
+import { Heart, Mail, Sparkles } from "lucide-react";
 
 export default function TestimonialsSection() {
   return (
