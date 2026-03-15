@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
-import { Package, Filter } from "lucide-react";
+import { Package, Mail, CheckCircle2, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 
@@ -27,6 +27,9 @@ export default function B2BOrders() {
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("Alle");
   const [selected, setSelected] = useState(null);
+  const [funeralHome, setFuneralHome] = useState(null);
+  const [sendingNotification, setSendingNotification] = useState(false);
+  const [notificationSent, setNotificationSent] = useState({});
 
   useEffect(() => {
     base44.auth.me().then(u => {
