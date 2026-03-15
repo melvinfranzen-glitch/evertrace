@@ -130,7 +130,7 @@ export default function MemorialProfile() {
           <Button
             onClick={handleUnlock}
             className="w-full mt-3 text-white rounded-xl"
-            style={{ background: "#b45309" }}
+            style={{ background: "#c9a96e", color: "#0f0e0c" }}
           >
             Eintreten
           </Button>
