@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Loader2, Heart, Feather, Upload, Flame, Copy, Check, BookOpen, MessageSquare } from "lucide-react";
+import { Loader2, Heart, Feather, Upload, Flame, Copy, Check, BookOpen } from "lucide-react";
+import QrSharePanel from "@/components/memorial/QrSharePanel";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import CondolenceBookPrintModal from "@/components/b2b/CondolenceBookPrintModal";
@@ -51,8 +52,15 @@ export default function B2BPublicMemorial() {
         p.funeral_home_id ? base44.entities.FuneralHome.filter({ id: p.funeral_home_id }) : Promise.resolve([]),
       ]);
       setContributions(contributions);
-      if (cases[0]) setCaseData(cases[0]);
-      if (fhList[0]) setFuneralHome(fhList[0]);
+      const resolvedCase = cases[0] || null;
+      if (resolvedCase) setCaseData(resolvedCase);
+      // Resolve funeral home: direct id first, fallback to case.created_by
+      if (fhList[0]) {
+        setFuneralHome(fhList[0]);
+      } else if (resolvedCase?.created_by) {
+        base44.entities.FuneralHome.filter({ created_by: resolvedCase.created_by }, "-created_date", 1)
+          .then(([fh]) => { if (fh) setFuneralHome(fh); });
+      }
       // increment visit count
       base44.entities.B2BMemorialPage.update(p.id, { visit_count: (p.visit_count || 0) + 1 }).catch(() => {});
       setLoading(false);
