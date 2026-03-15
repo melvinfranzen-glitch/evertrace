@@ -96,7 +96,7 @@ export default function B2BDashboard() {
       </div>
 
       {/* Anniversary reminders */}
-      <AnniversaryReminders memorials={caseAsMemorials} />
+      {caseAsMemorials.length > 0 && <AnniversaryReminders memorials={caseAsMemorials} />}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Chart */}

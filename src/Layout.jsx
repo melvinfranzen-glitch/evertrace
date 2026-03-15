@@ -53,9 +53,9 @@ export default function Layout({ children, currentPageName }) {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-1">
-            {navLinks.map(
-              (link) =>
-                (!link.auth || user) && (
+          {navLinks.map(
+            (link) =>
+              (!link.auth || user) && (
                   <Link
                     key={link.page}
                     to={link.href || createPageUrl(link.page)}

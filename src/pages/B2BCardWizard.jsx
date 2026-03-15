@@ -49,16 +49,18 @@ export default function B2BCardWizard() {
   const [selectedCase, setSelectedCase] = useState(null);
   const [cardFormat, setCardFormat] = useState("DIN_A6_landscape");
   const [previewSide, setPreviewSide] = useState("front"); // "front" | "inside"
+  const [schnellmodus, setSchnellmodus] = useState(false);
 
   // Questionnaire
   const [character, setCharacter] = useState("");
   const [passions, setPassions] = useState([]);
   const [customPassion, setCustomPassion] = useState("");
   const [quote, setQuote] = useState("");
-  const [religion, setReligion] = useState("");
+  const [religion, setReligion] = useState("Weltlich");
   const [tone, setTone] = useState(TONES[1]);
   const [motif, setMotif] = useState("nature");
   const [profession, setProfession] = useState("");
+  const [shortDescription, setShortDescription] = useState("");
 
   // Generation
   const [generatedText, setGeneratedText] = useState("");
@@ -126,19 +128,20 @@ export default function B2BCardWizard() {
 
   const generateText = async () => {
     setGenerating(true);
-    const allPassions = [...passions, ...(customPassion ? [customPassion] : [])].join(", ");
-    const professionHint = profession ? `Beruf/Handwerk: ${profession}.` : "";
+    const allPassions = schnellmodus ? "" : [...passions, ...(customPassion ? [customPassion] : [])].join(", ");
+    const professionHint = schnellmodus ? "" : profession ? `Beruf/Handwerk: ${profession}.` : "";
+    const briefDesc = schnellmodus ? shortDescription : "";
     const prompt = `Du bist ein Experte für würdevolle Trauerkarten auf Deutsch. Erstelle einen personalisierten Trauerkartentext:
 
-Name: ${selectedCase ? `${selectedCase.deceased_first_name} ${selectedCase.deceased_last_name}` : "Unbekannte Person"}
-Geburtsdatum: ${selectedCase ? fmtDate(selectedCase.date_of_birth) : "unbekannt"}
-Sterbedatum: ${selectedCase ? fmtDate(selectedCase.date_of_death) : "unbekannt"}
-Charakter: ${character || "gütig und herzlich"}
-Leidenschaften: ${allPassions || "Familie und Natur"}
-${professionHint}
-Zitat: ${quote || "keines angegeben"}
-Ausrichtung: ${religion || "nicht religiös"}
-Ton: ${tone}
+  Name: ${selectedCase ? `${selectedCase.deceased_first_name} ${selectedCase.deceased_last_name}` : "Unbekannte Person"}
+  Geburtsdatum: ${selectedCase ? fmtDate(selectedCase.date_of_birth) : "unbekannt"}
+  Sterbedatum: ${selectedCase ? fmtDate(selectedCase.date_of_death) : "unbekannt"}
+  ${schnellmodus ? `Kurzbeschreibung: ${briefDesc}` : `Charakter: ${character || "gütig und herzlich"}
+  Leidenschaften: ${allPassions || "Familie und Natur"}
+  ${professionHint}
+  Zitat: ${quote || "keines angegeben"}
+  Ausrichtung: ${religion || "nicht religiös"}
+  Ton: ${tone}`}
 
 Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Erstens ein eröffnender Satz, der den Charakter der Person in einer einzigen, präzisen Formulierung einfängt. Zweitens eine mittlere Passage von zwei bis drei Zeilen, die ihre Leidenschaften und ihren Beruf organisch verwebt. Drittens eine abschließende Zeile, die das angegebene Zitat oder einen würdigen Ersatz integriert, falls kein Zitat angegeben wurde. Gesamtlänge: 80 bis 110 Wörter. Der Text soll sich lesen, als wäre er von einem Menschen geschrieben worden, der die Person kannte — nicht wie ein KI-generierter Standardtext.`;
 
@@ -289,12 +292,61 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
             </div>
           )}
 
+          {/* Schnellmodus Toggle */}
+          {step === 0 && (
+            <div className="mb-6 flex items-center justify-center gap-3">
+              <span className="text-xs" style={{ color: "#8a8278" }}>Modus:</span>
+              <div className="flex rounded-lg overflow-hidden border" style={{ borderColor: "#302d28" }}>
+                <button onClick={() => setSchnellmodus(false)}
+                  className="px-4 py-2 text-xs font-medium transition-all"
+                  style={{ background: !schnellmodus ? "#c9a96e" : "#181714", color: !schnellmodus ? "#0f0e0c" : "#8a8278" }}>
+                  Vollständig
+                </button>
+                <button onClick={() => setSchnellmodus(true)}
+                  className="px-4 py-2 text-xs font-medium transition-all"
+                  style={{ background: schnellmodus ? "#c9a96e" : "#181714", color: schnellmodus ? "#0f0e0c" : "#8a8278" }}>
+                  Schnellmodus
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Step 1 — Questionnaire */}
-          {step === 1 && (
-            <div className="space-y-4">
-              <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
-                <label className="block text-sm font-medium mb-2" style={{ color: "#8a8278" }}>Charakterbeschreibung</label>
-                <textarea value={character} onChange={e => setCharacter(e.target.value)} rows={2}
+               {step === 1 && (
+                <div className="space-y-4">
+                  {schnellmodus ? (
+                    <>
+                      <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
+                        <label className="block text-sm font-medium mb-2" style={{ color: "#8a8278" }}>Verstorbene Person</label>
+                        <input disabled value={selectedCase ? `${selectedCase.deceased_first_name} ${selectedCase.deceased_last_name}` : ""} 
+                          className="w-full px-4 py-3 rounded-xl text-sm outline-none opacity-50"
+                          style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }} />
+                      </div>
+                      <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
+                        <label className="block text-sm font-medium mb-2" style={{ color: "#8a8278" }}>Kurzbeschreibung (optional)</label>
+                        <textarea value={shortDescription} onChange={e => setShortDescription(e.target.value)} rows={2}
+                          placeholder="Ein kurzer Satz über die Person genügt"
+                          className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none"
+                          style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }} />
+                      </div>
+                      <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
+                        <label className="block text-sm font-medium mb-3" style={{ color: "#8a8278" }}>Motivthema (Außenseite)</label>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                          {MOTIFS.map(m => (
+                            <button key={m.id} onClick={() => setMotif(m.id)}
+                              className="p-3 rounded-xl text-center text-xs transition-all"
+                              style={{ background: motif === m.id ? `${m.color}20` : "#201e1a", border: `1px solid ${motif === m.id ? m.color : "#302d28"}`, color: motif === m.id ? m.color : "#8a8278" }}>
+                              {m.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                  <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
+                    <label className="block text-sm font-medium mb-2" style={{ color: "#8a8278" }}>Charakterbeschreibung</label>
+                    <textarea value={character} onChange={e => setCharacter(e.target.value)} rows={2}
                   placeholder="Z.B. Ein ruhiger Mensch, der immer für andere da war…"
                   className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none"
                   style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }} />
