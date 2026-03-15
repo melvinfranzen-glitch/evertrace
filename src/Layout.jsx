@@ -31,7 +31,7 @@ export default function Layout({ children, currentPageName }) {
   const isActive = (page) => currentPageName === page;
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ fontFamily: "'Inter', sans-serif", background: "#FAFAF8" }}>
+    <div className="min-h-screen flex flex-col" style={{ fontFamily: "'DM Sans', sans-serif", background: "#FAFAF8" }}>
       <nav
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
         style={{

@@ -82,7 +82,7 @@ export default function MemorialCard({ memorial, onDelete, onOpenPlaque }) {
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-2 flex-wrap gap-y-2">
             <Button
               size="sm"
               variant="outline"

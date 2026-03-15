@@ -105,17 +105,20 @@ export default function HomeNav() {
         }}
       >
         <div className="px-4 py-4 space-y-1">
-          {navLinks.map((l) => (
+          {navLinks.map((l) => {
+            const isActive = window.location.pathname + window.location.search === l.href;
+            return (
             <Link
               key={l.label}
               to={l.href}
               className="block px-4 py-3 rounded-xl text-sm"
-              style={{ fontFamily: "'DM Sans', sans-serif", color: "#8a8278" }}
+              style={{ fontFamily: "'DM Sans', sans-serif", background: isActive ? "rgba(201,169,110,0.1)" : "transparent", color: isActive ? "#c9a96e" : "#8a8278" }}
               onClick={() => setMenuOpen(false)}
             >
               {l.label}
             </Link>
-          ))}
+            );
+          })}
           <div className="pt-3 border-t space-y-2" style={{ borderColor: "rgba(201,169,110,0.12)" }}>
             <Link
               to="/B2BRegister"
