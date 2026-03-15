@@ -29,10 +29,12 @@ export default function B2BOrders() {
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    Promise.all([
-      base44.entities.PrintOrder.list("-created_date", 100),
-      base44.entities.Case.list("-created_date", 100),
-    ]).then(([o, c]) => { setOrders(o); setCases(c); setLoading(false); });
+    base44.auth.me().then(u => {
+      Promise.all([
+        base44.entities.PrintOrder.filter({ created_by: u.email }, "-created_date", 100),
+        base44.entities.Case.filter({ created_by: u.email }, "-created_date", 100),
+      ]).then(([o, c]) => { setOrders(o); setCases(c); setLoading(false); });
+    });
   }, []);
 
   const getCase = (id) => cases.find(c => c.id === id);
