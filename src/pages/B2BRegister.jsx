@@ -70,12 +70,19 @@ export default function B2BRegister() {
   return (
     <div className="min-h-screen" style={{ background: "#0f0e0c", fontFamily: "'DM Sans', sans-serif" }}>
       {/* Header */}
-      <div className="border-b px-8 py-5 flex items-center gap-3" style={{ borderColor: "#302d28" }}>
-        <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#c9a96e" }}>
-          <span style={{ color: "#0f0e0c", fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: 14 }}>E</span>
+      <div className="border-b px-8 py-5 flex items-center justify-between" style={{ borderColor: "#302d28" }}>
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#c9a96e" }}>
+            <span style={{ color: "#0f0e0c", fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: 14 }}>E</span>
+          </div>
+          <span style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8", fontSize: 20, fontWeight: 600 }}>Evertrace</span>
+          <span style={{ color: "#5a554e", marginLeft: 8 }}>— Partner-Registrierung</span>
         </div>
-        <span style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8", fontSize: 20, fontWeight: 600 }}>Evertrace</span>
-        <span style={{ color: "#5a554e", marginLeft: 8 }}>— Partner-Registrierung</span>
+        <Link to="/" className="text-sm flex items-center gap-1.5 transition-colors" style={{ color: "#8a8278", fontFamily: "'DM Sans', sans-serif" }}
+          onMouseEnter={e => e.currentTarget.style.color = "#f0ede8"}
+          onMouseLeave={e => e.currentTarget.style.color = "#8a8278"}>
+          ← Zur Startseite
+        </Link>
       </div>
 
       <div className="max-w-5xl mx-auto px-6 py-16">
