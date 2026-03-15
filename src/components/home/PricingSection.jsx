@@ -252,9 +252,21 @@ export default function PricingSection() {
           </div>
         )}
 
-        <p className="text-center text-xs mt-8" style={{ color: "#5a554e" }}>
-          Alle B2B-Preise zzgl. MwSt. · Monatlich kündbar.
-        </p>
+        {tab === "b2c" && (
+          <div className="mt-8 text-center space-y-2">
+            <p className="text-xs" style={{ color: "#5a554e" }}>
+              Einmalige Zahlung · Gedenkseite bleibt dauerhaft online · Keine versteckten Kosten
+            </p>
+            <p className="text-xs" style={{ color: "#5a554e" }}>
+              Zahlung per Kreditkarte, PayPal oder SEPA-Lastschrift
+            </p>
+          </div>
+        )}
+        {tab === "b2b" && (
+          <p className="text-center text-xs mt-8" style={{ color: "#5a554e" }}>
+            Alle B2B-Preise zzgl. MwSt. · Monatlich kündbar · Zahlung per SEPA oder Kreditkarte
+          </p>
+        )}
       </div>
     </section>
   );

@@ -14,8 +14,8 @@ export default function Home() {
       <HeroLanding />
       <FeaturesSection />
       <CardTeaser />
-      <PricingSection />
       <TestimonialsSection />
+      <PricingSection />
 
       {/* Final CTA */}
       <section className="py-28 px-6 text-center relative overflow-hidden" style={{ background: "linear-gradient(160deg, #1a1410, #231a0e)" }}>
