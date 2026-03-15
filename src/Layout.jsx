@@ -60,7 +60,7 @@ export default function Layout({ children, currentPageName }) {
                 (!link.auth || user) && (
                   <Link
                     key={link.page}
-                    to={createPageUrl(link.page)}
+                    to={link.href || createPageUrl(link.page)}
                     className="px-4 py-2 rounded-lg text-sm transition-colors duration-150"
                     style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: isActive(link.page) ? "#f0ede8" : "#8a8278" }}
                     onMouseEnter={e => e.currentTarget.style.color = "#f0ede8"}
