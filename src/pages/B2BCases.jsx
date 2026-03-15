@@ -112,8 +112,8 @@ export default function B2BCases() {
 
       {/* Table */}
       <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid #302d28" }}>
-        {/* Header */}
-        <div className="grid grid-cols-12 gap-4 px-5 py-3" style={{ background: "#181714", borderBottom: "1px solid #302d28" }}>
+        {/* Header — desktop only */}
+        <div className="hidden md:grid grid-cols-12 gap-4 px-5 py-3" style={{ background: "#181714", borderBottom: "1px solid #302d28" }}>
           <div className="col-span-3"><SortBtn field="deceased_last_name" label="Name" /></div>
           <div className="col-span-2"><SortBtn field="date_of_death" label="Todesdatum" /></div>
           <div className="col-span-2 text-xs font-medium uppercase tracking-wide" style={{ color: "#5a554e" }}>Bestattungsart</div>
