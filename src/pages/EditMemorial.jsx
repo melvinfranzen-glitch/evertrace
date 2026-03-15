@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Loader2, Save, ArrowLeft, Upload, Plus, Trash2, Sparkles, Eye, CreditCard, BookOpen } from "lucide-react";
+import { Loader2, Save, ArrowLeft, Upload, Plus, Trash2, Sparkles, Eye, CreditCard, BookOpen, QrCode } from "lucide-react";
 import FamilyEditor from "@/components/memorial/FamilyEditor";
 import TimelineEditor from "@/components/memorial/TimelineEditor";
 import QrSharePanel from "@/components/memorial/QrSharePanel";
@@ -275,6 +275,24 @@ export default function EditMemorial() {
             </div>
           )}
         </div>
+      {/* Upsell banner */}
+      <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+        style={{ background: "linear-gradient(135deg, #1a1410, #2a1e0a)", border: "1px solid rgba(201,169,110,0.2)", borderRadius: 12, padding: "16px 20px" }}>
+        <div className="flex items-center gap-3">
+          <QrCode className="w-5 h-5 flex-shrink-0" style={{ color: "#c9a96e" }} />
+          <div>
+            <p className="font-medium" style={{ color: "#f0ede8" }}>QR-Plakette für das Grab</p>
+            <p className="text-xs mt-0.5" style={{ color: "#8a8278" }}>Besucher scannen den Code direkt am Grabstein</p>
+          </div>
+        </div>
+        <button
+          onClick={() => window.location.href = `/Shop?memorial_id=${memorial.short_id}`}
+          className="whitespace-nowrap px-4 py-2 font-medium flex-shrink-0"
+          style={{ background: "#c9a96e", color: "#0f0e0c", borderRadius: 8, fontSize: 13 }}
+        >
+          Jetzt bestellen ab € 129,–
+        </button>
+      </div>
       </div>
     </div>
   );

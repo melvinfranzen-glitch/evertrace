@@ -28,6 +28,7 @@ export default function B2BMemorial() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [generatingBio, setGeneratingBio] = useState(false);
+  const [newPageCaseId, setNewPageCaseId] = useState(null);
 
   const params = new URLSearchParams(window.location.search);
   const preselectedCaseId = params.get("case_id");
@@ -82,6 +83,7 @@ export default function B2BMemorial() {
     setShowModal(false);
     setForm(EMPTY);
     setSaving(false);
+    setNewPageCaseId(form.case_id);
   };
 
   return (
@@ -109,6 +111,22 @@ export default function B2BMemorial() {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {newPageCaseId && (
+            <div className="rounded-2xl p-5 flex flex-col gap-3" style={{ background: "#181714", border: "1px solid rgba(201,169,110,0.4)" }}>
+              <p className="text-sm font-semibold" style={{ color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>Plakette für das Grab bestellen?</p>
+              <p className="text-xs" style={{ color: "#8a8278" }}>Bieten Sie den Angehörigen eine gravierte QR-Plakette für den Grabstein an.</p>
+              <div className="flex items-center gap-2">
+                <a href={`/Shop?case_id=${newPageCaseId}`}
+                  className="flex-1 text-center py-2 rounded-xl text-xs font-medium"
+                  style={{ background: "#c9a96e", color: "#0f0e0c" }}>
+                  Zum Shop →
+                </a>
+                <button onClick={() => setNewPageCaseId(null)} className="px-3 py-2 rounded-xl text-xs" style={{ color: "#5a554e", border: "1px solid #302d28" }}>
+                  Schließen
+                </button>
+              </div>
+            </div>
+          )}
           {pages.map(page => {
             const c = getCase(page.case_id);
             const priv = PRIVACY_CONFIG[page.privacy] || PRIVACY_CONFIG.public;

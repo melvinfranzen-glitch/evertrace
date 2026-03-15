@@ -81,14 +81,57 @@ export default function CreateMemorial() {
     setGenerating(false);
   };
 
+  const [created, setCreated] = useState(false);
+  const [createdShortId, setCreatedShortId] = useState("");
+
   const handleSave = async () => {
     setSaving(true);
     const data = { ...form };
     if (!data.access_password) delete data.access_password;
     await base44.entities.Memorial.create(data);
     setSaving(false);
-    window.location.href = createPageUrl("Dashboard");
+    setCreatedShortId(form.short_id);
+    setCreated(true);
   };
+
+  if (created) {
+    return (
+      <div className="min-h-screen pt-24 pb-16 px-4 flex items-center justify-center" style={{ background: "#FAFAF8" }}>
+        <div className="max-w-md w-full text-center space-y-6">
+          <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center" style={{ background: "#ecfdf5" }}>
+            <Check className="w-8 h-8 text-green-600" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Gedenkseite erstellt</h2>
+            <p className="text-gray-500 text-sm">Die Gedenkseite für {form.name} ist jetzt aktiv.</p>
+          </div>
+          <Button onClick={() => window.location.href = createPageUrl("Dashboard")} className="text-white rounded-xl px-8" style={{ background: "#c9a96e" }}>
+            Zum Dashboard
+          </Button>
+
+          {/* Upsell card */}
+          <div className="text-left" style={{ background: "#181714", border: "1px solid rgba(201,169,110,0.25)", borderRadius: 14, padding: 24 }}>
+            <span className="inline-block text-xs font-semibold px-2.5 py-1 rounded-full mb-3" style={{ background: "rgba(201,169,110,0.15)", color: "#c9a96e" }}>
+              Empfehlung
+            </span>
+            <h3 className="text-lg font-semibold mb-2" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>
+              Machen Sie die Erinnerung greifbar
+            </h3>
+            <p className="text-sm leading-relaxed mb-4" style={{ color: "#8a8278" }}>
+              Eine gravierte Plakette mit QR-Code verbindet den Grabstein direkt mit dieser Gedenkseite. Besucher scannen den Code und landen sofort auf der persönlichen Erinnerungsseite.
+            </p>
+            <button
+              onClick={() => window.location.href = `/Shop?memorial_id=${createdShortId}`}
+              className="w-full py-2.5 rounded-xl text-sm font-medium"
+              style={{ background: "#c9a96e", color: "#0f0e0c" }}
+            >
+              Plakette bestellen ab € 129,–
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const memorialUrl = `${window.location.origin}/MemorialProfile?id=${form.short_id}`;
   const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(memorialUrl)}`;

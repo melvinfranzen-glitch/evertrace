@@ -22,17 +22,35 @@ export default function Shop() {
   const [user, setUser] = useState(null);
   const [productType, setProductType] = useState("plaque_brass");
   const [selectedMemorial, setSelectedMemorial] = useState(null);
+  const [b2bSlug, setB2bSlug] = useState(null);
   const [form, setForm] = useState({ customer_name: "", customer_email: "", shipping_street: "", shipping_city: "", shipping_zip: "", notes: "" });
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlMemorialId = urlParams.get("memorial_id");
+  const urlCaseId = urlParams.get("case_id");
 
   useEffect(() => {
     base44.auth.me().then((u) => {
       setUser(u);
       setForm((p) => ({ ...p, customer_name: u.full_name || "", customer_email: u.email || "" }));
-      base44.entities.Memorial.filter({ created_by: u.email }).then((ms) => {
+      base44.entities.Memorial.filter({ created_by: u.email }).then(async (ms) => {
         setMemorials(ms);
-        if (ms.length > 0) setSelectedMemorial(ms[0]);
+        if (urlMemorialId) {
+          const match = ms.find(m => m.short_id === urlMemorialId);
+          if (match) { setSelectedMemorial(match); return; }
+          // fallback: query by short_id
+          const found = await base44.entities.Memorial.filter({ short_id: urlMemorialId });
+          if (found[0]) setSelectedMemorial(found[0]);
+          else if (ms.length > 0) setSelectedMemorial(ms[0]);
+        } else if (urlCaseId) {
+          const b2bPages = await base44.entities.B2BMemorialPage.filter({ case_id: urlCaseId });
+          if (b2bPages[0]) setB2bSlug(b2bPages[0].slug);
+          if (ms.length > 0) setSelectedMemorial(ms[0]);
+        } else if (ms.length > 0) {
+          setSelectedMemorial(ms[0]);
+        }
       });
     }).catch(() => {});
   }, []);
@@ -61,7 +79,7 @@ export default function Shop() {
             <Check className="w-10 h-10 text-green-600" />
           </div>
           <h2 className="text-2xl font-semibold text-gray-800 mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Bestellung aufgenommen!</h2>
-          <p className="text-gray-500 mb-6">Wir fertigen Ihr Produkt innerhalb von 5–7 Werktagen und versenden es an die angegebene Adresse.</p>
+          <p className="text-gray-500 mb-6">Wir fertigen Ihre Plakette innerhalb von 5–7 Werktagen mit dem personalisierten QR-Code und versenden sie an die angegebene Adresse. Der QR-Code ist dauerhaft aktiv solange die Gedenkseite besteht.</p>
           <Button onClick={() => window.location.href = createPageUrl("Dashboard")} className="text-white rounded-xl px-8" style={{ background: "#c9a96e" }}>
             Zum Dashboard
           </Button>
@@ -74,14 +92,26 @@ export default function Shop() {
     <div className="min-h-screen pt-24 pb-16 px-4" style={{ background: "#FAFAF8" }}>
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-12">
-          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>Erinnerungsstücke</p>
+          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>Grabplaketten mit QR-Code</p>
           <h1 className="text-4xl font-semibold text-gray-800 mb-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            Erinnerungsstücke
+            Grabplaketten mit QR-Code
           </h1>
           <p className="text-gray-500 font-light max-w-lg mx-auto">
-            Hochwertige Plaketten und gedruckte Kondolenz­bücher als bleibendes Erinnerungsstück.
+            Hochwertig gravierte Plaketten für Grabstein, Urne oder Gedenkstein — mit persönlichem QR-Code, der direkt auf die digitale Gedenkseite führt. Besucher scannen und erleben die Geschichte des Menschen.
           </p>
         </div>
+
+        {/* QR destination preview */}
+        {(selectedMemorial || b2bSlug) && (
+          <div className="mb-6 px-4 py-3 rounded-xl border" style={{ background: "#f7f3ed", borderColor: "#e8dfd0" }}>
+            <p className="text-xs font-medium text-gray-500 mb-1">QR-Code zeigt auf:</p>
+            <p className="text-sm font-mono break-all" style={{ color: "#c9a96e" }}>
+              {b2bSlug
+                ? `evertrace.de/B2BPublicMemorial?slug=${b2bSlug}`
+                : `evertrace.de/MemorialProfile?id=${selectedMemorial?.short_id}`}
+            </p>
+          </div>
+        )}
 
         {/* Product selector */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">

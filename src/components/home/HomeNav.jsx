@@ -19,7 +19,7 @@ export default function HomeNav() {
   const navLinks = [
     { label: "Gedenkseiten", href: createPageUrl("Dashboard") },
     { label: "Trauerkarten", href: createPageUrl("Dashboard") },
-    { label: "Erinnerungsstücke", href: createPageUrl("Shop") },
+    { label: "Grabplaketten mit QR-Code", href: createPageUrl("Shop") },
   ];
 
   return (
