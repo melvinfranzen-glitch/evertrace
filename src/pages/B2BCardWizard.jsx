@@ -73,7 +73,7 @@ export default function B2BCardWizard() {
   const [addonQr, setAddonQr] = useState(false);
 
   // Print config
-  const [quantity, setQuantity] = useState(80);
+  const [quantity, setQuantity] = useState(DEFAULT_CARD_QUANTITY);
   const [printTier, setPrintTier] = useState("standard");
 
   // Delivery
