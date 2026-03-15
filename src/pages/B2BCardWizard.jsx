@@ -590,9 +590,12 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
                 ].map(([label, val]) => (
                   <div key={label} className="flex justify-between py-2 border-b text-sm last:border-0" style={{ borderColor: "#302d28" }}>
                     <span style={{ color: "#8a8278" }}>{label}</span>
-                    <span style={{ color: label === "Gesamtbetrag" ? "#c9a96e" : "#f0ede8", fontWeight: label === "Gesamtbetrag" ? 600 : 400 }}>{val}</span>
+                    <span style={{ color: label.startsWith("Gesamt") ? "#c9a96e" : "#f0ede8", fontWeight: label.startsWith("Gesamt") ? 600 : 400 }}>{val}</span>
                   </div>
                 ))}
+                <p className="text-xs mt-3 pt-3 border-t" style={{ color: "#5a554e", borderColor: "#302d28" }}>
+                  Alle Preise zzgl. MwSt. Die KI-Gestaltung und Personalisierung ist im Kartenpreis enthalten.
+                </p>
               </div>
             </div>
           )}
