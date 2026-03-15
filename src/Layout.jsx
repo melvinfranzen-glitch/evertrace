@@ -72,8 +72,8 @@ export default function Layout({ children, currentPageName }) {
                     to={createPageUrl(link.page)}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
                       isActive(link.page)
-                        ? "bg-stone-100"
-                        : "text-gray-600 hover:text-gray-900 hover:bg-stone-100"
+                        ? "bg-stone-100 text-gray-900"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-stone-100 text-gray-900"
                     }`}
                   >
                     {link.label}
@@ -85,8 +85,8 @@ export default function Layout({ children, currentPageName }) {
                 to={createPageUrl("AdminDashboard")}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 flex items-center gap-1.5 ${
                   isActive("AdminDashboard")
-                    ? "bg-stone-100"
-                    : "text-gray-600 hover:text-gray-900 hover:bg-stone-100"
+                    ? "bg-stone-100 text-gray-900"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-stone-100 text-gray-900"
                 }`}
               >
                 <Shield className="w-3.5 h-3.5" />
@@ -99,7 +99,7 @@ export default function Layout({ children, currentPageName }) {
           <div className="hidden md:flex items-center gap-2 shrink-0">
             {user ? (
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-stone-100 text-sm text-gray-700">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-stone-100 text-gray-900 text-sm text-gray-700">
                   <User className="w-3.5 h-3.5 text-gray-500" />
                   <span className="max-w-[140px] truncate">{user.full_name || user.email}</span>
                 </div>
@@ -137,7 +137,7 @@ export default function Layout({ children, currentPageName }) {
 
           {/* Mobile Hamburger */}
           <button
-            className="md:hidden p-2 rounded-lg text-gray-700 hover:bg-stone-100 transition-colors"
+            className="md:hidden p-2 rounded-lg text-gray-700 hover:bg-stone-100 text-gray-900 transition-colors"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Menü"
           >
@@ -161,8 +161,8 @@ export default function Layout({ children, currentPageName }) {
                     to={createPageUrl(link.page)}
                     className={`flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
                       isActive(link.page)
-                        ? "bg-stone-100"
-                        : "text-gray-700 hover:bg-stone-100"
+                        ? "bg-stone-100 text-gray-900"
+                        : "text-gray-700 hover:bg-stone-100 text-gray-900"
                     }`}
                     onClick={() => setMenuOpen(false)}
                   >
@@ -173,7 +173,7 @@ export default function Layout({ children, currentPageName }) {
             {user?.role === "admin" && (
               <Link
                 to={createPageUrl("AdminDashboard")}
-                className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 hover:bg-stone-100"
+                className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 hover:bg-stone-100 text-gray-900"
                 onClick={() => setMenuOpen(false)}
               >
                 <Shield className="w-4 h-4" /> Admin
