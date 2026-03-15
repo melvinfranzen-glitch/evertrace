@@ -274,9 +274,16 @@ export default function B2BPublicMemorial() {
 
       {/* Footer */}
       <div className="py-8 text-center" style={{ background: "#1a1410" }}>
-        <p className="text-xs" style={{ color: "#5a554e", fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic" }}>
-          Erstellt mit Evertrace
-        </p>
+        {funeralHome?.whitelabel_enabled ? (
+          <div className="flex flex-col items-center gap-2">
+            {funeralHome.logo_url && <img src={funeralHome.logo_url} alt={funeralHome.name} className="h-8 object-contain" />}
+            <p className="text-sm font-medium" style={{ color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>{funeralHome.name}</p>
+          </div>
+        ) : (
+          <p className="text-xs" style={{ color: "#5a554e", fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic" }}>
+            Erstellt mit <a href="/" style={{ color: "#c9a96e" }}>Evertrace</a>
+          </p>
+        )}
       </div>
     </div>
   );
