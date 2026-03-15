@@ -19,10 +19,13 @@ const TABS = [
   { id: "plan", label: "Tarif & Abrechnung", icon: Users },
 ];
 
-const PLANS = {
-  free: { name: "Kostenlos", limits: "3 Fälle/Monat · 5 Karten · 1 Gedenkseite" },
-  premium: { name: "Premium", limits: "50 Fälle/Monat · 50 Karten · Unbegrenzte Gedenkseiten" },
-  enterprise: { name: "Enterprise", limits: "Unbegrenzt · Custom Subdomain · API" },
+import { B2B_PLANS, getPlanLimits } from "@/components/pricing/pricingData";
+
+const PLAN_META = {
+  free:       { name: "Free",       limits: "3 Fälle/Monat · 3 Karten · 1 Gedenkseite",              price: "€ 0 / Monat" },
+  starter:    { name: "Starter",    limits: "15 Fälle/Monat · 20 Karten · Unbegrenzte Gedenkseiten", price: "€ 39 / Monat" },
+  premium:    { name: "Premium",    limits: "50 Fälle/Monat · 75 Karten · Unbegrenzte Gedenkseiten", price: "€ 99 / Monat" },
+  enterprise: { name: "Enterprise", limits: "Unbegrenzt · Custom Subdomain · API",                   price: "Ab € 299 / Monat" },
 };
 
 export default function B2BSettings() {

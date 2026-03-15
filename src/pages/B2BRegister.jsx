@@ -1,40 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { Check, ArrowRight, Building2, FileText, User, Mail, Phone, MapPin, ChevronRight } from "lucide-react";
-
-const PLANS = [
-  {
-    id: "free",
-    name: "Kostenlos",
-    price: "€ 0",
-    period: "/Monat",
-    description: "Zum Kennenlernen der Plattform",
-    features: ["3 Fälle pro Monat", "5 KI-Trauerkarten", "1 Gedenkseite", "Evertrace-Branding"],
-    cta: "Kostenlos starten",
-    highlight: false,
-  },
-  {
-    id: "premium",
-    name: "Premium",
-    price: "€ 79",
-    period: "/Monat",
-    description: "Für aktive Bestattungshäuser",
-    features: ["50 Fälle pro Monat", "50 KI-Trauerkarten", "Unbegrenzte Gedenkseiten", "White-Label (eigenes Logo)", "Print-on-Demand", "Vollständige Analysen", "QR-Code-Integration"],
-    cta: "Premium wählen",
-    highlight: true,
-  },
-  {
-    id: "enterprise",
-    name: "Enterprise",
-    price: "Auf Anfrage",
-    period: "",
-    description: "Für Bestattungsgruppen & Ketten",
-    features: ["Unbegrenzte Fälle & Karten", "Eigene Subdomain", "API-Zugang", "Mehrbenutzerverwaltung", "Priority-Support & SLA", "Onboarding-Beratung"],
-    cta: "Kontakt aufnehmen",
-    highlight: false,
-  },
-];
+import { ArrowRight, Building2, FileText, User, Mail, Phone, MapPin, ChevronRight, Check } from "lucide-react";
+import B2BPricingGrid from "@/components/pricing/B2BPricingGrid";
+import { B2B_PLANS } from "@/components/pricing/pricingData";
 
 const STEPS = ["Plan wählen", "Unternehmen", "Kontakt", "Bestätigung"];
 
