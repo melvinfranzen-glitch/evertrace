@@ -58,7 +58,7 @@ function UnlockedLetter({ track }) {
                 Digitaler Brief · Freigeschaltet
               </span>
             </div>
-            <p className="font-semibold text-gray-800 text-sm" style={{ fontFamily: "'Playfair Display', serif" }}>{track.title}</p>
+            <p className="font-semibold text-gray-800 text-sm" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{track.title}</p>
             {track.letter_from && <p className="text-xs text-gray-600 mt-0.5">Von: {track.letter_from}</p>}
             {track.letter_message && (
               <p className="text-sm italic text-gray-600 mt-2 leading-relaxed border-l-2 pl-3" style={{ borderColor: "#86efac" }}>
@@ -199,7 +199,7 @@ export default function AudioSection({ tracks }) {
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-10">
           <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#b45309" }}>Stimmen & Klänge</p>
-          <h2 className="text-3xl md:text-4xl font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <h2 className="text-3xl md:text-4xl font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             Audioerinnerungen
           </h2>
           <p className="text-gray-500 mt-3 text-base max-w-sm mx-auto">

@@ -37,7 +37,7 @@ export default function Dashboard() {
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10">
           <div>
-            <h1 className="text-3xl font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <h1 className="text-3xl font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Meine Gedenkseiten
             </h1>
             <p className="text-gray-500 mt-1">Willkommen zurück, {user?.full_name || user?.email}</p>
@@ -59,7 +59,7 @@ export default function Dashboard() {
             <div className="w-20 h-20 rounded-2xl mx-auto flex items-center justify-center mb-6" style={{ background: "#f5f0e8" }}>
               <BookOpen className="w-10 h-10 text-amber-700" />
             </div>
-            <h2 className="text-xl font-semibold text-gray-700 mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <h2 className="text-xl font-semibold text-gray-700 mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Noch keine Gedenkseite
             </h2>
             <p className="text-gray-500 mb-6 max-w-sm mx-auto">
