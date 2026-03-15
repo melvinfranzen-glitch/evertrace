@@ -66,7 +66,8 @@ export default function B2BSettings() {
   };
 
   const accent = form.accent_color || "#c9a96e";
-  const plan = PLANS[form.plan] || PLANS.free;
+  const plan = PLAN_META[form.plan] || PLAN_META.free;
+  const limits = getPlanLimits(form.plan || "free");
 
   return (
     <B2BLayout

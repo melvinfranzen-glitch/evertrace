@@ -182,7 +182,7 @@ export default function B2BRegister() {
             <p className="text-center mb-10" style={{ color: "#8a8278" }}>Bitte überprüfen Sie Ihre Angaben.</p>
             <div className="rounded-2xl p-6 space-y-4" style={{ background: "#181714", border: "1px solid #302d28" }}>
               {[
-                ["Tarif", PLANS.find(p => p.id === selectedPlan)?.name],
+                ["Tarif", getPlanName(selectedPlan)],
                 ["Firmenname", form.name],
                 ["Adresse", form.company_address],
                 ["Steuernummer", form.vat_number],
