@@ -22,7 +22,7 @@ const statusColors = {
 const statusLabels = { draft: "Entwurf", active: "Aktiv", expired: "Abgelaufen" };
 const planLabels = { free: "Free", classic: "Classic", premium: "Premium" };
 
-export default function MemorialCard({ memorial, onDelete }) {
+export default function MemorialCard({ memorial, onDelete, onOpenPlaque }) {
   const [confirming, setConfirming] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
@@ -51,7 +51,7 @@ export default function MemorialCard({ memorial, onDelete }) {
 
   return (
     <div className="relative">
-    <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 ease-in-out">
+    <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 ease-in-out flex flex-col">
       <div className="relative h-36 bg-stone-100 overflow-hidden">
         {memorial.hero_image_url ? (
           <img src={memorial.hero_image_url} alt={memorial.name} className="w-full h-full object-cover" />
@@ -72,7 +72,7 @@ export default function MemorialCard({ memorial, onDelete }) {
         </div>
       </div>
 
-      <div className="p-5">
+      <div className="p-5 flex-1">
         <h3 className="font-semibold text-gray-800 text-lg leading-tight mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
           {memorial.name}
         </h3>
@@ -152,6 +152,19 @@ export default function MemorialCard({ memorial, onDelete }) {
             </button>
           )}
         </div>
+      {/* Plaque upsell bar */}
+      <div className="flex items-center justify-between px-4 py-2.5"
+        style={{ borderTop: "1px solid #f0ede8", background: "linear-gradient(135deg, #fdf9f3, #faf5ec)" }}>
+        <div className="flex items-center gap-1.5">
+          <QrCode style={{ width: 14, height: 14, color: "#c9a96e", flexShrink: 0 }} />
+          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#8a8278" }}>Grabplakette mit QR-Code bestellen</span>
+        </div>
+        <button
+          onClick={() => onOpenPlaque ? onOpenPlaque(memorial) : window.location.href = `/Dashboard?memorial_id=${memorial.short_id}`}
+          style={{ background: "transparent", border: "1px solid rgba(201,169,110,0.35)", color: "#c9a96e", borderRadius: 6, padding: "4px 10px", fontSize: 11, fontFamily: "'DM Sans', sans-serif", cursor: "pointer", whiteSpace: "nowrap" }}>
+          Ab € 129,–
+        </button>
+      </div>
       </div>
     </div>
 
