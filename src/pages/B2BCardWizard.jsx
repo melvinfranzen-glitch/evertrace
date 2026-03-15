@@ -79,7 +79,8 @@ export default function B2BCardWizard() {
   const [printTier, setPrintTier] = useState("standard");
 
   // Delivery
-  const [deliveryMode, setDeliveryMode] = useState("funeral_home"); // "funeral_home" | "customer"
+  const [deliveryMode, setDeliveryMode] = useState("funeral_home");
+  const [customerNotificationEmail, setCustomerNotificationEmail] = useState(""); // "funeral_home" | "customer"
   const [deliveryName, setDeliveryName] = useState("");
   const [deliveryStreet, setDeliveryStreet] = useState("");
   const [deliveryCity, setDeliveryCity] = useState("");
