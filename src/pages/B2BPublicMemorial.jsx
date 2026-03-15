@@ -114,6 +114,15 @@ export default function B2BPublicMemorial() {
 
   return (
     <div style={{ background: "#f7f3ed", fontFamily: "'DM Sans', sans-serif", minHeight: "100vh" }}>
+
+      {/* White-label top banner */}
+      {funeralHome?.whitelabel_enabled && (
+        <div className="flex items-center justify-center gap-3 px-6" style={{ height: 44, background: "#1a1410" }}>
+          {funeralHome.logo_url && <img src={funeralHome.logo_url} alt={funeralHome.name} className="h-6 object-contain" />}
+          <span className="text-sm font-medium" style={{ color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>{funeralHome.name}</span>
+        </div>
+      )}
+
       {/* Hero */}
       <div className="relative min-h-[60vh] flex flex-col items-center justify-center text-center px-6 py-20"
         style={{ background: page.main_photo_url ? `url(${page.main_photo_url}) center/cover no-repeat` : "linear-gradient(160deg,#1c1917,#2c2010)" }}>
@@ -278,6 +287,31 @@ export default function B2BPublicMemorial() {
           )}
         </div>
       </section>
+
+      {/* Print book — shown to logged-in users who own this memorial page */}
+      {user && page && (
+        <section className="py-10 px-6 text-center" style={{ background: "#f0ebe1" }}>
+          <div className="max-w-md mx-auto">
+            <p className="text-xs uppercase tracking-[0.3em] mb-3" style={{ color: "#c9a96e" }}>Für das Bestattungshaus</p>
+            <button onClick={() => setShowPrintModal(true)}
+              className="flex items-center gap-2 mx-auto px-6 py-3 rounded-xl text-sm font-medium transition-all"
+              style={{ background: "#2c2419", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.4)" }}>
+              <BookOpen className="w-4 h-4" />
+              Gedenkbuch drucken
+            </button>
+            <p className="text-xs mt-2" style={{ color: "#8a8278" }}>{contributions.length} Beiträge · Hardcover Premium-Druck</p>
+          </div>
+        </section>
+      )}
+
+      {showPrintModal && (
+        <CondolenceBookPrintModal
+          page={page}
+          caseData={caseData}
+          contributions={contributions}
+          onClose={() => setShowPrintModal(false)}
+        />
+      )}
 
       {/* Footer */}
       <div className="py-8 text-center" style={{ background: "#1a1410" }}>
