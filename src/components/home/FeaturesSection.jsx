@@ -1,91 +1,81 @@
-import { Brain, QrCode, BookOpen, Flame, Music2, ShieldCheck, Printer, Building2 } from "lucide-react";
+import { Heart, Users, QrCode } from "lucide-react";
+import { createPageUrl } from "@/utils";
 
-const features = [
+const narratives = [
   {
-    icon: Brain,
-    title: "Biografie-Assistent",
-    desc: "Teilen Sie uns besondere Momente mit — gemeinsam finden wir die richtigen Worte für ein bewegtes Leben.",
+    icon: Heart,
+    headline: "Erinnern",
+    copy: "Erstellen Sie eine digitale Gedenkseite mit Fotos, Lebensgeschichte und den Dingen, die ihn oder sie ausmachten. Eine dauerhafte Erinnerung, die immer zugänglich bleibt.",
+  },
+  {
+    icon: Users,
+    headline: "Teilen",
+    copy: "Familie und Freunde können sich versammeln, um gemeinsam zu trauern. Nachrichten hinterlassen, virtuelle Kerzen entzünden und Erinnerungen miteinander bewahren.",
   },
   {
     icon: QrCode,
-    title: "QR-Code auf Plaketten",
-    desc: "Hochwertige Messing-, Schiefer- und Edelstahlplaketten mit QR-Code für Grabstein, Urne oder Trauerkarte.",
-  },
-  {
-    icon: BookOpen,
-    title: "Digitales Kondolenzbuch",
-    desc: "Freunde können Nachrichten hinterlassen, die Sie moderieren und als Hardcover-Buch drucken lassen können.",
-  },
-  {
-    icon: Flame,
-    title: "Virtuelle Kerzen",
-    desc: "Hinterbliebene können jederzeit eine virtuelle Kerze entzünden und eine persönliche Nachricht hinterlassen.",
-  },
-  {
-    icon: Music2,
-    title: "Spotify-Integration",
-    desc: "Binden Sie die Lieblingslieder der verstorbenen Person direkt in die Gedenkseite ein.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "DSGVO-konform & sicher",
-    desc: "Alle Daten werden sicher in Deutschland gespeichert. Private Gedenkseiten sind passwortgeschützt.",
-  },
-  {
-    icon: Printer,
-    title: "Hyperpersonalisierte Trauerkarten",
-    desc: "KI erstellt auf Basis der Lebensgeschichte einen einzigartigen Text und ein Motiv — direkt druckfertig oder per Post zugestellt.",
-  },
-  {
-    icon: Building2,
-    title: "Für Bestattungshäuser",
-    desc: "Vollständige B2B-Plattform mit Fallverwaltung, White-Label-Branding und direkter Print-on-Demand-Anbindung.",
+    headline: "Bewahren",
+    copy: "Halten Sie die Verbindung mit einer hochweertigen Grabplakette mit QR-Code fest. Besucher gelangen mit ihrem Handy direkt zur Gedenkseite.",
   },
 ];
 
 export default function FeaturesSection() {
   return (
     <section id="features" className="py-28 px-6" style={{ background: "#F5F0E8" }}>
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         <div className="text-center mb-20">
           <p className="text-xs uppercase tracking-[0.35em] font-medium mb-4" style={{ color: "#c9a96e" }}>
-            Was Evertrace bietet
+            Der Weg zum Gedenken
           </p>
           <h2
             className="text-4xl md:text-5xl font-semibold text-gray-800 mb-5"
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
-            Mehr als eine Gedenkseite
+            Drei Schritte zur Erinnerung
           </h2>
-          <p className="text-gray-500 max-w-xl mx-auto text-lg font-light leading-relaxed">
-            Alles, was Sie brauchen, um die Geschichte eines geliebten Menschen mit Würde zu bewahren — für Ihre Familie und alle, die trauern.
-          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {features.map((f) => (
-            <div
-              key={f.title}
-              className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-in-out border border-stone-100 group cursor-default"
-            >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-14">
+          {narratives.map((n) => (
+            <div key={n.headline} className="flex flex-col items-center text-center">
               <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center mb-7 transition-all duration-300 group-hover:scale-105"
+                className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6"
                 style={{
-                  background: "linear-gradient(135deg, #fef9ee, #fdf0d5)",
-                  border: "1.5px solid rgba(201,169,110,0.25)",
+                  background: "rgba(201,169,110,0.1)",
+                  border: "1.5px solid rgba(201,169,110,0.3)",
                 }}
               >
-                <f.icon className="w-6 h-6" style={{ color: "#c9a96e", strokeWidth: 1.5 }} />
+                <n.icon className="w-7 h-7" style={{ color: "#c9a96e", strokeWidth: 1.5 }} />
               </div>
               <h3
-                className="font-semibold text-gray-800 text-lg mb-3 leading-snug"
+                className="font-semibold text-gray-800 text-xl mb-4"
                 style={{ fontFamily: "'Cormorant Garamond', serif" }}
               >
-                {f.title}
+                {n.headline}
               </h3>
-              <p className="text-gray-500 text-base leading-relaxed">{f.desc}</p>
+              <p className="text-gray-600 text-base leading-relaxed">{n.copy}</p>
             </div>
           ))}
+        </div>
+
+        <div className="flex justify-center">
+          <a
+            href={createPageUrl("Dashboard")}
+            className="px-10 py-4 rounded-full text-sm font-medium transition-all duration-200"
+            style={{
+              background: "rgba(201,169,110,0.15)",
+              color: "#c9a96e",
+              border: "1px solid rgba(201,169,110,0.3)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(201,169,110,0.25)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(201,169,110,0.15)";
+            }}
+          >
+            Gedenkseite kostenlos erstellen
+          </a>
         </div>
       </div>
     </section>
