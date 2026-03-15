@@ -25,9 +25,9 @@ export default function Layout({ children, currentPageName }) {
   if (isHomePage) return <div className="min-h-screen flex flex-col" style={{ fontFamily: "'Inter', sans-serif", background: "#FAFAF8" }}><main className="flex-1">{children}</main></div>;
 
   const navLinks = [
-    { label: "Startseite", page: "Home" },
-    { label: "Dashboard", page: "Dashboard", auth: true },
-    { label: "Shop", page: "Shop" },
+    { label: "Gedenkseiten", page: "Dashboard", href: "/Dashboard?tab=memorials", auth: true },
+    { label: "Trauerkarten", page: "Dashboard", href: "/Dashboard?tab=cards", auth: true },
+    { label: "Lebensgeschichten", page: "Dashboard", href: "/Dashboard?tab=book", auth: true },
   ];
 
   const isActive = (page) => currentPageName === page;
