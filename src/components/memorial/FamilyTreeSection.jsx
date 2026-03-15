@@ -162,9 +162,19 @@ export default function FamilyTreeSection({ memorial }) {
           </div>
         </div>
 
-        <p className="text-center text-xs text-stone-400 mt-6 italic">
-          Auf ein Familienmitglied klicken, um das Kurzprofil anzuzeigen
-        </p>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
+          <p className="text-xs text-stone-400 italic">
+            Auf ein Familienmitglied klicken, um das Kurzprofil anzuzeigen
+          </p>
+          {members.some(m => m.linked_memorial_short_id) && (
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: "#b45309" }}>
+              <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ background: "#b45309" }}>
+                <ExternalLink className="w-2 h-2 text-white" />
+              </div>
+              <span>= eigene Gedenkseite vorhanden</span>
+            </div>
+          )}
+        </div>
       </div>
 
       {selected && (
