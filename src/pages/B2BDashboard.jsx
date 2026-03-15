@@ -42,7 +42,12 @@ export default function B2BDashboard() {
         base44.entities.PrintOrder.filter({ created_by: u.email }, "-created_date", 50),
         base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1),
       ]).then(([c, k, o, fh]) => {
-        setCases(c); setCards(k); setOrders(o); setFuneralHome(fh[0] || null); setLoading(false);
+        // Fix 1: B2B Route Protection — redirect unregistered users
+        if (fh.length === 0) {
+          window.location.href = "/B2BRegister";
+          return;
+        }
+        setCases(c); setCards(k); setOrders(o); setFuneralHome(fh[0]); setLoading(false);
       });
     });
   }, []);

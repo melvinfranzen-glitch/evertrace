@@ -49,17 +49,24 @@ export default function B2BCaseDetail() {
 
   useEffect(() => {
     if (!id) return;
-    Promise.all([
-      base44.entities.Case.filter({ id }),
-      base44.entities.MourningCard.filter({ case_id: id }),
-      base44.entities.B2BMemorialPage.filter({ case_id: id }),
-      base44.entities.PrintOrder.filter({ case_id: id }),
-    ]).then(([cases, k, mem, o]) => {
-      if (cases.length) setCaseData(cases[0]);
-      setCards(k);
-      if (mem.length) setMemorial(mem[0]);
-      setOrders(o);
-      setLoading(false);
+    base44.auth.me().then(currentUser => {
+      Promise.all([
+        base44.entities.Case.filter({ id }),
+        base44.entities.MourningCard.filter({ case_id: id }),
+        base44.entities.B2BMemorialPage.filter({ case_id: id }),
+        base44.entities.PrintOrder.filter({ case_id: id }),
+      ]).then(([cases, k, mem, o]) => {
+        // Fix 3: B2BCaseDetail ownership verification
+        if (cases.length && cases[0].created_by !== currentUser.email) {
+          window.location.href = "/B2BCases";
+          return;
+        }
+        if (cases.length) setCaseData(cases[0]);
+        setCards(k);
+        if (mem.length) setMemorial(mem[0]);
+        setOrders(o);
+        setLoading(false);
+      });
     });
   }, [id]);
 

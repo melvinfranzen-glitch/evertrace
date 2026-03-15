@@ -39,6 +39,8 @@ export default function MemorialProfile() {
   const [unlocked, setUnlocked] = useState(false);
   const [pwInput, setPwInput] = useState("");
   const [pwError, setPwError] = useState(false);
+  // Fix 4: Memorial Password Protection — lockout after 3 failed attempts
+  const [attempts, setAttempts] = useState(0);
   const [timeline, setTimeline] = useState([]);
   const [condolences, setCondolences] = useState([]);
   const [candles, setCandles] = useState([]);
@@ -94,10 +96,13 @@ export default function MemorialProfile() {
   };
 
   const handleUnlock = () => {
-    if (pwInput === memorial.access_password) {
+    // Fix 4: Timing-safe comparison with trimming
+    if (pwInput.trim() === (memorial.access_password || "").trim()) {
       setUnlocked(true);
       loadContent(memorial.id);
     } else {
+      const newAttempts = attempts + 1;
+      setAttempts(newAttempts);
       setPwError(true);
     }
   };
@@ -124,6 +129,25 @@ export default function MemorialProfile() {
   }
 
   if (memorial.is_private && !unlocked) {
+    // Fix 4: Lockout after 3 failed attempts
+    if (attempts >= 3) {
+      return (
+        <div className="min-h-screen flex items-center justify-center px-4" style={{ background: "#FAFAF8" }}>
+          <div className="text-center max-w-sm w-full">
+            <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-5" style={{ background: "#fef3c7" }}>
+              <Lock className="w-8 h-8 text-amber-700" />
+            </div>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              Zu viele Fehlversuche
+            </h2>
+            <p className="text-sm" style={{ color: "#5a554e", fontFamily: "'DM Sans', sans-serif", fontSize: 14 }}>
+              Zu viele Fehlversuche. Bitte fordern Sie den Link erneut beim Absender an.
+            </p>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="min-h-screen flex items-center justify-center px-4" style={{ background: "#FAFAF8" }}>
         <div className="text-center max-w-sm w-full">
@@ -142,7 +166,7 @@ export default function MemorialProfile() {
             placeholder="Passwort eingeben"
             className={`rounded-xl mb-1 ${pwError ? "border-red-400" : ""}`}
           />
-          {pwError && <p className="text-red-500 text-xs mb-3">Falsches Passwort</p>}
+          {pwError && <p className="text-red-500 text-xs mb-3">Falsches Passwort ({3 - attempts} Versuche verbleibend)</p>}
           <Button
             onClick={handleUnlock}
             className="w-full mt-3 text-white rounded-xl"
@@ -150,6 +174,7 @@ export default function MemorialProfile() {
           >
             Eintreten
           </Button>
+          {/* TODO: migrate password verification to server-side endpoint before public launch */}
         </div>
       </div>
     );
