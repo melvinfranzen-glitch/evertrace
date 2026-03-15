@@ -237,6 +237,10 @@ export default function Layout({ children, currentPageName }) {
                 <li><Link to="/Legal?section=impressum" className="hover:text-stone-300 transition-colors">Impressum</Link></li>
                 <li><Link to="/Legal?section=agb" className="hover:text-stone-300 transition-colors">AGB</Link></li>
               </ul>
+              <div className="mt-6">
+                <p className="text-xs uppercase tracking-widest text-stone-600 mb-3">Kontakt</p>
+                <a href="mailto:hallo@evertrace.de" className="text-sm text-stone-500 hover:text-stone-300 transition-colors">hallo@evertrace.de</a>
+              </div>
               <div className="mt-6 flex items-center gap-2 text-xs text-stone-600">
                 <svg className="w-3.5 h-3.5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
