@@ -195,6 +195,7 @@ Erstelle fließenden Text ohne Aufzählungen, max. 100 Wörter. Persönlich und 
       delivery_street: deliveryStreet,
       delivery_city: deliveryCity,
       delivery_zip: deliveryZip,
+      customer_notification_email: customerNotificationEmail,
       status: "In Bearbeitung",
     });
     if (selectedCaseId) {
@@ -513,6 +514,35 @@ Erstelle fließenden Text ohne Aufzählungen, max. 100 Wörter. Persönlich und 
                     { k: "deliveryZip", label: "PLZ", val: deliveryZip, set: setDeliveryZip },
                     { k: "deliveryCity", label: "Ort", val: deliveryCity, set: setDeliveryCity },
                   ].map(({ k, label, val, set: setter }) => (
+                  ))}
+                </div>
+              </div>
+
+              {/* Customer notification email */}
+              <div className="rounded-2xl p-5 md:p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
+                <h3 className="text-lg font-semibold mb-1" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Kunden-Benachrichtigung</h3>
+                <p className="text-xs mb-4" style={{ color: "#5a554e" }}>Sobald die Karten fertig sind, können Sie dem Kunden automatisch eine E-Mail senden.</p>
+                <label className="text-xs mb-1 block" style={{ color: "#8a8278" }}>E-Mail-Adresse des Kunden (optional)</label>
+                <input
+                  type="email"
+                  value={customerNotificationEmail}
+                  onChange={e => setCustomerNotificationEmail(e.target.value)}
+                  placeholder="kunde@beispiel.de"
+                  className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
+                  style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }}
+                />
+                {selectedCase?.next_of_kin_email && !customerNotificationEmail && (
+                  <button
+                    onClick={() => setCustomerNotificationEmail(selectedCase.next_of_kin_email)}
+                    className="mt-2 text-xs"
+                    style={{ color: "#c9a96e" }}
+                  >
+                    Aus Fall übernehmen: {selectedCase.next_of_kin_email}
+                  </button>
+                )}
+              </div>
+              {/* Dummy spacer to close the map above cleanly */}
+              {[].map(({ k, label, val, set: setter }) => (
                     <div key={k}>
                       <label className="text-xs mb-1 block" style={{ color: "#8a8278" }}>{label}</label>
                       <input value={val} onChange={e => setter(e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
