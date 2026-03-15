@@ -10,6 +10,7 @@ const STEPS = ["Plan wählen", "Unternehmen", "Kontakt", "Bestätigung"];
 export default function B2BRegister() {
   const [step, setStep] = useState(0);
   const [selectedPlan, setSelectedPlan] = useState("premium");
+  const getPlanName = (id) => B2B_PLANS.find(p => p.id === id)?.name || id;
   const [form, setForm] = useState({
     name: "", company_address: "", vat_number: "",
     contact_person: "", contact_email: "", contact_phone: "",
@@ -104,33 +105,8 @@ export default function B2BRegister() {
             <h1 className="text-4xl font-semibold text-center mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>
               Tarif wählen
             </h1>
-            <p className="text-center mb-12" style={{ color: "#8a8278" }}>Starten Sie kostenlos oder wählen Sie direkt den vollen Funktionsumfang.</p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {PLANS.map(plan => (
-                <div key={plan.id} onClick={() => setSelectedPlan(plan.id)}
-                  className="rounded-2xl p-7 cursor-pointer transition-all"
-                  style={{
-                    background: selectedPlan === plan.id ? "rgba(201,169,110,0.08)" : "#181714",
-                    border: `1.5px solid ${selectedPlan === plan.id ? "#c9a96e" : "#302d28"}`,
-                    position: "relative"
-                  }}>
-                  {plan.highlight && <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-xs font-semibold" style={{ background: "#c9a96e", color: "#0f0e0c" }}>Empfohlen</div>}
-                  <h3 className="text-xl font-semibold mb-1" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>{plan.name}</h3>
-                  <div className="flex items-baseline gap-1 mb-2">
-                    <span className="text-3xl font-bold" style={{ color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>{plan.price}</span>
-                    <span className="text-sm" style={{ color: "#8a8278" }}>{plan.period}</span>
-                  </div>
-                  <p className="text-sm mb-5" style={{ color: "#8a8278" }}>{plan.description}</p>
-                  <ul className="space-y-2">
-                    {plan.features.map((f, i) => (
-                      <li key={i} className="flex items-center gap-2 text-sm" style={{ color: "#f0ede8" }}>
-                        <Check className="w-3.5 h-3.5 flex-shrink-0" style={{ color: "#c9a96e" }} /> {f}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+            <p className="text-center mb-12" style={{ color: "#8a8278" }}>Starten Sie kostenlos oder wählen Sie direkt den vollen Funktionsumfang. Alle Preise zzgl. MwSt.</p>
+            <B2BPricingGrid selectedPlan={selectedPlan} onSelect={setSelectedPlan} />
             <div className="flex justify-center mt-10">
               <button onClick={next} className="flex items-center gap-2 px-8 py-3 rounded-xl font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
                 Weiter <ArrowRight className="w-4 h-4" />
