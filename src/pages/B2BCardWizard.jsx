@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
-import { Check, ChevronRight, RefreshCw, Loader2, QrCode, Mail, BookOpen } from "lucide-react";
+import CardPrintPreview from "@/components/b2b/CardPrintPreview";
+import { Check, ChevronRight, RefreshCw, Loader2, QrCode, Mail, BookOpen, Building2, User } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 
@@ -24,9 +25,10 @@ const MOTIFS = [
   { id: "floral_classic", label: "Florales Klassik", color: "#a78bfa" },
   { id: "minimalist", label: "Minimalistisch", color: "#94a3b8" },
   { id: "religious", label: "Religiös / Sakral", color: "#c9a96e" },
-  { id: "nature", label: "Natur", color: "#4ade80" },
+  { id: "nature", label: "Natur / Baum", color: "#4ade80" },
   { id: "maritime", label: "Maritime", color: "#60a5fa" },
   { id: "forest", label: "Waldmotiv", color: "#86efac" },
+  { id: "handwerk", label: "Handwerk / Beruf", color: "#fb923c" },
 ];
 
 const TONES = ["Förmlich & würdevoll", "Warm & persönlich", "Poetisch & lyrisch"];
@@ -38,63 +40,17 @@ const PRINT_TIERS = [
 
 const WIZARD_STEPS = ["Fall & Format", "Fragebogen", "KI-Vorschau", "Druckkonfiguration", "Bestellung"];
 
-function CardPreview({ caseData, generatedText, motif, format: fmt }) {
-  const motifColors = {
-    floral_classic: "linear-gradient(135deg,#2a1f2e,#1a1520)",
-    minimalist: "linear-gradient(135deg,#1a1a1a,#111)",
-    religious: "linear-gradient(135deg,#1e1810,#0f0c08)",
-    nature: "linear-gradient(135deg,#0e1a10,#0a1008)",
-    maritime: "linear-gradient(135deg,#0e1520,#080f1a)",
-    forest: "linear-gradient(135deg,#0e1a10,#0a1208)",
-  };
-
-  return (
-    <div className="rounded-2xl overflow-hidden shadow-2xl" style={{
-      background: motifColors[motif] || motifColors.minimalist,
-      border: "1px solid rgba(201,169,110,0.2)",
-      minHeight: 320,
-      padding: "2.5rem",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-    }}>
-      <div className="flex items-center gap-3 mb-6">
-        <div className="h-px w-8" style={{ background: "rgba(201,169,110,0.5)" }} />
-        <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#c9a96e" }} />
-        <div className="h-px w-8" style={{ background: "rgba(201,169,110,0.5)" }} />
-      </div>
-      <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>In liebevoller Erinnerung</p>
-      <h2 className="text-3xl font-semibold text-center mb-1" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>
-        {caseData ? `${caseData.deceased_first_name} ${caseData.deceased_last_name}` : "Vorname Nachname"}
-      </h2>
-      {caseData && (
-        <p className="text-sm mb-6 tracking-widest" style={{ color: "#8a8278" }}>
-          * {fmtDate(caseData.date_of_birth)} · † {fmtDate(caseData.date_of_death)}
-        </p>
-      )}
-      {generatedText ? (
-        <p className="text-center text-sm leading-8 italic max-w-xs" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#d4c5a9", fontStyle: "italic" }}>
-          {generatedText}
-        </p>
-      ) : (
-        <div className="space-y-2 w-full max-w-xs">
-          {[...Array(4)].map((_, i) => <div key={i} className="h-3 rounded-full mx-auto" style={{ background: "rgba(201,169,110,0.1)", width: `${70 + Math.random() * 25}%` }} />)}
-        </div>
-      )}
-    </div>
-  );
-}
-
 export default function B2BCardWizard() {
   const params = new URLSearchParams(window.location.search);
   const preselectedCaseId = params.get("case_id");
 
   const [step, setStep] = useState(0);
   const [cases, setCases] = useState([]);
+  const [funeralHome, setFuneralHome] = useState(null);
   const [selectedCaseId, setSelectedCaseId] = useState(preselectedCaseId || "");
   const [selectedCase, setSelectedCase] = useState(null);
-  const [format, setFormat] = useState("DIN_A6_landscape");
+  const [cardFormat, setCardFormat] = useState("DIN_A6_landscape");
+  const [previewSide, setPreviewSide] = useState("front"); // "front" | "inside"
 
   // Questionnaire
   const [character, setCharacter] = useState("");
@@ -103,11 +59,14 @@ export default function B2BCardWizard() {
   const [quote, setQuote] = useState("");
   const [religion, setReligion] = useState("");
   const [tone, setTone] = useState(TONES[1]);
-  const [motif, setMotif] = useState("floral_classic");
+  const [motif, setMotif] = useState("nature");
+  const [profession, setProfession] = useState("");
 
   // Generation
   const [generatedText, setGeneratedText] = useState("");
+  const [generatedMotifUrl, setGeneratedMotifUrl] = useState("");
   const [generating, setGenerating] = useState(false);
+  const [generatingMotif, setGeneratingMotif] = useState(false);
   const [editedText, setEditedText] = useState("");
 
   // Addons
@@ -119,16 +78,23 @@ export default function B2BCardWizard() {
   const [quantity, setQuantity] = useState(80);
   const [printTier, setPrintTier] = useState("standard");
 
-  // Order
+  // Delivery
+  const [deliveryMode, setDeliveryMode] = useState("funeral_home"); // "funeral_home" | "customer"
   const [deliveryName, setDeliveryName] = useState("");
   const [deliveryStreet, setDeliveryStreet] = useState("");
   const [deliveryCity, setDeliveryCity] = useState("");
   const [deliveryZip, setDeliveryZip] = useState("");
+
   const [submitting, setSubmitting] = useState(false);
   const [orderDone, setOrderDone] = useState(false);
 
   useEffect(() => {
-    base44.entities.Case.filter({ status: "aktiv" }, "-created_date").then(setCases);
+    const user = base44.auth.me().then(u => {
+      base44.entities.Case.filter({ created_by: u.email, status: "aktiv" }, "-created_date").then(setCases);
+      base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1).then(([h]) => {
+        if (h) setFuneralHome(h);
+      });
+    });
   }, []);
 
   useEffect(() => {
@@ -138,6 +104,23 @@ export default function B2BCardWizard() {
     }
   }, [selectedCaseId, cases]);
 
+  // Pre-fill funeral home delivery address
+  useEffect(() => {
+    if (deliveryMode === "funeral_home" && funeralHome) {
+      const addr = funeralHome.company_address || "";
+      const parts = addr.split(",").map(s => s.trim());
+      setDeliveryName(funeralHome.name || "");
+      setDeliveryStreet(parts[0] || "");
+      const cityPart = parts[1] || "";
+      const zipMatch = cityPart.match(/^(\d{5})\s+(.*)/);
+      if (zipMatch) { setDeliveryZip(zipMatch[1]); setDeliveryCity(zipMatch[2]); }
+      else setDeliveryCity(cityPart);
+    } else if (deliveryMode === "customer" && selectedCase) {
+      setDeliveryName(selectedCase.next_of_kin_name || "");
+      setDeliveryStreet(""); setDeliveryCity(""); setDeliveryZip("");
+    }
+  }, [deliveryMode, funeralHome, selectedCase]);
+
   const togglePassion = (p) => {
     setPassions(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]);
   };
@@ -145,23 +128,20 @@ export default function B2BCardWizard() {
   const generateText = async () => {
     setGenerating(true);
     const allPassions = [...passions, ...(customPassion ? [customPassion] : [])].join(", ");
-    const prompt = `Du bist ein Experte für würdevolle Trauerkarten auf Deutsch. Erstelle einen personalisierten Trauerkartentext für folgende verstorbene Person:
+    const professionHint = profession ? `Beruf/Handwerk: ${profession}.` : "";
+    const prompt = `Du bist ein Experte für würdevolle Trauerkarten auf Deutsch. Erstelle einen personalisierten Trauerkartentext:
 
 Name: ${selectedCase ? `${selectedCase.deceased_first_name} ${selectedCase.deceased_last_name}` : "Unbekannte Person"}
 Geburtsdatum: ${selectedCase ? fmtDate(selectedCase.date_of_birth) : "unbekannt"}
 Sterbedatum: ${selectedCase ? fmtDate(selectedCase.date_of_death) : "unbekannt"}
 Charakter: ${character || "gütig und herzlich"}
 Leidenschaften: ${allPassions || "Familie und Natur"}
-Zitat oder Lieblingsspruch: ${quote || "keines angegeben"}
-Religiöse Ausrichtung: ${religion || "nicht religiös"}
-Gewünschter Ton: ${tone}
+${professionHint}
+Zitat: ${quote || "keines angegeben"}
+Ausrichtung: ${religion || "nicht religiös"}
+Ton: ${tone}
 
-Erstelle einen Text mit:
-1. Einem kurzen persönlichen Beschreibungsabsatz (2–3 Sätze)
-2. Einem integrierten Zitat oder Spruch
-3. Einem abschließenden Satz
-
-Der Text soll ${tone.toLowerCase()} sein. Nutze keine Aufzählungen, nur fließenden Text. Maximal 120 Wörter.`;
+Erstelle fließenden Text ohne Aufzählungen, max. 100 Wörter. Persönlich und würdevoll.`;
 
     const result = await base44.integrations.Core.InvokeLLM({ prompt });
     setGeneratedText(result);
@@ -169,8 +149,19 @@ Der Text soll ${tone.toLowerCase()} sein. Nutze keine Aufzählungen, nur fließe
     setGenerating(false);
   };
 
+  const generateMotif = async () => {
+    setGeneratingMotif(true);
+    const allPassions = [...passions, ...(customPassion ? [customPassion] : [])].join(", ");
+    const profHint = profession ? `, referencing the profession: ${profession}` : "";
+    const prompt = `Minimalist memorial card front cover illustration. Style: elegant, dark background (#0f0e0c or deep navy), single symbolic motif${profHint}. Motif theme: "${motif}" (e.g. for "nature": a lone bare tree; for "maritime": an anchor; for "handwerk": craftsman tools in silhouette). Very thin gold lines (#c9a96e), no text, no faces, no people. Suitable for a premium German funeral card. Ultra-minimal, sophisticated, print-ready.`;
+    const { url } = await base44.integrations.Core.GenerateImage({ prompt });
+    setGeneratedMotifUrl(url);
+    setGeneratingMotif(false);
+  };
+
   useEffect(() => {
     if (step === 2 && !generatedText) generateText();
+    if (step === 2 && !generatedMotifUrl) generateMotif();
   }, [step]);
 
   const tier = PRINT_TIERS.find(t => t.id === printTier);
@@ -178,12 +169,14 @@ Der Text soll ${tone.toLowerCase()} sein. Nutze keine Aufzählungen, nur fließe
 
   const submitOrder = async () => {
     setSubmitting(true);
+    const user = await base44.auth.me();
     const card = await base44.entities.MourningCard.create({
       case_id: selectedCaseId,
-      format,
-      questionnaire_answers: JSON.stringify({ character, passions, quote, religion, tone }),
+      format: cardFormat,
+      questionnaire_answers: JSON.stringify({ character, passions, quote, religion, tone, profession }),
       generated_text: editedText,
       motif_theme: motif,
+      motif_image_url: generatedMotifUrl,
       addon_invitation: addonInvitation,
       addon_thankyou: addonThankyou,
       addon_qr: addonQr,
@@ -218,7 +211,7 @@ Der Text soll ${tone.toLowerCase()} sein. Nutze keine Aufzählungen, nur fließe
             <Check className="w-9 h-9" style={{ color: "#4ade80" }} />
           </div>
           <h2 className="text-3xl font-semibold mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Bestellung bestätigt</h2>
-          <p className="mb-8" style={{ color: "#8a8278" }}>Ihre Bestellung über {quantity} Trauerkarten ({tier?.label}) wurde erfolgreich aufgegeben. Sie erhalten eine Bestätigungs-E-Mail.</p>
+          <p className="mb-8" style={{ color: "#8a8278" }}>Ihre Bestellung über {quantity} Trauerkarten ({tier?.label}) wurde erfolgreich aufgegeben.</p>
           <button onClick={() => window.location.href = "/B2BOrders"} className="px-6 py-3 rounded-xl text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
             Zu den Bestellungen
           </button>
@@ -230,11 +223,11 @@ Der Text soll ${tone.toLowerCase()} sein. Nutze keine Aufzählungen, nur fließe
   return (
     <B2BLayout title="Neue Trauerkarte erstellen">
       {/* Wizard steps */}
-      <div className="flex items-center gap-2 mb-10 overflow-x-auto pb-2">
+      <div className="flex items-center gap-1 mb-8 overflow-x-auto pb-2">
         {WIZARD_STEPS.map((s, i) => (
-          <div key={i} className="flex items-center gap-2 flex-shrink-0">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold"
+          <div key={i} className="flex items-center gap-1 flex-shrink-0">
+            <div className="flex items-center gap-1.5">
+              <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0"
                 style={{
                   background: i < step ? "#c9a96e" : i === step ? "rgba(201,169,110,0.2)" : "rgba(90,85,78,0.2)",
                   color: i < step ? "#0f0e0c" : i === step ? "#c9a96e" : "#5a554e",
@@ -242,20 +235,20 @@ Der Text soll ${tone.toLowerCase()} sein. Nutze keine Aufzählungen, nur fließe
                 }}>
                 {i < step ? <Check className="w-3.5 h-3.5" /> : i + 1}
               </div>
-              <span className="text-sm hidden sm:block" style={{ color: i === step ? "#f0ede8" : "#5a554e" }}>{s}</span>
+              <span className="text-xs sm:text-sm hidden sm:block" style={{ color: i === step ? "#f0ede8" : "#5a554e" }}>{s}</span>
             </div>
-            {i < WIZARD_STEPS.length - 1 && <ChevronRight className="w-4 h-4 flex-shrink-0" style={{ color: "#302d28" }} />}
+            {i < WIZARD_STEPS.length - 1 && <ChevronRight className="w-3 h-3 flex-shrink-0" style={{ color: "#302d28" }} />}
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-        <div className="lg:col-span-3">
+      <div className="grid grid-cols-1 xl:grid-cols-5 gap-6 lg:gap-8">
+        <div className="xl:col-span-3 order-2 xl:order-1">
 
           {/* Step 0 */}
           {step === 0 && (
-            <div className="space-y-6">
-              <div className="rounded-2xl p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
+            <div className="space-y-5">
+              <div className="rounded-2xl p-5 md:p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
                 <h3 className="text-lg font-semibold mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Fall auswählen</h3>
                 {cases.length === 0 ? (
                   <p className="text-sm" style={{ color: "#5a554e" }}>Keine aktiven Fälle vorhanden. Bitte zuerst einen Fall anlegen.</p>
@@ -276,13 +269,13 @@ Der Text soll ${tone.toLowerCase()} sein. Nutze keine Aufzählungen, nur fließe
                 )}
               </div>
 
-              <div className="rounded-2xl p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
+              <div className="rounded-2xl p-5 md:p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
                 <h3 className="text-lg font-semibold mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Kartenformat</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {FORMATS.map(f => (
-                    <button key={f.id} onClick={() => setFormat(f.id)}
+                    <button key={f.id} onClick={() => setCardFormat(f.id)}
                       className="p-4 rounded-xl text-left transition-all"
-                      style={{ background: format === f.id ? "rgba(201,169,110,0.1)" : "#201e1a", border: `1px solid ${format === f.id ? "#c9a96e" : "#302d28"}` }}>
+                      style={{ background: cardFormat === f.id ? "rgba(201,169,110,0.1)" : "#201e1a", border: `1px solid ${cardFormat === f.id ? "#c9a96e" : "#302d28"}` }}>
                       <p className="text-sm font-medium" style={{ color: "#f0ede8" }}>{f.label}</p>
                       <p className="text-xs mt-1" style={{ color: "#5a554e" }}>{f.desc}</p>
                     </button>
@@ -294,16 +287,24 @@ Der Text soll ${tone.toLowerCase()} sein. Nutze keine Aufzählungen, nur fließe
 
           {/* Step 1 — Questionnaire */}
           {step === 1 && (
-            <div className="space-y-5">
-              <div className="rounded-2xl p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
-                <label className="block text-sm font-medium mb-2" style={{ color: "#8a8278" }}>Wie würden Sie {selectedCase?.deceased_first_name || "die Person"} in einem Satz beschreiben?</label>
+            <div className="space-y-4">
+              <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
+                <label className="block text-sm font-medium mb-2" style={{ color: "#8a8278" }}>Charakterbeschreibung</label>
                 <textarea value={character} onChange={e => setCharacter(e.target.value)} rows={2}
                   placeholder="Z.B. Ein ruhiger Mensch, der immer für andere da war…"
                   className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none"
                   style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }} />
               </div>
 
-              <div className="rounded-2xl p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
+              <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
+                <label className="block text-sm font-medium mb-2" style={{ color: "#8a8278" }}>Beruf / Handwerk (für Motivgestaltung)</label>
+                <input value={profession} onChange={e => setProfession(e.target.value)}
+                  placeholder="Z.B. Fliesenleger, Bäcker, Lehrerin, Schreiner…"
+                  className="w-full px-4 py-3 rounded-xl text-sm outline-none"
+                  style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }} />
+              </div>
+
+              <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
                 <label className="block text-sm font-medium mb-3" style={{ color: "#8a8278" }}>Leidenschaften & Interessen</label>
                 <div className="flex flex-wrap gap-2 mb-3">
                   {PASSIONS.map(p => (
@@ -319,17 +320,17 @@ Der Text soll ${tone.toLowerCase()} sein. Nutze keine Aufzählungen, nur fließe
                   style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }} />
               </div>
 
-              <div className="rounded-2xl p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
-                <label className="block text-sm font-medium mb-2" style={{ color: "#8a8278" }}>Lieblingszitat, Liedtext oder Bibelvers</label>
+              <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
+                <label className="block text-sm font-medium mb-2" style={{ color: "#8a8278" }}>Lieblingszitat oder Spruch</label>
                 <textarea value={quote} onChange={e => setQuote(e.target.value)} rows={2}
-                  placeholder="Z.B. »Nicht Weinen, dass es vorbei ist, sondern Lächeln, dass es war.«"
+                  placeholder="Z.B. »Nicht Weinen, dass es vorbei ist…«"
                   className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none"
                   style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }} />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
-                  <label className="block text-sm font-medium mb-3" style={{ color: "#8a8278" }}>Ausrichtung der Trauerfeier</label>
+                  <label className="block text-sm font-medium mb-3" style={{ color: "#8a8278" }}>Ausrichtung</label>
                   {["Christlich", "Evangelisch", "Weltlich", "Spirituell", "Muslimisch"].map(r => (
                     <button key={r} onClick={() => setReligion(r)} className="block w-full text-left px-3 py-2 rounded-lg text-sm mb-1 transition-all"
                       style={{ background: religion === r ? "rgba(201,169,110,0.1)" : "transparent", color: religion === r ? "#c9a96e" : "#8a8278", border: `1px solid ${religion === r ? "#c9a96e" : "transparent"}` }}>
@@ -350,8 +351,8 @@ Der Text soll ${tone.toLowerCase()} sein. Nutze keine Aufzählungen, nur fließe
               </div>
 
               <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
-                <label className="block text-sm font-medium mb-3" style={{ color: "#8a8278" }}>Motivthema</label>
-                <div className="grid grid-cols-3 gap-2">
+                <label className="block text-sm font-medium mb-3" style={{ color: "#8a8278" }}>Motivthema (Außenseite)</label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {MOTIFS.map(m => (
                     <button key={m.id} onClick={() => setMotif(m.id)}
                       className="p-3 rounded-xl text-center text-xs transition-all"
@@ -367,12 +368,12 @@ Der Text soll ${tone.toLowerCase()} sein. Nutze keine Aufzählungen, nur fließe
           {/* Step 2 — AI preview */}
           {step === 2 && (
             <div className="space-y-5">
-              <div className="rounded-2xl p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
+              <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>KI-generierter Text</h3>
                   <button onClick={generateText} disabled={generating} className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs transition-all" style={{ background: "rgba(201,169,110,0.1)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}>
                     {generating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
-                    Neu generieren
+                    Neu
                   </button>
                 </div>
                 {generating ? (
@@ -388,16 +389,23 @@ Der Text soll ${tone.toLowerCase()} sein. Nutze keine Aufzählungen, nur fließe
               </div>
 
               <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
-                <h3 className="text-sm font-medium mb-3" style={{ color: "#8a8278" }}>Motivthema anpassen</h3>
-                <div className="grid grid-cols-3 gap-2">
-                  {MOTIFS.map(m => (
-                    <button key={m.id} onClick={() => setMotif(m.id)}
-                      className="p-2.5 rounded-xl text-center text-xs transition-all"
-                      style={{ background: motif === m.id ? `${m.color}20` : "#201e1a", border: `1px solid ${motif === m.id ? m.color : "#302d28"}`, color: motif === m.id ? m.color : "#8a8278" }}>
-                      {m.label}
-                    </button>
-                  ))}
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-medium" style={{ color: "#8a8278" }}>KI-generiertes Motiv (Außenseite)</h3>
+                  <button onClick={generateMotif} disabled={generatingMotif} className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs transition-all" style={{ background: "rgba(201,169,110,0.1)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}>
+                    {generatingMotif ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+                    Neu generieren
+                  </button>
                 </div>
+                {generatingMotif ? (
+                  <div className="h-40 rounded-xl flex items-center justify-center" style={{ background: "#201e1a" }}>
+                    <div className="text-center">
+                      <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2" style={{ color: "#c9a96e" }} />
+                      <p className="text-xs" style={{ color: "#5a554e" }}>Motiv wird generiert…</p>
+                    </div>
+                  </div>
+                ) : generatedMotifUrl ? (
+                  <img src={generatedMotifUrl} alt="Motiv" className="w-full h-48 object-cover rounded-xl" />
+                ) : null}
               </div>
 
               <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
@@ -414,7 +422,7 @@ Der Text soll ${tone.toLowerCase()} sein. Nutze keine Aufzählungen, nur fließe
                       <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: val ? "rgba(201,169,110,0.15)" : "#302d28" }}>
                         <Icon className="w-4 h-4" style={{ color: val ? "#c9a96e" : "#5a554e" }} />
                       </div>
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium" style={{ color: "#f0ede8" }}>{label}</p>
                         <p className="text-xs" style={{ color: "#5a554e" }}>{desc}</p>
                       </div>
@@ -431,12 +439,12 @@ Der Text soll ${tone.toLowerCase()} sein. Nutze keine Aufzählungen, nur fließe
           {/* Step 3 — Print config */}
           {step === 3 && (
             <div className="space-y-5">
-              <div className="rounded-2xl p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
+              <div className="rounded-2xl p-5 md:p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
                 <h3 className="text-lg font-semibold mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Auflage</h3>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 flex-wrap">
                   <button onClick={() => setQuantity(q => Math.max(10, q - 10))} className="w-10 h-10 rounded-xl text-lg flex items-center justify-center" style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }}>−</button>
                   <input type="number" value={quantity} onChange={e => setQuantity(Math.max(10, parseInt(e.target.value) || 10))}
-                    className="w-24 text-center py-2.5 rounded-xl text-lg font-semibold outline-none"
+                    className="w-20 text-center py-2.5 rounded-xl text-lg font-semibold outline-none"
                     style={{ background: "#201e1a", border: "1px solid #c9a96e", color: "#f0ede8" }} />
                   <button onClick={() => setQuantity(q => q + 10)} className="w-10 h-10 rounded-xl text-lg flex items-center justify-center" style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }}>+</button>
                   <span className="text-sm" style={{ color: "#8a8278" }}>Exemplare</span>
@@ -446,17 +454,17 @@ Der Text soll ${tone.toLowerCase()} sein. Nutze keine Aufzählungen, nur fließe
               <div className="space-y-3">
                 {PRINT_TIERS.map(t => (
                   <button key={t.id} onClick={() => setPrintTier(t.id)}
-                    className="w-full p-5 rounded-2xl text-left transition-all"
+                    className="w-full p-4 md:p-5 rounded-2xl text-left transition-all"
                     style={{ background: printTier === t.id ? "rgba(201,169,110,0.08)" : "#181714", border: `1.5px solid ${printTier === t.id ? "#c9a96e" : "#302d28"}` }}>
-                    <div className="flex items-start justify-between">
+                    <div className="flex items-start justify-between gap-3">
                       <div>
                         <p className="font-semibold" style={{ color: "#f0ede8", fontFamily: "'Cormorant Garamond', serif" }}>{t.label}</p>
                         <p className="text-sm mt-0.5" style={{ color: "#8a8278" }}>{t.desc}</p>
                         <p className="text-xs mt-1" style={{ color: "#5a554e" }}>Lieferzeit: {t.delivery}</p>
                       </div>
-                      <div className="text-right">
+                      <div className="text-right flex-shrink-0">
                         <p className="font-semibold" style={{ color: "#c9a96e" }}>€ {t.basePrice.toFixed(2).replace(".", ",")} / Stk.</p>
-                        <p className="text-sm mt-1" style={{ color: "#8a8278" }}>Gesamt: € {(t.basePrice * quantity).toFixed(2).replace(".", ",")}</p>
+                        <p className="text-sm mt-1" style={{ color: "#8a8278" }}>€ {(t.basePrice * quantity).toFixed(2).replace(".", ",")}</p>
                       </div>
                     </div>
                   </button>
@@ -476,8 +484,27 @@ Der Text soll ${tone.toLowerCase()} sein. Nutze keine Aufzählungen, nur fließe
           {/* Step 4 — Order summary */}
           {step === 4 && (
             <div className="space-y-5">
-              <div className="rounded-2xl p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
+              {/* Delivery mode */}
+              <div className="rounded-2xl p-5 md:p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
                 <h3 className="text-lg font-semibold mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Lieferadresse</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
+                  {[
+                    { mode: "funeral_home", icon: Building2, label: "An Bestattungshaus", desc: funeralHome?.name || "Ihre Geschäftsadresse" },
+                    { mode: "customer", icon: User, label: "Direkt an Kunden", desc: selectedCase?.next_of_kin_name || "Angehörige/r" },
+                  ].map(({ mode, icon: Icon, label, desc }) => (
+                    <button key={mode} onClick={() => setDeliveryMode(mode)}
+                      className="flex items-center gap-3 p-4 rounded-xl text-left transition-all"
+                      style={{ background: deliveryMode === mode ? "rgba(201,169,110,0.1)" : "#201e1a", border: `1.5px solid ${deliveryMode === mode ? "#c9a96e" : "#302d28"}` }}>
+                      <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: deliveryMode === mode ? "rgba(201,169,110,0.2)" : "#302d28" }}>
+                        <Icon className="w-4 h-4" style={{ color: deliveryMode === mode ? "#c9a96e" : "#5a554e" }} />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium" style={{ color: "#f0ede8" }}>{label}</p>
+                        <p className="text-xs truncate" style={{ color: "#5a554e" }}>{desc}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
                 <div className="space-y-3">
                   {[
                     { k: "deliveryName", label: "Empfänger", val: deliveryName, set: setDeliveryName },
@@ -494,11 +521,11 @@ Der Text soll ${tone.toLowerCase()} sein. Nutze keine Aufzählungen, nur fließe
                 </div>
               </div>
 
-              <div className="rounded-2xl p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
+              <div className="rounded-2xl p-5 md:p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
                 <h3 className="text-lg font-semibold mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Bestellübersicht</h3>
                 {[
                   ["Fall", selectedCase ? `${selectedCase.deceased_first_name} ${selectedCase.deceased_last_name}` : "—"],
-                  ["Format", FORMATS.find(f => f.id === format)?.label || "—"],
+                  ["Format", FORMATS.find(f => f.id === cardFormat)?.label || "—"],
                   ["Motiv", MOTIFS.find(m => m.id === motif)?.label || "—"],
                   ["Drucktier", tier?.label || "—"],
                   ["Auflage", `${quantity} Stk.`],
@@ -507,9 +534,9 @@ Der Text soll ${tone.toLowerCase()} sein. Nutze keine Aufzählungen, nur fließe
                   ...(addonQr ? [["+ QR-Code", "Ja"]] : []),
                   ["Gesamtbetrag", `€ ${totalPrice}`],
                 ].map(([label, val]) => (
-                  <div key={label} className="flex justify-between py-2 border-b text-sm" style={{ borderColor: "#302d28" }}>
+                  <div key={label} className="flex justify-between py-2 border-b text-sm last:border-0" style={{ borderColor: "#302d28" }}>
                     <span style={{ color: "#8a8278" }}>{label}</span>
-                    <span style={{ color: "#f0ede8" }}>{val}</span>
+                    <span style={{ color: label === "Gesamtbetrag" ? "#c9a96e" : "#f0ede8", fontWeight: label === "Gesamtbetrag" ? 600 : 400 }}>{val}</span>
                   </div>
                 ))}
               </div>
@@ -517,7 +544,7 @@ Der Text soll ${tone.toLowerCase()} sein. Nutze keine Aufzählungen, nur fließe
           )}
 
           {/* Navigation */}
-          <div className="flex gap-3 mt-8">
+          <div className="flex gap-3 mt-6">
             {step > 0 && (
               <button onClick={() => setStep(s => s - 1)} className="flex-1 py-3 rounded-xl text-sm border" style={{ borderColor: "#302d28", color: "#8a8278" }}>
                 Zurück
@@ -538,10 +565,29 @@ Der Text soll ${tone.toLowerCase()} sein. Nutze keine Aufzählungen, nur fließe
         </div>
 
         {/* Live preview */}
-        <div className="lg:col-span-2">
-          <div className="sticky top-8">
-            <p className="text-xs uppercase tracking-widest mb-3" style={{ color: "#5a554e" }}>Live-Vorschau</p>
-            <CardPreview caseData={selectedCase} generatedText={editedText} motif={motif} format={format} />
+        <div className="xl:col-span-2 order-1 xl:order-2">
+          <div className="xl:sticky xl:top-8">
+            <div className="flex items-center gap-3 mb-3">
+              <p className="text-xs uppercase tracking-widest" style={{ color: "#5a554e" }}>Vorschau</p>
+              <div className="flex rounded-lg overflow-hidden border" style={{ borderColor: "#302d28" }}>
+                {["front", "inside"].map(side => (
+                  <button key={side} onClick={() => setPreviewSide(side)}
+                    className="px-3 py-1.5 text-xs transition-all"
+                    style={{ background: previewSide === side ? "#c9a96e" : "#181714", color: previewSide === side ? "#0f0e0c" : "#8a8278" }}>
+                    {side === "front" ? "Außen" : "Innen"}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <CardPrintPreview
+              caseData={selectedCase}
+              generatedText={editedText}
+              motif={motif}
+              motifImageUrl={generatedMotifUrl}
+              cardFormat={cardFormat}
+              side={previewSide}
+              funeralHome={funeralHome}
+            />
           </div>
         </div>
       </div>
