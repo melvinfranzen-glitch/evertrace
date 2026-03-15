@@ -187,7 +187,7 @@ function AudioTrack({ track }) {
 }
 
 export default function AudioSection({ tracks, curatedTracks = [] }) {
-  if (!tracks || tracks.length === 0) return null;
+  if ((!tracks || tracks.length === 0) && (!curatedTracks || curatedTracks.length === 0)) return null;
 
   const regularTracks = tracks.filter((t) => !t.is_letter);
   const letters = tracks.filter((t) => t.is_letter);
@@ -217,12 +217,27 @@ export default function AudioSection({ tracks, curatedTracks = [] }) {
           </div>
         )}
 
+        {/* Curated Tracks */}
+         {curatedTracks.length > 0 && (
+           <div className="mb-8">
+             <div className="flex items-center gap-3 mb-4">
+               <p className="text-xs uppercase tracking-[0.2em] flex items-center gap-1.5" style={{ color: "#c9a96e" }}>
+                 <Music className="w-3.5 h-3.5" /> Ausgewählte Trauermusik
+               </p>
+               <span className="text-xs" style={{ color: "#8a8278" }}>Lizenzfrei · Evertrace Bibliothek</span>
+             </div>
+             <div className="space-y-3">
+               {curatedTracks.map((t) => <AudioTrack key={t.id} track={t} />)}
+             </div>
+           </div>
+         )}
+
         {/* Reguläre Tracks */}
-        {regularTracks.length > 0 && (
-          <div className="space-y-3 mb-6">
-            {regularTracks.map((t) => <AudioTrack key={t.id} track={t} />)}
-          </div>
-        )}
+         {regularTracks.length > 0 && (
+           <div className="space-y-3 mb-6">
+             {regularTracks.map((t) => <AudioTrack key={t.id} track={t} />)}
+           </div>
+         )}
 
         {/* Gesperrte Briefe */}
         {lockedLetters.length > 0 && (
