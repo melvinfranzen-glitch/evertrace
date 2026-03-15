@@ -1,18 +1,47 @@
-import { useState } from "react";
-import { Music, ChevronDown, ChevronUp, X } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Music, ChevronDown, ChevronUp, X, Play, Pause } from "lucide-react";
 
-export default function FloatingMusicPlayer({ spotifyUrl, name }) {
+export default function FloatingMusicPlayer({ spotifyUrl, name, curatedTracks = [] }) {
   const [expanded, setExpanded] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const audioRef = useRef(null);
 
-  if (!spotifyUrl || dismissed) return null;
+  const hasCuratedTracks = curatedTracks && curatedTracks.length > 0;
+  const firstCuratedTrack = hasCuratedTracks ? curatedTracks[0] : null;
 
-  // Extract Spotify ID and type (playlist, album, track)
-  const match = spotifyUrl.match(/spotify\.com\/(playlist|album|track)\/([a-zA-Z0-9]+)/);
-  if (!match) return null;
-  const [, type, spotifyId] = match;
+  // Prioritize Spotify, fall back to first curated track
+  if (!spotifyUrl && !hasCuratedTracks) return null;
+  if (dismissed) return null;
 
-  const embedHeight = type === "track" ? 152 : 352;
+  const useCurated = !spotifyUrl && hasCuratedTracks;
+
+  // Extract Spotify ID if Spotify URL exists
+  let type, spotifyId, embedHeight;
+  if (spotifyUrl && !useCurated) {
+    const match = spotifyUrl.match(/spotify\.com\/(playlist|album|track)\/([a-zA-Z0-9]+)/);
+    if (!match) return null;
+    [, type, spotifyId] = match;
+    embedHeight = type === "track" ? 152 : 352;
+  }
+
+  const handlePlayPause = () => {
+    if (!audioRef.current) return;
+    if (playing) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setPlaying(!playing);
+  };
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    const onEnded = () => setPlaying(false);
+    audio.addEventListener("ended", onEnded);
+    return () => audio.removeEventListener("ended", onEnded);
+  }, []);
 
   return (
     <div
@@ -32,7 +61,7 @@ export default function FloatingMusicPlayer({ spotifyUrl, name }) {
         {expanded ? (
           <>
             <div className="flex-1 min-w-0">
-              <p className="text-white text-xs font-medium truncate">Lieblingsmelodien</p>
+              <p className="text-white text-xs font-medium truncate">{useCurated ? "Trauermusik" : "Lieblingsmelodien"}</p>
               <p className="text-gray-400 text-xs truncate">{name}</p>
             </div>
             <ChevronDown className="w-4 h-4 text-gray-400 flex-shrink-0" />
@@ -54,19 +83,43 @@ export default function FloatingMusicPlayer({ spotifyUrl, name }) {
         </button>
       </div>
 
-      {/* Spotify embed */}
-      {expanded && (
-        <iframe
-          src={`https://open.spotify.com/embed/${type}/${spotifyId}?utm_source=generator&theme=0`}
-          width="320"
-          height={embedHeight}
-          frameBorder="0"
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-          loading="lazy"
-          title="Spotify Player"
-          style={{ display: "block" }}
-        />
-      )}
+      {/* Content area */}
+       {expanded && useCurated && firstCuratedTrack && (
+         <div className="p-4 border-t border-gray-700">
+           <div className="flex items-center gap-3">
+             <button
+               onClick={handlePlayPause}
+               className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-colors"
+               style={{ background: "#c9a96e" }}
+             >
+               {playing ? (
+                 <Pause className="w-4 h-4 text-white" fill="white" />
+               ) : (
+                 <Play className="w-4 h-4 text-white ml-0.5" fill="white" />
+               )}
+             </button>
+             <div className="flex-1 min-w-0">
+               <p className="text-white text-sm font-medium truncate">{firstCuratedTrack.title}</p>
+               <p className="text-gray-400 text-xs">{firstCuratedTrack.duration_hint}</p>
+             </div>
+           </div>
+           <audio ref={audioRef} src={firstCuratedTrack.audio_url} />
+         </div>
+       )}
+
+       {/* Spotify embed */}
+       {expanded && !useCurated && spotifyUrl && (
+         <iframe
+           src={`https://open.spotify.com/embed/${type}/${spotifyId}?utm_source=generator&theme=0`}
+           width="320"
+           height={embedHeight}
+           frameBorder="0"
+           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+           loading="lazy"
+           title="Spotify Player"
+           style={{ display: "block" }}
+         />
+       )}
     </div>
   );
 }
