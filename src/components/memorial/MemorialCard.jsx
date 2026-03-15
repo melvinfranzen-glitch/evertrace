@@ -1,4 +1,4 @@
-import { Eye, Edit, QrCode, Calendar, Trash2, X, Copy, Check } from "lucide-react";
+import { Eye, Edit, QrCode, Calendar, Trash2, X, Copy, Check, BookOpen } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
