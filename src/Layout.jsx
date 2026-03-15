@@ -20,7 +20,9 @@ export default function Layout({ children, currentPageName }) {
   useEffect(() => { setMenuOpen(false); }, [currentPageName]);
 
   const isMemorialPage = currentPageName === "MemorialProfile";
+  const isHomePage = currentPageName === "Home";
   if (isMemorialPage) return <>{children}</>;
+  if (isHomePage) return <div className="min-h-screen flex flex-col" style={{ fontFamily: "'Inter', sans-serif", background: "#FAFAF8" }}><main className="flex-1">{children}</main></div>;
 
   const navLinks = [
     { label: "Startseite", page: "Home" },
@@ -56,7 +58,7 @@ export default function Layout({ children, currentPageName }) {
               className="text-lg sm:text-xl font-semibold tracking-wide"
               style={{ fontFamily: "'Cormorant Garamond', serif", color: "#2c1a0e", letterSpacing: "0.02em" }}
             >
-              Ever<span style={{ color: "#b45309" }}>trace</span>
+              Ever<span style={{ color: "#c9a96e" }}>trace</span>
             </span>
           </Link>
 
@@ -70,7 +72,7 @@ export default function Layout({ children, currentPageName }) {
                     to={createPageUrl(link.page)}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
                       isActive(link.page)
-                        ? "bg-amber-50 text-amber-700"
+                        ? "bg-stone-100"
                         : "text-gray-600 hover:text-gray-900 hover:bg-stone-100"
                     }`}
                   >
@@ -83,7 +85,7 @@ export default function Layout({ children, currentPageName }) {
                 to={createPageUrl("AdminDashboard")}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 flex items-center gap-1.5 ${
                   isActive("AdminDashboard")
-                    ? "bg-amber-50 text-amber-700"
+                    ? "bg-stone-100"
                     : "text-gray-600 hover:text-gray-900 hover:bg-stone-100"
                 }`}
               >
@@ -159,7 +161,7 @@ export default function Layout({ children, currentPageName }) {
                     to={createPageUrl(link.page)}
                     className={`flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
                       isActive(link.page)
-                        ? "bg-amber-50 text-amber-700"
+                        ? "bg-stone-100"
                         : "text-gray-700 hover:bg-stone-100"
                     }`}
                     onClick={() => setMenuOpen(false)}
