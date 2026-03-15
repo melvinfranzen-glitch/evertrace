@@ -1,108 +1,56 @@
 import { createPageUrl } from "@/utils";
-
-const testimonials = [
-  {
-    name: "Maria K.",
-    relation: "Tochter",
-    text: "Evertrace hat uns geholfen, die Geschichte meines Vaters würdevoll zu bewahren. Die Lebensgeschichte klingt, als hätte er sie selbst geschrieben – wir sind überwältigt.",
-    stars: 5,
-    initial: "M",
-  },
-  {
-    name: "Thomas B.",
-    relation: "Ehemann",
-    text: "Die Messing-Plakette am Grabstein zieht täglich Besucher in ihren Bann. Jeder scannt den Code und liest die Geschichte meiner Frau. Ein Geschenk für die Familie.",
-    stars: 5,
-    initial: "T",
-  },
-  {
-    name: "Sabine W.",
-    relation: "Enkelin",
-    text: "Innerhalb einer Stunde hatten wir eine vollständige Gedenkseite mit Fotos, Biografie und virtuellem Kondolenzbuch. Einfach, würdevoll und wunderschön.",
-    stars: 5,
-    initial: "S",
-  },
-];
-
-function Stars({ count }) {
-  return (
-    <div className="flex gap-0.5 mb-4">
-      {[...Array(count)].map((_, i) => (
-        <svg key={i} className="w-4 h-4" fill="#c9a96e" viewBox="0 0 20 20">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-        </svg>
-      ))}
-    </div>
-  );
-}
+import { Heart, Mail } from "lucide-react";
 
 export default function TestimonialsSection() {
   return (
     <section className="py-24 px-6" style={{ background: "linear-gradient(160deg, #1a1410, #231a0e)" }}>
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <p className="text-xs uppercase tracking-[0.35em] font-medium mb-4" style={{ color: "#c9a96e" }}>
-            Stimmen der Familien
-          </p>
-          <h2
-            className="text-4xl md:text-5xl font-semibold text-white mb-4 leading-tight"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
-          >
-            Was Trauernde sagen
-          </h2>
-          <p className="text-stone-300 font-light max-w-md mx-auto leading-relaxed text-base">
-            Was unsere ersten Nutzer sagen.
-          </p>
-        </div>
+      <div className="max-w-4xl mx-auto text-center">
+        <p className="text-xs uppercase tracking-[0.35em] font-medium mb-4" style={{ color: "#c9a96e" }}>
+          Early Access
+        </p>
+        <h2
+          className="text-4xl md:text-5xl font-semibold text-white mb-5 leading-tight"
+          style={{ fontFamily: "'Cormorant Garamond', serif" }}
+        >
+          Werden Sie Teil der ersten Gemeinschaft
+        </h2>
+        <p className="text-stone-400 font-light max-w-xl mx-auto leading-relaxed text-base mb-12">
+          Evertrace befindet sich im Aufbau. Wir suchen die ersten Familien und Bestattungshäuser, die gemeinsam mit uns eine neue Form des digitalen Gedenkens gestalten möchten.
+        </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map((t) => (
-            <div
-              key={t.name}
-              className="rounded-2xl p-7 flex flex-col transition-all duration-300 hover:translate-y-[-2px]"
-              style={{
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(201,169,110,0.15)",
-                backdropFilter: "blur(8px)",
-              }}
-            >
-              <Stars count={t.stars} />
-              <p className="text-stone-300 text-base leading-relaxed flex-1 mb-6 italic">
-                „{t.text}"
-              </p>
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0"
-                  style={{ background: "rgba(201,169,110,0.15)", color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}
-                >
-                  {t.initial}
-                </div>
-                <div>
-                  <p className="text-white text-sm font-medium">{t.name}</p>
-                  <p className="text-stone-500 text-xs">{t.relation}</p>
-                </div>
+        {/* Value props */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-14">
+          {[
+            { icon: Heart, title: "Kostenlos starten", desc: "Erstellen Sie eine vollständige Gedenkseite ohne Kosten — und entscheiden Sie später, ob Sie erweitern möchten." },
+            { icon: Sparkles, title: "KI-Biografie inklusive", desc: "Unser Biografie-Assistent hilft Ihnen, die richtigen Worte zu finden — einfühlsam und persönlich." },
+            { icon: Mail, title: "Persönliche Begleitung", desc: "In der Early-Access-Phase stehen wir Ihnen direkt zur Seite. Schreiben Sie uns jederzeit." },
+          ].map(({ icon: Icon, title, desc }) => (
+            <div key={title} className="rounded-2xl p-6 text-left"
+              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,169,110,0.15)" }}>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
+                style={{ background: "rgba(201,169,110,0.12)", border: "1px solid rgba(201,169,110,0.2)" }}>
+                <Icon className="w-5 h-5" style={{ color: "#c9a96e" }} />
               </div>
+              <p className="font-semibold text-white text-base mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{title}</p>
+              <p className="text-stone-400 text-sm leading-relaxed">{desc}</p>
             </div>
           ))}
         </div>
 
-        {/* Community CTA — replaces false aggregate rating */}
-        <div className="mt-14 text-center">
-          <p className="text-stone-400 text-sm mb-5">
-            Evertrace befindet sich im Aufbau — werden Sie Teil der ersten Gemeinschaft.
-          </p>
-          <a
-            href={createPageUrl("Dashboard")}
-            className="inline-block px-8 py-3.5 rounded-full text-sm font-medium transition-all duration-200"
-            style={{
-              background: "linear-gradient(135deg, #c9a96e, #a07830)",
-              color: "#1c1917",
-              boxShadow: "0 4px 20px rgba(201,169,110,0.30)",
-            }}
-          >
-            Jetzt kostenlos starten
-          </a>
-        </div>
+        <a
+          href={createPageUrl("Dashboard")}
+          className="inline-block px-10 py-4 rounded-full text-sm font-medium transition-all duration-200"
+          style={{
+            background: "linear-gradient(135deg, #c9a96e, #a07830)",
+            color: "#1c1917",
+            boxShadow: "0 4px 20px rgba(201,169,110,0.30)",
+          }}
+        >
+          Jetzt kostenlos starten
+        </a>
+        <p className="mt-4 text-xs" style={{ color: "#5a554e" }}>
+          Kein Kreditkarteneintrag erforderlich · Jederzeit kündbar
+        </p>
       </div>
     </section>
   );

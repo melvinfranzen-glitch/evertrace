@@ -1,5 +1,5 @@
 import { createPageUrl } from "@/utils";
-import { Heart, ArrowDown, Sparkles, Users, ShieldCheck } from "lucide-react";
+import { Heart, ArrowDown, Sparkles, ShieldCheck } from "lucide-react";
 
 export default function HeroLanding() {
   return (
