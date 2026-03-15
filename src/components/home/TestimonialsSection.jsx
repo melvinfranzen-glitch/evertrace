@@ -1,3 +1,5 @@
+import { createPageUrl } from "@/utils";
+
 const testimonials = [
   {
     name: "Maria K.",
@@ -26,7 +28,7 @@ function Stars({ count }) {
   return (
     <div className="flex gap-0.5 mb-4">
       {[...Array(count)].map((_, i) => (
-        <svg key={i} className="w-4 h-4" fill="#c9a84c" viewBox="0 0 20 20">
+        <svg key={i} className="w-4 h-4" fill="#c9a96e" viewBox="0 0 20 20">
           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
         </svg>
       ))}
@@ -39,17 +41,17 @@ export default function TestimonialsSection() {
     <section className="py-24 px-6" style={{ background: "linear-gradient(160deg, #1a1410, #231a0e)" }}>
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <p className="text-xs uppercase tracking-[0.35em] font-medium mb-4" style={{ color: "#c9a84c" }}>
+          <p className="text-xs uppercase tracking-[0.35em] font-medium mb-4" style={{ color: "#c9a96e" }}>
             Stimmen der Familien
           </p>
           <h2
             className="text-4xl md:text-5xl font-semibold text-white mb-4 leading-tight"
-            style={{ fontFamily: "'Playfair Display', serif" }}
+            style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
             Was Trauernde sagen
           </h2>
           <p className="text-stone-300 font-light max-w-md mx-auto leading-relaxed text-base">
-            Über 500 Familien vertrauen Evertrace, um die Erinnerung zu bewahren.
+            Was unsere ersten Nutzer sagen.
           </p>
         </div>
 
@@ -60,7 +62,7 @@ export default function TestimonialsSection() {
               className="rounded-2xl p-7 flex flex-col transition-all duration-300 hover:translate-y-[-2px]"
               style={{
                 background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(201,168,76,0.15)",
+                border: "1px solid rgba(201,169,110,0.15)",
                 backdropFilter: "blur(8px)",
               }}
             >
@@ -71,7 +73,7 @@ export default function TestimonialsSection() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0"
-                  style={{ background: "rgba(201,168,76,0.15)", color: "#c9a84c", fontFamily: "'Playfair Display', serif" }}
+                  style={{ background: "rgba(201,169,110,0.15)", color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}
                 >
                   {t.initial}
                 </div>
@@ -84,16 +86,22 @@ export default function TestimonialsSection() {
           ))}
         </div>
 
-        {/* Aggregate rating */}
-        <div className="mt-10 flex items-center justify-center gap-3 text-stone-400 text-sm">
-          <div className="flex gap-0.5">
-            {[...Array(5)].map((_, i) => (
-              <svg key={i} className="w-4 h-4" fill="#c9a84c" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-            ))}
-          </div>
-          <span><strong className="text-white">4.9 / 5</strong> · Basierend auf über 500 Gedenkseiten</span>
+        {/* Community CTA — replaces false aggregate rating */}
+        <div className="mt-14 text-center">
+          <p className="text-stone-400 text-sm mb-5">
+            Evertrace befindet sich im Aufbau — werden Sie Teil der ersten Gemeinschaft.
+          </p>
+          <a
+            href={createPageUrl("Dashboard")}
+            className="inline-block px-8 py-3.5 rounded-full text-sm font-medium transition-all duration-200"
+            style={{
+              background: "linear-gradient(135deg, #c9a96e, #a07830)",
+              color: "#1c1917",
+              boxShadow: "0 4px 20px rgba(201,169,110,0.30)",
+            }}
+          >
+            Jetzt kostenlos starten
+          </a>
         </div>
       </div>
     </section>

@@ -1,217 +1,260 @@
 import { useState } from "react";
-import { Check, X, Package } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Check, X } from "lucide-react";
 import { createPageUrl } from "@/utils";
 
-const B2C_FREE_FEATURES = [
-  { text: "1 Gedenkseite", included: true },
-  { text: "Max. 10 Kondolenzeinträge", included: true },
-  { text: "Max. 5 Fotos", included: true },
-  { text: "Evertrace-Branding", included: true },
-  { text: "Audio-Uploads", included: false },
-  { text: "Stammbaum", included: false },
-  { text: "Passwortschutz", included: false },
-  { text: "Individuelle Gedenkseiten-URL", included: false },
+const B2C_PLANS = [
+  {
+    id: "basic",
+    name: "Basic",
+    price: "Kostenlos",
+    period: "Zum Kennenlernen",
+    features: [
+      { text: "1 Gedenkseite", included: true },
+      { text: "Bis zu 10 Kondolenz-Einträge", included: true },
+      { text: "5 Fotos", included: true },
+      { text: "Evertrace-Branding", included: true },
+      { text: "Audio & Spotify", included: false },
+      { text: "Stammbaum", included: false },
+      { text: "Passwortschutz", included: false },
+    ],
+    cta: "Kostenlos starten",
+    ctaLink: createPageUrl("Dashboard"),
+    highlight: false,
+  },
+  {
+    id: "classic",
+    name: "Classic",
+    badge: "Beliebteste Wahl",
+    price: "€ 79,–",
+    period: "einmalige Zahlung",
+    description: "Einmal zahlen — für immer bewahren.",
+    features: [
+      { text: "Unbegrenzte Gedenkseite", included: true },
+      { text: "Unbegrenzte Kondolenz-Einträge", included: true },
+      { text: "Unbegrenzte Fotos & Audio", included: true },
+      { text: "Stammbaum mit verlinkten Seiten", included: true },
+      { text: "Spotify-Integration", included: true },
+      { text: "Digitale Briefe mit Zeitversand", included: true },
+      { text: "Passwortschutz", included: true },
+      { text: "QR-Code", included: true },
+    ],
+    cta: "Erinnerung jetzt gestalten",
+    ctaLink: createPageUrl("Dashboard"),
+    highlight: true,
+  },
+  {
+    id: "premium",
+    name: "Premium",
+    price: "€ 149,–",
+    period: "einmalige Zahlung",
+    description: "Alles inklusive, keinerlei Kompromisse.",
+    features: [
+      { text: "Alles aus Classic", included: true },
+      { text: "KI-Trauerkarte (4 Motive inklusive)", included: true },
+      { text: "Kondolenzbuch als Druckprodukt", included: true },
+      { text: "Persönliche Betreuung", included: true },
+      { text: "Individuelle Memorial-URL", included: true },
+    ],
+    cta: "Vollständiges Erbe sichern",
+    ctaLink: createPageUrl("Dashboard"),
+    highlight: false,
+  },
 ];
 
-const B2C_PREMIUM_FEATURES = [
-  { text: "Unbegrenzte Gedenkseiten", included: true },
-  { text: "Unbegrenzte Kondolenzeinträge", included: true },
-  { text: "Unbegrenzte Fotos & Audio-Uploads", included: true },
-  { text: "Stammbaum mit verlinkten Gedenkseiten", included: true },
-  { text: "Spotify-Playlist-Integration", included: true },
-  { text: "Digitale Briefe mit zeitverzögerter Freischaltung", included: true },
-  { text: "Zeitleiste & Vermächtnis-Abschnitte", included: true },
-  { text: "Passwortschutz", included: true },
-  { text: "Individuelle Gedenkseiten-URL", included: true },
+const B2B_PLANS = [
+  {
+    id: "free",
+    name: "Free",
+    price: "€ 0",
+    period: "/Monat",
+    features: ["3 Fälle / Monat", "3 Karten", "1 Gedenkseite", "Kein White-Label", "Kein Print"],
+    excluded: ["White-Label", "Print-on-Demand", "Analytics"],
+    cta: "Kostenlos starten",
+    highlight: false,
+  },
+  {
+    id: "starter",
+    name: "Starter",
+    price: "€ 39",
+    period: "/Monat",
+    features: ["15 Fälle / Monat", "20 Karten", "White-Label", "Print-on-Demand"],
+    excluded: ["Analytics", "Jahrestags-Erinnerungen"],
+    cta: "Jetzt starten",
+    highlight: false,
+  },
+  {
+    id: "premium",
+    name: "Premium",
+    price: "€ 99",
+    period: "/Monat",
+    features: ["50 Fälle / Monat", "75 Karten", "Vollständiges Analytics", "Jahrestags-Erinnerungen", "3 Nutzer"],
+    excluded: [],
+    cta: "Premium wählen",
+    highlight: true,
+    badge: "Empfohlen",
+  },
+  {
+    id: "enterprise",
+    name: "Enterprise",
+    price: "ab € 299",
+    period: "/Monat",
+    features: ["Unbegrenzte Fälle & Karten", "Custom-Domain", "API-Zugang", "Persönlicher Account-Manager"],
+    excluded: [],
+    cta: "Angebot anfragen",
+    highlight: false,
+  },
 ];
 
 export default function PricingSection() {
-  const [billing, setBilling] = useState("annual"); // "monthly" | "annual"
+  const [tab, setTab] = useState("b2c");
 
   return (
-    <section id="pricing" className="py-28 px-6" style={{ background: "#FAFAF8" }}>
-      <div className="max-w-5xl mx-auto">
-        {/* Header */}
+    <section id="pricing" className="py-28 px-6" style={{ background: "#0f0e0c" }}>
+      <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
-          <p className="text-xs uppercase tracking-[0.35em] font-medium mb-4" style={{ color: "#c9a96e" }}>Preise</p>
-          <h2 className="text-4xl md:text-5xl font-semibold text-gray-800 mb-5" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            Das Vermächtnis bewahren
-          </h2>
-          <p className="text-gray-500 max-w-lg mx-auto font-light leading-relaxed text-base">
-            Alle Preise verstehen sich zzgl. MwSt.
+          <p className="text-xs uppercase tracking-[0.35em] font-medium mb-4" style={{ color: "#c9a96e" }}>
+            Preise & Tarife
           </p>
-
-          {/* Billing toggle */}
-          <div className="inline-flex items-center gap-1 mt-7 p-1 rounded-xl" style={{ background: "#f0ede8", border: "1px solid #e5ddd0" }}>
-            <button
-              onClick={() => setBilling("annual")}
-              className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
-              style={{
-                background: billing === "annual" ? "white" : "transparent",
-                color: billing === "annual" ? "#2c1a0e" : "#9a8c7e",
-                boxShadow: billing === "annual" ? "0 1px 4px rgba(0,0,0,0.1)" : "none",
-              }}
-            >
-              Jährlich <span className="text-xs ml-1 px-1.5 py-0.5 rounded" style={{ background: "#c9a96e20", color: "#b08040" }}>2 Monate gratis</span>
-            </button>
-            <button
-              onClick={() => setBilling("monthly")}
-              className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
-              style={{
-                background: billing === "monthly" ? "white" : "transparent",
-                color: billing === "monthly" ? "#2c1a0e" : "#9a8c7e",
-                boxShadow: billing === "monthly" ? "0 1px 4px rgba(0,0,0,0.1)" : "none",
-              }}
-            >
-              Monatlich
-            </button>
-          </div>
+          <h2 className="text-4xl md:text-5xl font-semibold text-white mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            Transparent. Einmalig. Oder monatlich.
+          </h2>
+          <p className="text-stone-400 max-w-xl mx-auto font-light leading-relaxed">
+            Für Privatpersonen: einmalige Zahlung, ewige Erinnerung. Für Bestatter: monatliche Lizenz mit vollem Feature-Set.
+          </p>
         </div>
 
-        {/* Plans grid — 2 columns: Free + Premium */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-
-          {/* Free */}
-          <div className="rounded-2xl p-8" style={{ background: "white", border: "1.5px solid #e7e5e4" }}>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "#9a8c7e" }}>Free</p>
-            <div className="flex items-baseline gap-1 mb-1">
-              <span className="text-5xl font-bold text-gray-900">€ 0</span>
-            </div>
-            <p className="text-xs mb-6" style={{ color: "#9a8c7e" }}>zzgl. MwSt.</p>
-            <ul className="space-y-2.5 mb-8">
-              {B2C_FREE_FEATURES.map((f, i) => (
-                <li key={i} className="flex items-start gap-2.5 text-sm">
-                  {f.included
-                    ? <Check className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "#7a9688" }} />
-                    : <X className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "#c9c0b8" }} />
-                  }
-                  <span style={{ color: f.included ? "#4b5563" : "#c9c0b8" }}>{f.text}</span>
-                </li>
-              ))}
-            </ul>
-            <Button
-              className="w-full rounded-xl py-5 font-medium"
-              style={{ background: "#f0ede8", color: "#57534e" }}
-              onClick={() => window.location.href = createPageUrl("Dashboard")}
-            >
-              Kostenlos erstellen
-            </Button>
-          </div>
-
-          {/* Premium */}
-          <div className="relative rounded-2xl p-8" style={{ background: "linear-gradient(160deg,#fffcf5,#fff)", border: "2px solid #c9a96e", boxShadow: "0 8px 40px rgba(201,169,110,0.18)" }}>
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-semibold whitespace-nowrap"
-              style={{ background: "#c9a96e", color: "#1c1917" }}>
-              ✦ Empfohlen
-            </div>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-3 mt-2" style={{ color: "#b08040" }}>Premium</p>
-            {billing === "annual" ? (
-              <>
-                <div className="flex items-baseline gap-1 mb-0.5">
-                  <span className="text-5xl font-bold text-gray-900">€ 99,–</span>
-                  <span className="text-sm text-gray-400">/ Jahr</span>
-                </div>
-                <p className="text-sm mb-1" style={{ color: "#b08040" }}>€ 8,25 / Monat · 2 Monate gratis</p>
-              </>
-            ) : (
-              <>
-                <div className="flex items-baseline gap-1 mb-0.5">
-                  <span className="text-5xl font-bold text-gray-900">€ 12,90</span>
-                  <span className="text-sm text-gray-400">/ Monat</span>
-                </div>
-              </>
-            )}
-            <p className="text-xs mb-6" style={{ color: "#9a8c7e" }}>zzgl. MwSt.</p>
-            <ul className="space-y-2.5 mb-6">
-              {B2C_PREMIUM_FEATURES.map((f, i) => (
-                <li key={i} className="flex items-start gap-2.5 text-sm">
-                  <Check className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "#7a9688" }} />
-                  <span className="text-gray-700">{f.text}</span>
-                </li>
-              ))}
-            </ul>
-            <Button
-              className="w-full rounded-xl py-5 font-semibold"
-              style={{ background: "linear-gradient(135deg,#c9a84c,#a07830)", color: "#1c1917", boxShadow: "0 6px 24px rgba(201,168,76,0.4)" }}
-              onClick={() => window.location.href = createPageUrl("Dashboard")}
-            >
-              Premium freischalten
-            </Button>
-
-            {/* Lifetime option */}
-            <div className="mt-5 pt-5 border-t border-amber-100 rounded-xl px-4 py-4" style={{ background: "rgba(201,169,110,0.06)" }}>
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-semibold text-gray-800">Lifetime</span>
-                <span className="text-sm font-bold" style={{ color: "#b08040" }}>€ 179,–</span>
-              </div>
-              <p className="text-xs text-gray-400 mb-1">Einmalzahlung — für immer</p>
-              <p className="text-xs text-gray-500 mb-3 leading-relaxed">
-                Ideal für Familien, die ein dauerhaftes digitales Erbe schaffen möchten — ohne monatliche Kosten.
-              </p>
-              <button
-                className="w-full py-2 rounded-lg text-sm font-medium transition-all"
-                style={{ background: "transparent", color: "#b08040", border: "1px solid rgba(176,128,64,0.4)" }}
-                onClick={() => window.location.href = createPageUrl("Dashboard")}
-              >
-                Einmalig kaufen
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Trust badges */}
-        <div className="flex flex-wrap justify-center gap-4 mb-10">
+        {/* Tab toggle */}
+        <div className="flex items-center justify-center gap-2 mb-12">
           {[
-            { icon: "🔒", label: "SSL-verschlüsselt" },
-            { icon: "🇩🇪", label: "Hosting in Deutschland" },
-            { icon: "✅", label: "DSGVO-konform" },
-            { icon: "💳", label: "Sichere Zahlung" },
-          ].map((b) => (
-            <div key={b.label} className="flex items-center gap-2 px-4 py-2 rounded-full border border-stone-200 text-xs text-stone-500 bg-white shadow-sm">
-              <span>{b.icon}</span><span>{b.label}</span>
-            </div>
+            { id: "b2c", label: "Für Privatpersonen" },
+            { id: "b2b", label: "Für Bestattungshäuser" },
+          ].map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className="px-5 py-2.5 rounded-xl text-sm font-medium transition-all"
+              style={{
+                background: tab === t.id ? "rgba(201,169,110,0.15)" : "transparent",
+                border: `1px solid ${tab === t.id ? "#c9a96e" : "rgba(201,169,110,0.2)"}`,
+                color: tab === t.id ? "#c9a96e" : "#8a8278",
+                fontFamily: "'DM Sans', sans-serif",
+              }}
+            >
+              {t.label}
+            </button>
           ))}
         </div>
 
-        {/* Physical Add-on */}
-        <div className="rounded-2xl overflow-hidden border border-stone-200 bg-white flex flex-col md:flex-row">
-          <div className="relative md:w-64 h-52 md:h-auto flex-shrink-0 overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=85" alt="Gedenkplakette" className="w-full h-full object-cover" />
-            <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,rgba(28,22,8,0.3),transparent)" }} />
-            <div className="absolute bottom-3 left-3">
-              <span className="text-xs font-medium px-2.5 py-1 rounded-full" style={{ background: "rgba(201,168,76,0.9)", color: "#1c1917" }}>Physisches Produkt</span>
-            </div>
-          </div>
-          <div className="flex-1 p-8 flex flex-col md:flex-row items-center gap-6">
-            <div className="flex-1 text-center md:text-left">
-              <div className="flex items-center gap-2 mb-2 justify-center md:justify-start">
-                <Package className="w-4 h-4" style={{ color: "#c9a84c" }} />
-                <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: "#c9a84c" }}>Gedenkplakette</span>
-              </div>
-              <h3 className="font-semibold text-gray-800 text-xl mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                Die digitale Brücke zum ewigen Gedenken
-              </h3>
-              <p className="text-gray-500 text-sm leading-relaxed max-w-md">
-                Feinste Gravur in gebürstetem Aluminium oder Edelstahl — mit persönlichem QR-Code. An Grabstein, Urne oder Trauerkarte: eine stille Einladung zur Erinnerung.
-              </p>
-              <div className="flex gap-4 mt-3 text-xs" style={{ color: "#9a8c7e" }}>
-                <span>Standard ab <strong className="text-gray-700">€ 149,–</strong></span>
-                <span>Premium ab <strong className="text-gray-700">€ 219,–</strong></span>
-              </div>
-              <p className="text-xs mt-1" style={{ color: "#9a8c7e" }}>zzgl. MwSt.</p>
-            </div>
-            <div className="text-center flex-shrink-0">
-              <Button
-                className="rounded-xl text-sm px-6 py-2.5 font-medium"
-                style={{ background: "linear-gradient(135deg,#c9a84c,#a07830)", color: "#1c1917" }}
-                onClick={() => window.location.href = createPageUrl("Shop")}
+        {/* B2C */}
+        {tab === "b2c" && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {B2C_PLANS.map((plan) => (
+              <div
+                key={plan.id}
+                className="rounded-2xl p-7 flex flex-col transition-all duration-300"
+                style={{
+                  background: plan.highlight ? "rgba(201,169,110,0.06)" : "#181714",
+                  border: plan.highlight ? "1.5px solid #c9a96e" : "1px solid #302d28",
+                  boxShadow: plan.highlight ? "0 0 40px rgba(201,169,110,0.12)" : "none",
+                }}
               >
-                Zur Plakette →
-              </Button>
-            </div>
+                {plan.badge && (
+                  <div className="inline-flex mb-3">
+                    <span className="text-xs px-3 py-1 rounded-full font-medium" style={{ background: "rgba(201,169,110,0.15)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}>
+                      {plan.badge}
+                    </span>
+                  </div>
+                )}
+                <p className="text-lg font-semibold mb-1" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>{plan.name}</p>
+                <div className="mb-1">
+                  <span className="text-4xl font-bold" style={{ fontFamily: "'Cormorant Garamond', serif", color: plan.highlight ? "#c9a96e" : "#f0ede8" }}>{plan.price}</span>
+                </div>
+                <p className="text-xs mb-2" style={{ color: "#5a554e" }}>{plan.period}</p>
+                {plan.description && <p className="text-sm mb-5 leading-relaxed" style={{ color: "#8a8278" }}>{plan.description}</p>}
+                <div className="space-y-2.5 mb-8 flex-1">
+                  {plan.features.map((f) => (
+                    <div key={f.text} className="flex items-start gap-2.5">
+                      {f.included
+                        ? <Check className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "#c9a96e" }} />
+                        : <X className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "#302d28" }} />}
+                      <span className="text-sm" style={{ color: f.included ? "#d4c5a9" : "#5a554e" }}>{f.text}</span>
+                    </div>
+                  ))}
+                </div>
+                <a
+                  href={plan.ctaLink}
+                  className="block text-center py-3 rounded-xl text-sm font-medium transition-all"
+                  style={{
+                    background: plan.highlight ? "#c9a96e" : "transparent",
+                    color: plan.highlight ? "#0f0e0c" : "#c9a96e",
+                    border: plan.highlight ? "none" : "1px solid rgba(201,169,110,0.4)",
+                  }}
+                >
+                  {plan.cta}
+                </a>
+              </div>
+            ))}
           </div>
-        </div>
+        )}
+
+        {/* B2B */}
+        {tab === "b2b" && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {B2B_PLANS.map((plan) => (
+              <div
+                key={plan.id}
+                className="rounded-2xl p-6 flex flex-col transition-all duration-300"
+                style={{
+                  background: plan.highlight ? "rgba(201,169,110,0.06)" : "#181714",
+                  border: plan.highlight ? "1.5px solid #c9a96e" : "1px solid #302d28",
+                  boxShadow: plan.highlight ? "0 0 40px rgba(201,169,110,0.12)" : "none",
+                }}
+              >
+                {plan.badge && (
+                  <div className="inline-flex mb-3">
+                    <span className="text-xs px-3 py-1 rounded-full font-medium" style={{ background: "rgba(201,169,110,0.15)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}>
+                      {plan.badge}
+                    </span>
+                  </div>
+                )}
+                <p className="text-lg font-semibold mb-1" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>{plan.name}</p>
+                <div className="mb-4">
+                  <span className="text-3xl font-bold" style={{ fontFamily: "'Cormorant Garamond', serif", color: plan.highlight ? "#c9a96e" : "#f0ede8" }}>{plan.price}</span>
+                  <span className="text-sm ml-1" style={{ color: "#5a554e" }}>{plan.period}</span>
+                </div>
+                <div className="space-y-2 mb-6 flex-1">
+                  {plan.features.map((f) => (
+                    <div key={f} className="flex items-start gap-2">
+                      <Check className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style={{ color: "#c9a96e" }} />
+                      <span className="text-xs" style={{ color: "#d4c5a9" }}>{f}</span>
+                    </div>
+                  ))}
+                  {plan.excluded?.map((f) => (
+                    <div key={f} className="flex items-start gap-2">
+                      <X className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style={{ color: "#302d28" }} />
+                      <span className="text-xs" style={{ color: "#5a554e" }}>{f}</span>
+                    </div>
+                  ))}
+                </div>
+                <a
+                  href="/B2BRegister"
+                  className="block text-center py-2.5 rounded-xl text-sm font-medium transition-all"
+                  style={{
+                    background: plan.highlight ? "#c9a96e" : "transparent",
+                    color: plan.highlight ? "#0f0e0c" : "#c9a96e",
+                    border: plan.highlight ? "none" : "1px solid rgba(201,169,110,0.4)",
+                  }}
+                >
+                  {plan.cta}
+                </a>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <p className="text-center text-xs mt-8" style={{ color: "#5a554e" }}>
+          Alle B2B-Preise zzgl. MwSt. · Monatlich kündbar.
+        </p>
       </div>
     </section>
   );
