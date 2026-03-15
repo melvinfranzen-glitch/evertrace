@@ -114,7 +114,7 @@ export default function MemorialProfile() {
           <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-5" style={{ background: "#fef3c7" }}>
             <Lock className="w-8 h-8 text-amber-700" />
           </div>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             Private Gedenkseite
           </h2>
           <p className="text-gray-500 mb-6 text-sm">Diese Gedenkseite ist nur mit Passwort zugänglich.</p>
@@ -149,16 +149,16 @@ export default function MemorialProfile() {
           <section className="py-24 px-6" style={{ background: "white" }}>
             <div className="max-w-3xl mx-auto">
               <div className="text-center mb-12">
-                <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#b45309" }}>Lebensgeschichte</p>
-                <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+                <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>Lebensgeschichte</p>
+                <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                   {memorial.name}
                 </h2>
-                <p className="text-gray-400 text-sm font-light" style={{ fontFamily: "'Playfair Display', serif" }}>
+                <p className="text-gray-400 text-sm font-light" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                   Eine Geschichte, die weiterlebt.
                 </p>
               </div>
               <div className="text-gray-600 leading-9 text-lg whitespace-pre-wrap"
-                style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic" }}>
+                style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic" }}>
                 {memorial.biography}
               </div>
             </div>
@@ -208,11 +208,11 @@ export default function MemorialProfile() {
       {memorial.spotify_url && (
         <section className="py-16 px-6" style={{ background: "#F5F0E8" }}>
           <div className="max-w-3xl mx-auto text-center">
-            <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#b45309" }}>Lieblingsmelodien</p>
-            <h2 className="text-3xl font-semibold text-gray-800 mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>Lieblingsmelodien</p>
+            <h2 className="text-3xl font-semibold text-gray-800 mb-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Musik, die verbindet
             </h2>
-            <p className="text-gray-400 text-sm mb-8 font-light" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <p className="text-gray-400 text-sm mb-8 font-light" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Songs, die {memorial.name} liebte — und die uns an ihn / sie erinnern.
             </p>
             <iframe
@@ -246,16 +246,16 @@ export default function MemorialProfile() {
       {/* Footer */}
       <div className="py-12 text-center border-t border-stone-100" style={{ background: "#1a1410" }}>
         <div className="flex items-center justify-center gap-3 mb-4">
-          <div className="h-px w-8 bg-amber-700/30" />
+          <div className="h-px w-8" style={{ background: "rgba(201,169,110,0.3)" }} />
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2C12 2 7 7 7 12C7 17 12 22 12 22C12 22 17 17 17 12C17 7 12 2 12 2Z" fill="#c9a84c" opacity="0.5"/>
-            <circle cx="12" cy="12" r="2.5" fill="#c9a84c"/>
+            <path d="M12 2C12 2 7 7 7 12C7 17 12 22 12 22C12 22 17 17 17 12C17 7 12 2 12 2Z" fill="#c9a96e" opacity="0.5"/>
+            <circle cx="12" cy="12" r="2.5" fill="#c9a96e"/>
           </svg>
-          <div className="h-px w-8 bg-amber-700/30" />
+          <div className="h-px w-8" style={{ background: "rgba(201,169,110,0.3)" }} />
         </div>
-        <p className="text-sm" style={{ color: "#6b5a44", fontFamily: "'Playfair Display', serif", fontStyle: "italic" }}>
+        <p className="text-sm" style={{ color: "#6b5a44", fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic" }}>
           In liebevoller Erinnerung bewahrt mit{" "}
-          <a href="/" className="font-semibold" style={{ color: "#c9a84c" }}>Evertrace</a>
+          <a href="/" className="font-semibold" style={{ color: "#c9a96e" }}>Evertrace</a>
         </p>
       </div>
     </div>
