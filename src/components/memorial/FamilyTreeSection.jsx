@@ -122,8 +122,9 @@ export default function FamilyTreeSection({ memorial }) {
           </h2>
         </div>
 
-        <div className="overflow-x-auto pb-4">
-          <div className="min-w-[280px] space-y-0">
+        <div className="overflow-hidden">
+          <div className="overflow-x-auto pb-4 scrollbar-thin">
+            <div className="min-w-[320px] space-y-0">
 
             {grandparents.length > 0 && (
               <>
@@ -167,8 +168,11 @@ export default function FamilyTreeSection({ memorial }) {
               </>
             )}
 
+            </div>
           </div>
         </div>
+
+        <div className="md:hidden text-center text-xs mt-2" style={{ color: "#8a8278" }}>← Zum Scrollen wischen →</div>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
           <p className="text-xs text-stone-400 italic">

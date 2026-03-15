@@ -130,7 +130,7 @@ export default function B2BPublicMemorial() {
       </div>
 
       {/* Hero */}
-      <div className="relative min-h-[60vh] flex flex-col items-center justify-center text-center px-6 py-20"
+      <div className="relative min-h-[60vh] flex flex-col items-center justify-center text-center px-4 py-20"
         style={{ background: page.main_photo_url ? `url(${page.main_photo_url}) center/cover no-repeat` : "linear-gradient(160deg,#1c1917,#2c2010)" }}>
         <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.2) 100%)" }} />
         <div className="relative text-white text-center">
@@ -194,7 +194,7 @@ export default function B2BPublicMemorial() {
 
       {/* Candles & stats */}
       <section className="py-14 px-6 text-center" style={{ background: "#f0ebe1" }}>
-        <div className="flex items-center justify-center gap-10">
+        <div className="flex flex-wrap items-center justify-center gap-y-8 gap-x-10">
           <div>
             <p className="text-3xl font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#2c2419" }}>{page.visit_count || 0}</p>
             <p className="text-xs mt-1" style={{ color: "#8a8278" }}>Besuche</p>
@@ -263,14 +263,14 @@ export default function B2BPublicMemorial() {
                   <label className="text-xs mb-1.5 block" style={{ color: "#8a8278" }}>Ihr Name</label>
                   <input value={form.contributor_name} onChange={e => set("contributor_name", e.target.value)} placeholder="Vor- und Nachname"
                     className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                    style={{ background: "#f7f3ed", border: "1px solid #e8dfd0", color: "#2c2419" }} />
+                    style={{ background: "#f7f3ed", border: "1px solid #e8dfd0", color: "#2c2419", fontSize: 16 }} />
                 </div>
                 <div>
                   <label className="text-xs mb-1.5 block" style={{ color: "#8a8278" }}>Ihre Erinnerung</label>
                   <textarea value={form.message} onChange={e => set("message", e.target.value)} rows={4}
                     placeholder="Teilen Sie eine Erinnerung, ein Gebet oder einfach Ihr Mitgefühl…"
                     className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none"
-                    style={{ background: "#f7f3ed", border: "1px solid #e8dfd0", color: "#2c2419" }} />
+                    style={{ background: "#f7f3ed", border: "1px solid #e8dfd0", color: "#2c2419", fontSize: 16 }} />
                 </div>
                 <div className="flex gap-3">
                   <button onClick={() => set("is_candle", !form.is_candle)}

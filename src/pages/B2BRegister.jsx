@@ -99,7 +99,7 @@ export default function B2BRegister() {
                   }}>
                   {i < step ? <Check className="w-3.5 h-3.5" style={{ color: "#0f0e0c" }} /> : i + 1}
                 </div>
-                <span className="text-sm hidden sm:block" style={{ color: i === step ? "#f0ede8" : "#5a554e" }}>{s}</span>
+                {(i === step || i < step) && <span className="text-xs sm:text-sm hidden sm:block" style={{ color: i === step ? "#f0ede8" : "#5a554e" }}>{s}</span>}
               </div>
               {i < STEPS.length - 1 && <ChevronRight className="w-4 h-4" style={{ color: "#302d28" }} />}
             </div>
