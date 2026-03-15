@@ -5,7 +5,7 @@ import { ArrowRight, Building2, FileText, User, Mail, Phone, MapPin, ChevronRigh
 import B2BPricingGrid from "@/components/pricing/B2BPricingGrid";
 import { B2B_PLANS } from "@/components/pricing/pricingData";
 
-const STEPS = ["Plan wählen", "Unternehmen", "Kontakt", "Bestätigung"];
+const STEPS = ["Plan & Unternehmen", "Kontakt", "Bestätigung"];
 
 export default function B2BRegister() {
   const [step, setStep] = useState(0);

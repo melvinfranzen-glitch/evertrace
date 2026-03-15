@@ -156,7 +156,7 @@ export default function MemorialProfile() {
   }
 
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif", background: "#FAFAF8" }}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", background: "#FAFAF8" }}>
       <HeroSection memorial={memorial} />
 
       {/* Biography */}

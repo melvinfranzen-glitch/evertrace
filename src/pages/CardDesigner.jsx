@@ -41,7 +41,7 @@ export default function CardDesigner() {
           death: m.death_date ? m.death_date.slice(0, 4) : "",
           quote: m.subtitle || "",
           body: "",
-          font: "Playfair Display",
+          font: "Cormorant Garamond",
         });
       }
       setLoading(false);
@@ -92,7 +92,7 @@ export default function CardDesigner() {
               <ArrowLeft className="w-5 h-5" />
             </button>
             <div>
-              <h1 className="text-2xl font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
+              <h1 className="text-2xl font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 Trauerkarte gestalten
               </h1>
               <p className="text-sm text-gray-500">für {memorial?.name}</p>
@@ -161,7 +161,7 @@ export default function CardDesigner() {
                 ))}
                 <div className="pt-2 border-t border-stone-100 flex justify-between text-sm font-semibold">
                   <span className="text-gray-700">50 Karten inkl. Versand</span>
-                  <span style={{ color: "#b45309" }}>€ 69</span>
+                  <span style={{ color: "#c9a96e" }}>€ 59,–</span>
                 </div>
               </div>
             )}
@@ -171,7 +171,7 @@ export default function CardDesigner() {
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm sticky top-24">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
+                <h3 className="font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                   Vorschau
                 </h3>
                 {/* Side toggle */}
