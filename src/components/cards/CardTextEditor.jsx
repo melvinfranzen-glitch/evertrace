@@ -51,9 +51,9 @@ export default function CardTextEditor({ texts, onChange, showQr, onToggleQr }) 
                 className="px-3 py-1.5 rounded-lg text-xs border transition-all"
                 style={{
                   fontFamily: f,
-                  borderColor: texts.font === f ? "#c9a84c" : "#e5e7eb",
-                  background: texts.font === f ? "#fef9ee" : "white",
-                  color: texts.font === f ? "#a07830" : "#6b7280",
+                  borderColor: texts.font === f ? "#c9a96e" : "#e5e7eb",
+                  background: texts.font === f ? "rgba(201,169,110,0.08)" : "white",
+                  color: texts.font === f ? "#c9a96e" : "#6b7280",
                 }}
               >
                 {f}
@@ -70,10 +70,10 @@ export default function CardTextEditor({ texts, onChange, showQr, onToggleQr }) 
         style={{ borderColor: showQr ? "#c9a84c" : "#e5e7eb", background: showQr ? "#fef9ee" : "#fafaf8" }}
       >
         <div className="w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all"
-          style={{ borderColor: showQr ? "#c9a84c" : "#d1d5db", background: showQr ? "#c9a84c" : "white" }}>
+          style={{ borderColor: showQr ? "#c9a96e" : "#d1d5db", background: showQr ? "#c9a96e" : "white" }}>
           {showQr && <span className="text-white text-xs font-bold">✓</span>}
         </div>
-        <QrCode className="w-4 h-4 flex-shrink-0" style={{ color: showQr ? "#c9a84c" : "#9ca3af" }} />
+        <QrCode className="w-4 h-4 flex-shrink-0" style={{ color: showQr ? "#c9a96e" : "#9ca3af" }} />
         <div>
           <p className="text-sm font-medium text-gray-700">QR-Code auf Rückseite</p>
           <p className="text-xs text-gray-400">Verweist auf die digitale Gedenkseite</p>

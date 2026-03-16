@@ -56,17 +56,9 @@ export default function CardPreview({ bgImage, texts, showQr, side, memorial }) 
 
       <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
         {/* Gold ornament */}
-        <div className="w-12 h-px mb-6" style={{ background: "#c9a84c" }} />
-
-        {texts.body ? (
-          <p className="text-sm text-gray-700 leading-relaxed mb-6" style={{ fontFamily: font }}>
-            {texts.body}
-          </p>
-        ) : (
-          <p className="text-sm text-gray-400 italic mb-6">Innentext hier…</p>
-        )}
-
-        <div className="w-12 h-px mb-6" style={{ background: "#c9a84c" }} />
+        <div className="w-12 h-px mb-6" style={{ background: "#c9a96e" }} />
+...
+        <div className="w-12 h-px mb-6" style={{ background: "#c9a96e" }} />
 
         {/* QR placeholder */}
         {showQr && (

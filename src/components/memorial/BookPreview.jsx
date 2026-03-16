@@ -62,7 +62,7 @@ function BioPage({ memorial }) {
         <h3 className="text-base font-semibold text-gray-800 mb-3 leading-snug" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
           {memorial.name}
         </h3>
-        <div className="h-px mb-4" style={{ background: "linear-gradient(90deg, #c9a84c, transparent)" }} />
+        <div className="h-px mb-4" style={{ background: "linear-gradient(90deg, #c9a96e, transparent)" }} />
         <p className="text-gray-600 leading-relaxed flex-1 overflow-hidden" style={{ fontSize: "0.62rem", lineHeight: "1.7" }}>
           {memorial.biography
             ? memorial.biography.slice(0, 600) + (memorial.biography.length > 600 ? " …" : "")
