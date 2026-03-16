@@ -43,9 +43,7 @@ export default function B2BRegister() {
    setLoading(true);
    await base44.entities.FuneralHome.create({ ...form, plan: selectedPlan, verified: false });
    setLoading(false);
-   setTimeout(() => {
-     base44.auth.redirectToLogin(createPageUrl("B2BDashboard"));
-   }, 2000);
+   setDone(true);
   };
 
   if (done) {
