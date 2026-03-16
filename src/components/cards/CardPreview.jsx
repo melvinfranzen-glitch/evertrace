@@ -64,8 +64,8 @@ export default function CardPreview({ bgImage, texts, showQr, side, memorial }) 
         {showQr && (
           <div className="mt-2 flex flex-col items-center gap-2">
             <div className="w-16 h-16 rounded-lg border-2 flex items-center justify-center"
-              style={{ borderColor: "#c9a84c", background: "white" }}>
-              <QrCode className="w-8 h-8" style={{ color: "#c9a84c" }} />
+              style={{ borderColor: "#c9a96e", background: "white" }}>
+              <QrCode className="w-8 h-8" style={{ color: "#c9a96e" }} />
             </div>
             <p className="text-xs text-gray-400">Digitale Gedenkseite</p>
           </div>
