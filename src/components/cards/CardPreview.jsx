@@ -16,7 +16,7 @@ export default function CardPreview({ bgImage, texts, showQr, side, memorial }) 
         {/* Portrait */}
         {memorial?.hero_image_url && (
           <div className="absolute top-8 left-1/2 -translate-x-1/2 w-24 h-24 rounded-full overflow-hidden border-2"
-            style={{ borderColor: "rgba(201,168,76,0.5)" }}>
+            style={{ borderColor: "rgba(201,169,110,0.5)" }}>
             <img src={memorial.hero_image_url} alt={texts.name} className="w-full h-full object-cover" />
           </div>
         )}
@@ -40,7 +40,7 @@ export default function CardPreview({ bgImage, texts, showQr, side, memorial }) 
             </p>
           )}
           {/* Gold line */}
-          <div className="w-16 h-px mx-auto mt-4" style={{ background: "rgba(201,168,76,0.6)" }} />
+          <div className="w-16 h-px mx-auto mt-4" style={{ background: "rgba(201,169,110,0.6)" }} />
         </div>
       </div>
     );
