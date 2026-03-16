@@ -1,7 +1,7 @@
 import { QrCode } from "lucide-react";
 
 export default function CardPreview({ bgImage, texts, showQr, side, memorial }) {
-  const font = texts.font || "Playfair Display";
+  const font = texts.font || "Cormorant Garamond";
 
   if (side === "front") {
     return (

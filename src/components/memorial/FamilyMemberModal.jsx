@@ -58,7 +58,7 @@ export default function FamilyMemberModal({ person, memorialId, isDeceased, onCl
           <div
             className="w-24 h-24 rounded-full border-4 border-white shadow-lg overflow-hidden flex items-center justify-center font-bold text-2xl"
             style={isDeceased
-              ? { background: "linear-gradient(135deg,#92400e,#b45309)", color: "white" }
+              ? { background: "linear-gradient(135deg,#a07830,#c9a96e)", color: "white" }
               : { background: "#e7e2db", color: "#6b5a44" }
             }
           >
@@ -68,17 +68,17 @@ export default function FamilyMemberModal({ person, memorialId, isDeceased, onCl
             }
           </div>
 
-          <h3 className="mt-3 text-xl font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <h3 className="mt-3 text-xl font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             {person.name}
           </h3>
 
           {!isDeceased && person.relation && (
-            <span className="mt-1 text-sm px-3 py-0.5 rounded-full font-medium" style={{ background: "#fef3c7", color: "#92400e" }}>
+            <span className="mt-1 text-sm px-3 py-0.5 rounded-full font-medium" style={{ background: "rgba(201,169,110,0.15)", color: "#c9a96e" }}>
               {RELATION_LABEL[person.relation] || person.relation}
             </span>
           )}
           {isDeceased && (
-            <span className="mt-1 text-sm text-amber-700 font-light italic" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <span className="mt-1 text-sm font-light italic" style={{ color: '#c9a96e', fontFamily: "'Cormorant Garamond', serif" }}>
               In liebevoller Erinnerung
             </span>
           )}
@@ -87,7 +87,7 @@ export default function FamilyMemberModal({ person, memorialId, isDeceased, onCl
           <div className="mt-5 w-full space-y-2">
             {(person.birth_year || person.death_year) && (
               <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "#FAF8F4" }}>
-                <Calendar className="w-4 h-4 flex-shrink-0" style={{ color: "#b45309" }} />
+                <Calendar className="w-4 h-4 flex-shrink-0" style={{ color: "#c9a96e" }} />
                 <span className="text-sm text-gray-600">
                   {person.birth_year && <>geb. {person.birth_year}</>}
                   {person.birth_year && person.death_year && " · "}
@@ -98,7 +98,7 @@ export default function FamilyMemberModal({ person, memorialId, isDeceased, onCl
 
             {person.notes && (
               <div className="flex items-start gap-3 p-3 rounded-xl" style={{ background: "#FAF8F4" }}>
-                <Heart className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "#b45309" }} />
+                <Heart className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "#c9a96e" }} />
                 <p className="text-sm text-gray-600 leading-relaxed">{person.notes}</p>
               </div>
             )}
@@ -111,7 +111,7 @@ export default function FamilyMemberModal({ person, memorialId, isDeceased, onCl
               target="_blank"
               rel="noopener noreferrer"
               className="mt-4 w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all"
-              style={{ background: "#fef3c7", color: "#92400e", border: "1px solid #fde68a" }}
+              style={{ background: "rgba(201,169,110,0.1)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}
             >
               <ExternalLink className="w-4 h-4" />
               Zur Gedenkseite von {person.name.split(" ")[0]}
@@ -122,8 +122,8 @@ export default function FamilyMemberModal({ person, memorialId, isDeceased, onCl
           {!isDeceased && !loadingMemories && memories.length > 0 && (
             <div className="mt-6 w-full">
               <div className="flex items-center gap-2 mb-3">
-                <MessageSquare className="w-4 h-4" style={{ color: "#b45309" }} />
-                <p className="text-xs uppercase tracking-widest font-medium" style={{ color: "#b45309" }}>
+                <MessageSquare className="w-4 h-4" style={{ color: "#c9a96e" }} />
+                <p className="text-xs uppercase tracking-widest font-medium" style={{ color: "#c9a96e" }}>
                   Erwähnungen in Erinnerungen
                 </p>
               </div>

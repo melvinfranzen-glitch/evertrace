@@ -69,7 +69,7 @@ export default function LegacyEditor({ memorialId }) {
           <Textarea value={form.description} onChange={e => setF("description", e.target.value)}
             className="mt-1 h-20 resize-none" placeholder="Details oder Hintergrund..." />
         </div>
-        <Button onClick={add} disabled={saving || !form.title} size="sm" className="text-white rounded-xl" style={{ background: "#b45309" }}>
+        <Button onClick={add} disabled={saving || !form.title} size="sm" className="rounded-xl" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
           {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" /> : <Plus className="w-3.5 h-3.5 mr-1" />}
           Hinzufügen
         </Button>
@@ -82,7 +82,7 @@ export default function LegacyEditor({ memorialId }) {
           {entries.map(entry => (
             <div key={entry.id} className="flex items-start justify-between gap-3 p-3 rounded-xl border border-stone-100 bg-stone-50">
               <div className="flex-1 min-w-0">
-                <span className="text-xs font-medium uppercase tracking-wide" style={{ color: "#b45309" }}>
+                <span className="text-xs font-medium uppercase tracking-wide" style={{ color: "#c9a96e" }}>
                   {CATEGORIES.find(c => c.value === entry.category)?.label}
                 </span>
                 <p className="font-medium text-gray-800 text-sm mt-0.5">{entry.title}</p>

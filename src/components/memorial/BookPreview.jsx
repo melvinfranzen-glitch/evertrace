@@ -14,7 +14,7 @@ function BookPage({ children, className = "" }) {
       style={{ aspectRatio: "3/4", border: "1px solid #e7e5e4" }}
     >
       {/* Decorative top-border */}
-      <div className="absolute top-0 left-0 right-0 h-1" style={{ background: "linear-gradient(90deg, #c9a84c, #e6cc80, #c9a84c)" }} />
+      <div className="absolute top-0 left-0 right-0 h-1" style={{ background: "linear-gradient(90deg, #c9a96e, #e4c99a, #c9a96e)" }} />
       {children}
     </div>
   );
@@ -33,8 +33,8 @@ function CoverPage({ memorial }) {
           <div className="flex-1" style={{ background: "linear-gradient(160deg, #2d1f0a, #1a1410)" }} />
         )}
         <div className="p-5 text-center" style={{ background: "#fafaf8" }}>
-          <div className="h-px mb-3 mx-6" style={{ background: "linear-gradient(90deg, transparent, #c9a84c, transparent)" }} />
-          <h2 className="font-semibold text-gray-800 text-lg leading-tight mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <div className="h-px mb-3 mx-6" style={{ background: "linear-gradient(90deg, transparent, #c9a96e, transparent)" }} />
+          <h2 className="font-semibold text-gray-800 text-lg leading-tight mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             {memorial.name}
           </h2>
           {(memorial.birth_date || memorial.death_date) && (
@@ -45,8 +45,8 @@ function CoverPage({ memorial }) {
           {memorial.subtitle && (
             <p className="text-xs italic mt-1.5" style={{ color: "#a07830" }}>„{memorial.subtitle}"</p>
           )}
-          <div className="h-px mt-3 mx-6" style={{ background: "linear-gradient(90deg, transparent, #c9a84c, transparent)" }} />
-          <p className="text-xs mt-2" style={{ color: "#c9a84c", letterSpacing: "0.15em", fontSize: "0.55rem" }}>EVERTRACE · ERINNERUNGSBUCH</p>
+          <div className="h-px mt-3 mx-6" style={{ background: "linear-gradient(90deg, transparent, #c9a96e, transparent)" }} />
+          <p className="text-xs mt-2" style={{ color: "#c9a96e", letterSpacing: "0.15em", fontSize: "0.55rem" }}>EVERTRACE · ERINNERUNGSBUCH</p>
         </div>
       </div>
     </BookPage>
@@ -58,8 +58,8 @@ function BioPage({ memorial }) {
   return (
     <BookPage>
       <div className="p-5 h-full flex flex-col">
-        <p className="text-xs uppercase tracking-widest mb-3" style={{ color: "#c9a84c", fontSize: "0.55rem" }}>Lebensgeschichte</p>
-        <h3 className="text-base font-semibold text-gray-800 mb-3 leading-snug" style={{ fontFamily: "'Playfair Display', serif" }}>
+        <p className="text-xs uppercase tracking-widest mb-3" style={{ color: "#c9a96e", fontSize: "0.55rem" }}>Lebensgeschichte</p>
+        <h3 className="text-base font-semibold text-gray-800 mb-3 leading-snug" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
           {memorial.name}
         </h3>
         <div className="h-px mb-4" style={{ background: "linear-gradient(90deg, #c9a84c, transparent)" }} />
@@ -80,7 +80,7 @@ function GalleryPage({ images, title = "Erinnerungen in Bildern" }) {
   return (
     <BookPage>
       <div className="p-4 h-full flex flex-col">
-        <p className="text-xs uppercase tracking-widest mb-3 text-center" style={{ color: "#c9a84c", fontSize: "0.55rem" }}>{title}</p>
+        <p className="text-xs uppercase tracking-widest mb-3 text-center" style={{ color: "#c9a96e", fontSize: "0.55rem" }}>{title}</p>
         <div className="grid grid-cols-2 gap-1.5 flex-1">
           {shown.map((url, i) => (
             <div key={i} className="rounded overflow-hidden bg-stone-100">
@@ -101,11 +101,11 @@ function CondolencePage({ entries, pageNum }) {
   return (
     <BookPage>
       <div className="p-5 h-full flex flex-col">
-        <p className="text-xs uppercase tracking-widest mb-3" style={{ color: "#c9a84c", fontSize: "0.55rem" }}>Worte des Gedenkens</p>
-        <div className="h-px mb-4" style={{ background: "linear-gradient(90deg, #c9a84c, transparent)" }} />
+        <p className="text-xs uppercase tracking-widest mb-3" style={{ color: "#c9a96e", fontSize: "0.55rem" }}>Worte des Gedenkens</p>
+        <div className="h-px mb-4" style={{ background: "linear-gradient(90deg, #c9a96e, transparent)" }} />
         <div className="space-y-4 flex-1">
           {entries.map((e) => (
-            <div key={e.id} className="border-l-2 pl-3" style={{ borderColor: "#e6cc80" }}>
+            <div key={e.id} className="border-l-2 pl-3" style={{ borderColor: "#e4c99a" }}>
               <p className="text-gray-600 italic leading-relaxed mb-1" style={{ fontSize: "0.6rem", lineHeight: "1.65" }}>
                 „{e.message.slice(0, 220)}{e.message.length > 220 ? " …" : ""}"
               </p>
@@ -139,11 +139,11 @@ export default function BookPreview({ memorial, condolences, selectedImages }) {
         <BookPage>
           <div className="h-full flex flex-col items-center justify-center p-6 text-center"
             style={{ background: "linear-gradient(160deg, #1a1410, #2d1f0a)" }}>
-            <div className="h-px w-12 mb-4" style={{ background: "#c9a84c" }} />
-            <p className="text-white font-semibold text-sm mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>{memorial.name}</p>
+            <div className="h-px w-12 mb-4" style={{ background: "#c9a96e" }} />
+            <p className="text-white font-semibold text-sm mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{memorial.name}</p>
             {memorial.death_date && <p className="text-stone-500 text-xs">† {fmt(memorial.death_date)}</p>}
-            <div className="h-px w-12 mt-4 mb-3" style={{ background: "#c9a84c" }} />
-            <p style={{ color: "#c9a84c", fontSize: "0.55rem", letterSpacing: "0.2em" }}>EVERTRACE</p>
+            <div className="h-px w-12 mt-4 mb-3" style={{ background: "#c9a96e" }} />
+            <p style={{ color: "#c9a96e", fontSize: "0.55rem", letterSpacing: "0.2em" }}>EVERTRACE</p>
           </div>
         </BookPage>
       </div>

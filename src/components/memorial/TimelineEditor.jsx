@@ -95,7 +95,7 @@ function EventRow({ ev, onDelete, onSave }) {
             <Button size="sm" variant="outline" className="rounded-xl" onClick={() => setEditing(false)}>
               <X className="w-4 h-4" />
             </Button>
-            <Button size="sm" className="rounded-xl text-white" style={{ background: "#b45309" }} onClick={save}>
+            <Button size="sm" className="rounded-xl text-white" style={{ background: "#c9a96e", color: "#0f0e0c" }} onClick={save}>
               <Check className="w-4 h-4 mr-1" /> Speichern
             </Button>
           </div>
@@ -110,11 +110,11 @@ function EventRow({ ev, onDelete, onSave }) {
         className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
         style={{ background: type.color + "44" }}
       >
-        <Icon className="w-4 h-4" style={{ color: "#92400e" }} />
+        <Icon className="w-4 h-4" style={{ color: "#a07830" }} />
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-amber-700">{ev.year}</span>
+          <span className="text-xs font-bold" style={{ color: "#c9a96e" }}>{ev.year}</span>
           <span className="text-xs text-gray-400">·</span>
           <span className="text-xs text-gray-400">{getType(ev.event_type).label}</span>
         </div>
@@ -174,7 +174,7 @@ export default function TimelineEditor({ memorialId, timeline, setTimeline }) {
     <div className="space-y-3">
       <div className="flex items-center justify-between mb-1">
         <p className="text-sm text-gray-500">{sorted.length} Ereignis{sorted.length !== 1 ? "se" : ""}</p>
-        <Button size="sm" onClick={() => setAdding(true)} className="rounded-xl text-white text-xs" style={{ background: "#b45309" }}>
+        <Button size="sm" onClick={() => setAdding(true)} className="rounded-xl text-xs" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
           <Plus className="w-3.5 h-3.5 mr-1" /> Ereignis hinzufügen
         </Button>
       </div>
@@ -227,7 +227,7 @@ export default function TimelineEditor({ memorialId, timeline, setTimeline }) {
             )}
             <div className="flex gap-2 ml-auto">
               <Button size="sm" variant="outline" className="rounded-xl" onClick={() => setAdding(false)}>Abbrechen</Button>
-              <Button size="sm" disabled={!newEvent.year || !newEvent.title} onClick={add} className="rounded-xl text-white" style={{ background: "#b45309" }}>
+              <Button size="sm" disabled={!newEvent.year || !newEvent.title} onClick={add} className="rounded-xl" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
                 <Plus className="w-4 h-4 mr-1" /> Hinzufügen
               </Button>
             </div>

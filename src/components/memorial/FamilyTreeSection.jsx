@@ -117,7 +117,7 @@ export default function FamilyTreeSection({ memorial }) {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-14">
           <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>Familie</p>
-          <h2 className="text-3xl md:text-4xl font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <h2 className="text-3xl md:text-4xl font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             Stammbaum
           </h2>
         </div>

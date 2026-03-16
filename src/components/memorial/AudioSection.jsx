@@ -148,7 +148,7 @@ function AudioTrack({ track }) {
       <button
         onClick={toggle}
         className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 transition-all active:scale-95"
-        style={{ background: playing ? "#92400e" : "#b45309" }}
+        style={{ background: playing ? "#a07830" : "#c9a96e" }}
       >
         {playing
           ? <Pause className="w-4 h-4 text-white" fill="white" />
@@ -159,7 +159,7 @@ function AudioTrack({ track }) {
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-2">
           <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full"
-            style={{ background: isVoice ? "#fef3c7" : "#f0fdf4", color: isVoice ? "#92400e" : "#166534" }}>
+            style={{ background: isVoice ? "rgba(201,169,110,0.1)" : "#f0fdf4", color: isVoice ? "#a07830" : "#166534" }}>
             {isVoice ? <Mic className="w-3 h-3" /> : <Music className="w-3 h-3" />}
             {isVoice ? "Sprachnachricht" : "Musik"}
           </span>
@@ -173,7 +173,7 @@ function AudioTrack({ track }) {
         >
           <div
             className="absolute left-0 top-0 h-full rounded-full transition-all"
-            style={{ width: `${progress}%`, background: "linear-gradient(90deg, #b45309, #c9a84c)" }}
+            style={{ width: `${progress}%`, background: "linear-gradient(90deg, #c9a96e, #e4c99a)" }}
           />
         </div>
 
@@ -198,7 +198,7 @@ export default function AudioSection({ tracks, curatedTracks = [] }) {
     <section className="py-20 px-6" style={{ background: "#FAFAF8" }}>
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-10">
-          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#b45309" }}>Stimmen & Klänge</p>
+          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>Stimmen & Klänge</p>
           <h2 className="text-3xl md:text-4xl font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             Audioerinnerungen
           </h2>

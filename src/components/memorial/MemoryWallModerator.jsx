@@ -34,9 +34,9 @@ export default function MemoryWallModerator({ memorialId }) {
     <div>
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h3 className="font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>Erinnerungswand</h3>
+          <h3 className="font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Erinnerungswand</h3>
           {pendingCount > 0 && (
-            <p className="text-xs font-medium mt-0.5" style={{ color: "#92400e" }}>
+            <p className="text-xs font-medium mt-0.5" style={{ color: "#c9a96e" }}>
               {pendingCount} ausstehende Einträge zur Prüfung
             </p>
           )}
@@ -45,7 +45,7 @@ export default function MemoryWallModerator({ memorialId }) {
           {[["pending", "Ausstehend"], ["approved", "Genehmigt"], ["all", "Alle"]].map(([val, label]) => (
             <button key={val} onClick={() => setFilter(val)}
               className="px-3 py-1 rounded-lg text-xs font-medium transition-all"
-              style={{ background: filter === val ? "#b45309" : "#f3f4f6", color: filter === val ? "white" : "#6b7280" }}>
+              style={{ background: filter === val ? "#c9a96e" : "#f3f4f6", color: filter === val ? "white" : "#6b7280" }}>
               {label}
             </button>
           ))}
@@ -65,7 +65,7 @@ export default function MemoryWallModerator({ memorialId }) {
                     {entry.relation && <span className="text-xs text-gray-400">· {entry.relation}</span>}
                     <span className="text-xs px-2 py-0.5 rounded-full" style={{
                       background: entry.status === "approved" ? "#d1fae5" : "#fef3c7",
-                      color: entry.status === "approved" ? "#065f46" : "#92400e"
+                      color: entry.status === "approved" ? "#065f46" : "#a07830"
                     }}>
                       {entry.status === "approved" ? "✓ Genehmigt" : "Ausstehend"}
                     </span>

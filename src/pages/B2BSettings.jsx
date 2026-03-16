@@ -39,7 +39,8 @@ export default function B2BSettings() {
   useEffect(() => {
     base44.auth.me().then(u => {
       base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1).then(([h]) => {
-        if (h) { setHome(h); setForm(h); }
+        if (!h) { window.location.href = "/B2BRegister"; return; }
+        setHome(h); setForm(h);
       });
     });
   }, []);

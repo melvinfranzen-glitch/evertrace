@@ -47,19 +47,19 @@ export default function PlaqueConfigurator({ memorial, selected, onSelect }) {
             onClick={() => onSelect(m.id)}
             className="relative p-4 rounded-xl border-2 cursor-pointer transition-all text-center"
             style={{
-              borderColor: selected === m.id ? "#b45309" : "#e5e7eb",
+              borderColor: selected === m.id ? "#c9a96e" : "#e5e7eb",
               background: selected === m.id ? "#fffbf5" : "white",
             }}
           >
             {m.tag && (
-              <span className="absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full text-white text-[10px] font-semibold" style={{ background: "#b45309" }}>
+              <span className="absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full text-white text-[10px] font-semibold" style={{ background: "#c9a96e" }}>
                 {m.tag}
               </span>
             )}
             <div className="w-8 h-8 rounded-full mx-auto mb-2" style={{ background: m.fill, border: `2px solid ${m.stroke}` }} />
             <p className="font-semibold text-gray-800 text-sm">{m.label}</p>
             <p className="text-xs text-gray-400">{m.desc}</p>
-            <p className="text-sm font-bold mt-1" style={{ color: "#b45309" }}>€ {m.price}</p>
+            <p className="text-sm font-bold mt-1" style={{ color: "#c9a96e" }}>€ {m.price}</p>
           </div>
         ))}
       </div>

@@ -11,7 +11,7 @@ export default function GallerySection({ images, name }) {
     <section className="py-20 px-6" style={{ background: "#FAFAF8" }}>
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-14">
-          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#b45309" }}>In Bildern</p>
+          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>In Bildern</p>
           <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             Momente, die bleiben
           </h2>

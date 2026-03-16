@@ -36,7 +36,7 @@ export default function CardContextForm({ memorial, onGenerate, generating }) {
   return (
     <div className="bg-white rounded-2xl border border-stone-200 p-7 shadow-sm space-y-6">
       <div>
-        <h3 className="font-semibold text-gray-800 text-lg mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>
+        <h3 className="font-semibold text-gray-800 text-lg mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
           Gestaltungs-Kontext
         </h3>
         <p className="text-sm text-gray-500">
@@ -124,7 +124,7 @@ export default function CardContextForm({ memorial, onGenerate, generating }) {
         onClick={handleSubmit}
         disabled={generating}
         className="w-full py-5 rounded-xl text-base font-medium"
-        style={{ background: "linear-gradient(135deg, #c9a84c, #a07830)", color: "#1c1917" }}
+        style={{ background: "linear-gradient(135deg, #c9a96e, #a07830)", color: "#1c1917" }}
       >
         {generating ? (
           <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> 4 Designs werden generiert…</>

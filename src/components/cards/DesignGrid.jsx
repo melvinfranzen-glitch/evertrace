@@ -6,7 +6,7 @@ export default function DesignGrid({ designs, selected, onSelect, generating }) 
   if (generating) {
     return (
       <div className="bg-white rounded-2xl border border-stone-200 p-8 shadow-sm">
-        <h3 className="font-semibold text-gray-800 text-lg mb-6" style={{ fontFamily: "'Playfair Display', serif" }}>
+        <h3 className="font-semibold text-gray-800 text-lg mb-6" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
           Designs werden generiert…
         </h3>
         <div className="grid grid-cols-2 gap-4">
@@ -32,7 +32,7 @@ export default function DesignGrid({ designs, selected, onSelect, generating }) 
   return (
     <div className="bg-white rounded-2xl border border-stone-200 p-7 shadow-sm">
       <div className="mb-5">
-        <h3 className="font-semibold text-gray-800 text-lg" style={{ fontFamily: "'Playfair Display', serif" }}>
+        <h3 className="font-semibold text-gray-800 text-lg" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
           Design auswählen
         </h3>
         <p className="text-sm text-gray-500 mt-1">Klicken Sie auf Ihr bevorzugtes Design, um es anzupassen.</p>

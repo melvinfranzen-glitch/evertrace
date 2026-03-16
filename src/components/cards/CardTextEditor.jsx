@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
-const fontOptions = ["Playfair Display", "Inter", "Georgia"];
+const fontOptions = ["Cormorant Garamond", "DM Sans", "Georgia"];
 
 export default function CardTextEditor({ texts, onChange, showQr, onToggleQr }) {
   const set = (k, v) => onChange({ ...texts, [k]: v });
@@ -11,7 +11,7 @@ export default function CardTextEditor({ texts, onChange, showQr, onToggleQr }) 
   return (
     <div className="bg-white rounded-2xl border border-stone-200 p-7 shadow-sm space-y-5">
       <div>
-        <h3 className="font-semibold text-gray-800 text-lg mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>
+        <h3 className="font-semibold text-gray-800 text-lg mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
           Texte anpassen
         </h3>
         <p className="text-sm text-gray-500">Alle Texte werden auf Ihrer Karte angezeigt.</p>

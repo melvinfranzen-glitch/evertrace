@@ -28,12 +28,15 @@ export default function B2BAnalytics() {
 
   useEffect(() => {
     base44.auth.me().then(u => {
-      Promise.all([
-        base44.entities.Case.filter({ created_by: u.email }, "-created_date", 200),
-        base44.entities.MourningCard.filter({ created_by: u.email }, "-created_date", 200),
-        base44.entities.B2BMemorialPage.filter({ created_by: u.email }, "-created_date", 200),
-        base44.entities.PrintOrder.filter({ created_by: u.email }, "-created_date", 200),
-      ]).then(([c, k, p, o]) => { setCases(c); setCards(k); setPages(p); setOrders(o); setLoading(false); });
+      base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1).then(fh => {
+        if (fh.length === 0) { window.location.href = "/B2BRegister"; return; }
+        Promise.all([
+          base44.entities.Case.filter({ created_by: u.email }, "-created_date", 200),
+          base44.entities.MourningCard.filter({ created_by: u.email }, "-created_date", 200),
+          base44.entities.B2BMemorialPage.filter({ created_by: u.email }, "-created_date", 200),
+          base44.entities.PrintOrder.filter({ created_by: u.email }, "-created_date", 200),
+        ]).then(([c, k, p, o]) => { setCases(c); setCards(k); setPages(p); setOrders(o); setLoading(false); });
+      });
     });
   }, []);
 

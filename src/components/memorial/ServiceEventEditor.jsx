@@ -102,12 +102,12 @@ export default function ServiceEventEditor({ memorialId }) {
         </div>
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => setF("rsvp_enabled", !form.rsvp_enabled)}>
           <div className="w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all"
-            style={{ borderColor: form.rsvp_enabled ? "#b45309" : "#d1d5db", background: form.rsvp_enabled ? "#b45309" : "white" }}>
+            style={{ borderColor: form.rsvp_enabled ? "#c9a96e" : "#d1d5db", background: form.rsvp_enabled ? "#c9a96e" : "white" }}>
             {form.rsvp_enabled && <span className="text-white text-xs font-bold">✓</span>}
           </div>
           <span className="text-sm text-gray-700">RSVP / Anmeldung für Gäste aktivieren</span>
         </div>
-        <Button onClick={add} disabled={saving || !form.title || !form.date} size="sm" className="text-white rounded-xl" style={{ background: "#b45309" }}>
+        <Button onClick={add} disabled={saving || !form.title || !form.date} size="sm" className="rounded-xl" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
           {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" /> : <Plus className="w-3.5 h-3.5 mr-1" />}
           Veranstaltung hinzufügen
         </Button>
@@ -121,7 +121,7 @@ export default function ServiceEventEditor({ memorialId }) {
             <div key={event.id} className="rounded-xl border border-stone-100 bg-stone-50 overflow-hidden">
               <div className="flex items-start justify-between gap-3 p-4">
                 <div className="flex-1 min-w-0">
-                  <span className="text-xs font-medium uppercase tracking-wide" style={{ color: "#b45309" }}>
+                  <span className="text-xs font-medium uppercase tracking-wide" style={{ color: "#c9a96e" }}>
                     {EVENT_TYPES.find(t => t.value === event.event_type)?.label}
                   </span>
                   <p className="font-medium text-gray-800 text-sm mt-0.5">{event.title}</p>
@@ -131,7 +131,7 @@ export default function ServiceEventEditor({ memorialId }) {
                   </p>
                   {event.rsvp_enabled && (
                     <button onClick={() => loadRsvps(event.id)}
-                      className="flex items-center gap-1 text-xs mt-1.5 font-medium hover:text-amber-700 transition-colors" style={{ color: "#b45309" }}>
+                      className="flex items-center gap-1 text-xs mt-1.5 font-medium transition-colors" style={{ color: "#c9a96e" }}>
                       <Users className="w-3 h-3" />
                       Anmeldungen anzeigen
                       {expandedRsvp === event.id ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}

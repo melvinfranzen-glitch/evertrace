@@ -65,7 +65,7 @@ export default function PodOrderForm({ memorial, condolenceCount, photoCount }) 
         <div className="w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-5" style={{ background: "#f0fdf4" }}>
           <CheckCircle2 className="w-8 h-8 text-green-600" />
         </div>
-        <h3 className="text-xl font-semibold text-gray-800 mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+        <h3 className="text-xl font-semibold text-gray-800 mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
           Bestellung eingegangen
         </h3>
         <p className="text-gray-500 text-sm max-w-sm mx-auto leading-relaxed">
@@ -90,7 +90,7 @@ export default function PodOrderForm({ memorial, condolenceCount, photoCount }) 
           { icon: Package, label: "Fotos", value: photoCount },
         ].map(({ icon: Icon, label, value }) => (
           <div key={label} className="rounded-xl border border-stone-200 bg-stone-50 p-4 text-center">
-            <p className="text-2xl font-bold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>{value}</p>
+            <p className="text-2xl font-bold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{value}</p>
             <p className="text-xs text-gray-500 mt-0.5">{label}</p>
           </div>
         ))}
@@ -106,7 +106,7 @@ export default function PodOrderForm({ memorial, condolenceCount, photoCount }) 
               onClick={() => setFormat(f.id)}
               className="flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all"
               style={{
-                borderColor: format === f.id ? "#c9a84c" : "#e7e5e4",
+                borderColor: format === f.id ? "#c9a96e" : "#e7e5e4",
                 background: format === f.id ? "#fffcf5" : "white",
               }}
             >
@@ -118,9 +118,9 @@ export default function PodOrderForm({ memorial, condolenceCount, photoCount }) 
               <p className="font-bold text-gray-800 text-sm whitespace-nowrap">€ {f.price.toFixed(2).replace(".", ",")}</p>
               <div
                 className="w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0"
-                style={{ borderColor: format === f.id ? "#c9a84c" : "#d1d5db" }}
+                style={{ borderColor: format === f.id ? "#c9a96e" : "#d1d5db" }}
               >
-                {format === f.id && <div className="w-2 h-2 rounded-full" style={{ background: "#c9a84c" }} />}
+                {format === f.id && <div className="w-2 h-2 rounded-full" style={{ background: "#c9a96e" }} />}
               </div>
             </div>
           ))}
@@ -182,11 +182,11 @@ export default function PodOrderForm({ memorial, condolenceCount, photoCount }) 
             <p className="font-semibold text-gray-800">{selectedFormat.label} × {qty}</p>
             <p className="text-xs text-gray-500 mt-0.5">inkl. Versand nach Deutschland · 2–3 Werktage</p>
           </div>
-          <p className="text-2xl font-bold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>€ {total}</p>
+          <p className="text-2xl font-bold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>€ {total}</p>
         </div>
         <Button
           className="w-full rounded-xl py-5 font-semibold text-base"
-          style={{ background: "linear-gradient(135deg, #c9a84c, #a07830)", color: "#1c1917", boxShadow: "0 4px 20px rgba(201,168,76,0.35)" }}
+          style={{ background: "linear-gradient(135deg, #c9a96e, #a07830)", color: "#1c1917", boxShadow: "0 4px 20px rgba(201,169,110,0.35)" }}
           onClick={handleOrder}
           disabled={submitting || !form.name || !form.email || !form.street || !form.city || !form.zip}
         >

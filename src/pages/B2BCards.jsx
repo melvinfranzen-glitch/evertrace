@@ -22,10 +22,15 @@ export default function B2BCards() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([
-      base44.entities.MourningCard.list("-created_date", 50),
-      base44.entities.Case.list("-created_date", 100),
-    ]).then(([k, c]) => { setCards(k); setCases(c); setLoading(false); });
+    base44.auth.me().then(u => {
+      base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1).then(fh => {
+        if (fh.length === 0) { window.location.href = "/B2BRegister"; return; }
+        Promise.all([
+          base44.entities.MourningCard.filter({ created_by: u.email }, "-created_date", 50),
+          base44.entities.Case.filter({ created_by: u.email }, "-created_date", 100),
+        ]).then(([k, c]) => { setCards(k); setCases(c); setLoading(false); });
+      });
+    });
   }, []);
 
   const getCase = (id) => cases.find(c => c.id === id);

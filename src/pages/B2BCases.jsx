@@ -38,7 +38,10 @@ export default function B2BCases() {
 
   useEffect(() => {
     base44.auth.me().then(u => {
-      base44.entities.Case.filter({ created_by: u.email }, "-created_date", 100).then(d => { setCases(d); setLoading(false); });
+      base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1).then(fh => {
+        if (fh.length === 0) { window.location.href = "/B2BRegister"; return; }
+        base44.entities.Case.filter({ created_by: u.email }, "-created_date", 100).then(d => { setCases(d); setLoading(false); });
+      });
     });
   }, []);
 
