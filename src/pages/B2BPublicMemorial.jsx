@@ -123,9 +123,12 @@ export default function B2BPublicMemorial() {
             <span className="text-sm font-medium" style={{ color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>{funeralHome.name}</span>
           </>
         ) : (
-          <span style={{ fontFamily: "'Cormorant Garamond', serif", color: "#c9a96e", fontSize: 15, letterSpacing: "0.02em" }}>
-            ✦ <span style={{ color: "#f0ede8" }}>Ever</span>trace
-          </span>
+          <>
+            <span style={{ fontFamily: "'Cormorant Garamond', serif", color: "#c9a96e", fontSize: 15, letterSpacing: "0.02em" }}>
+              ✦ <span style={{ color: "#f0ede8" }}>Ever</span>trace
+            </span>
+            <a href="/" style={{ marginLeft: "auto", fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#8a8278", textDecoration: "none" }}>Auch eine erstellen →</a>
+          </>
         )}
       </div>
 

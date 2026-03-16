@@ -22,6 +22,80 @@ export default function Layout({ children, currentPageName }) {
   const isMemorialPage = currentPageName === "MemorialProfile";
   if (isMemorialPage) return <>{children}</>;
 
+  const FooterBlock = () => (
+    <footer style={{ background: "#1a1410" }} className="text-stone-500">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 border-b border-stone-800">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div>
+            <Link to={createPageUrl("Home")} className="flex items-center gap-2 mb-4">
+              <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: "linear-gradient(135deg,#a07830,#c9a96e)" }}>
+                <svg width="14" height="10" viewBox="0 0 36 24" fill="none">
+                  <path d="M6 12C6 12 5 5 11 5C15 5 17.5 9 18 12C18.5 15 21 19 25 19C31 19 33 12 33 12C33 12 31 5 25 5C21 5 18.5 9 18 12C17.5 15 15 19 11 19C5 19 3 12 3 12" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <circle cx="32" cy="12" r="1.8" fill="#c9a84c"/>
+                </svg>
+              </div>
+              <span className="text-lg" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#e5d5c0" }}>
+                Ever<span style={{ color: "#c9a84c" }}>trace</span>
+              </span>
+            </Link>
+            <p className="text-sm leading-relaxed text-stone-500">
+              Digitale Gedenkkultur mit Würde — Erinnern, Erzählen, Bewahren.
+            </p>
+            <div className="flex items-center gap-2 mt-5">
+              <span className="text-xs text-stone-500">Digitale Gedenkkultur — im Aufbau. Seien Sie dabei.</span>
+            </div>
+          </div>
+
+          <div>
+            <p className="text-xs uppercase tracking-widest text-stone-600 mb-4">Produkte</p>
+            <ul className="space-y-2.5 text-sm">
+              {[["Gedenkseiten", "Dashboard?tab=memorials"], ["Gedenkbücher", "Dashboard?tab=book"], ["Trauerkarten", "Dashboard?tab=cards"], ["Startseite", "Home"]].map(([label, page]) => (
+                <li key={page}>
+                  <Link to={createPageUrl(page)} className="hover:text-stone-300 transition-colors">{label}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <p className="text-xs uppercase tracking-widest text-stone-600 mb-4">Rechtliches</p>
+            <ul className="space-y-2.5 text-sm">
+              <li><Link to="/Legal?section=datenschutz" className="hover:text-stone-300 transition-colors">Datenschutz (DSGVO)</Link></li>
+              <li><Link to="/Legal?section=impressum" className="hover:text-stone-300 transition-colors">Impressum</Link></li>
+              <li><Link to="/Legal?section=agb" className="hover:text-stone-300 transition-colors">AGB</Link></li>
+            </ul>
+            <div className="mt-6">
+              <p className="text-xs uppercase tracking-widest text-stone-600 mb-3">Kontakt</p>
+              <a href="mailto:hallo@evertrace.de" className="text-sm text-stone-500 hover:text-stone-300 transition-colors">hallo@evertrace.de</a>
+            </div>
+            <div className="mt-4">
+              <Link to="/B2BRegister" className="text-sm text-stone-500 hover:text-stone-300 transition-colors">Für Bestatter →</Link>
+            </div>
+            <div className="mt-6 flex items-center gap-2 text-xs text-stone-600">
+              <svg className="w-3.5 h-3.5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              <span>In Deutschland gehostet · ISO-konform</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-stone-600">
+        <span>© 2026 Evertrace. Alle Rechte vorbehalten.</span>
+        <span>Mit ♥ für würdevolle Erinnerungen</span>
+      </div>
+    </footer>
+  );
+
+  const isHomePage = currentPageName === "Home";
+  if (isHomePage) return (
+    <div className="min-h-screen flex flex-col" style={{ fontFamily: "'DM Sans', sans-serif", background: "#FAFAF8" }}>
+      <main className="flex-1">{children}</main>
+      <FooterBlock />
+    </div>
+  );
+
   const navLinks = [
     { label: "Gedenkseiten", page: "Dashboard", href: "/Dashboard?tab=memorials", auth: true },
     { label: "Trauerkarten", page: "Dashboard", href: "/Dashboard?tab=cards", auth: true },
@@ -84,12 +158,14 @@ export default function Layout({ children, currentPageName }) {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-4 shrink-0">
-            <Link
-              to="/B2BRegister"
-              style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#c9a96e" }}
-            >
-              Für Bestatter
-            </Link>
+            {!user && (
+              <Link
+                to="/B2BRegister"
+                style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#c9a96e" }}
+              >
+                Für Bestatter
+              </Link>
+            )}
             {user ? (
               <div className="flex items-center gap-3">
                 <span className="text-sm truncate max-w-[140px]" style={{ color: "#8a8278", fontFamily: "'DM Sans', sans-serif", fontSize: 13 }}>
@@ -194,66 +270,7 @@ export default function Layout({ children, currentPageName }) {
 
       <main className="flex-1">{children}</main>
 
-      <footer style={{ background: "#1a1410" }} className="text-stone-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 border-b border-stone-800">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            <div>
-              <Link to={createPageUrl("Home")} className="flex items-center gap-2 mb-4">
-                <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: "linear-gradient(135deg,#a07830,#c9a96e)" }}>
-                  <svg width="14" height="10" viewBox="0 0 36 24" fill="none">
-                    <path d="M6 12C6 12 5 5 11 5C15 5 17.5 9 18 12C18.5 15 21 19 25 19C31 19 33 12 33 12C33 12 31 5 25 5C21 5 18.5 9 18 12C17.5 15 15 19 11 19C5 19 3 12 3 12" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <circle cx="32" cy="12" r="1.8" fill="#c9a84c"/>
-                  </svg>
-                </div>
-                <span className="text-lg" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#e5d5c0" }}>
-                  Ever<span style={{ color: "#c9a84c" }}>trace</span>
-                </span>
-              </Link>
-              <p className="text-sm leading-relaxed text-stone-500">
-                Digitale Gedenkkultur mit Würde — Erinnern, Erzählen, Bewahren.
-              </p>
-              <div className="flex items-center gap-2 mt-5">
-                <span className="text-xs text-stone-500">Digitale Gedenkkultur — im Aufbau. Seien Sie dabei.</span>
-              </div>
-            </div>
-
-            <div>
-              <p className="text-xs uppercase tracking-widest text-stone-600 mb-4">Produkte</p>
-              <ul className="space-y-2.5 text-sm">
-                {[["Gedenkseiten", "Dashboard?tab=memorials"], ["Gedenkbücher", "Dashboard?tab=book"], ["Trauerkarten", "Dashboard?tab=cards"], ["Startseite", "Home"]].map(([label, page]) => (
-                  <li key={page}>
-                    <Link to={createPageUrl(page)} className="hover:text-stone-300 transition-colors">{label}</Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <p className="text-xs uppercase tracking-widest text-stone-600 mb-4">Rechtliches</p>
-              <ul className="space-y-2.5 text-sm">
-                <li><Link to="/Legal?section=datenschutz" className="hover:text-stone-300 transition-colors">Datenschutz (DSGVO)</Link></li>
-                <li><Link to="/Legal?section=impressum" className="hover:text-stone-300 transition-colors">Impressum</Link></li>
-                <li><Link to="/Legal?section=agb" className="hover:text-stone-300 transition-colors">AGB</Link></li>
-              </ul>
-              <div className="mt-6">
-                <p className="text-xs uppercase tracking-widest text-stone-600 mb-3">Kontakt</p>
-                <a href="mailto:hallo@evertrace.de" className="text-sm text-stone-500 hover:text-stone-300 transition-colors">hallo@evertrace.de</a>
-              </div>
-              <div className="mt-6 flex items-center gap-2 text-xs text-stone-600">
-                <svg className="w-3.5 h-3.5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-                <span>In Deutschland gehostet · ISO-konform</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-stone-600">
-          <span>© 2026 Evertrace. Alle Rechte vorbehalten.</span>
-          <span>Mit ♥ für würdevolle Erinnerungen</span>
-        </div>
-      </footer>
+      <FooterBlock />
     </div>
   );
 }

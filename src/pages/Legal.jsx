@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, ArrowLeft } from "lucide-react";
 
 const SECTIONS = {
   impressum: {
@@ -119,7 +119,14 @@ export default function Legal() {
   const section = SECTIONS[active] || SECTIONS.impressum;
 
   return (
-    <div className="min-h-screen pt-20 pb-20 px-4" style={{ background: "#FAFAF8" }}>
+    <div className="min-h-screen pb-20" style={{ background: "#FAFAF8" }}>
+      <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: "1px solid #e8dfd0" }}>
+        <Link to="/" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, color: "#c9a96e", fontWeight: 600 }}>Evertrace</Link>
+        <button onClick={() => window.history.back()} className="flex items-center gap-1.5" style={{ color: "#8a8278", fontFamily: "'DM Sans', sans-serif", fontSize: 13, background: "none", border: "none", cursor: "pointer" }}>
+          <ArrowLeft className="w-4 h-4" /> Zurück
+        </button>
+      </div>
+    <div className="pt-8 pb-20 px-4">
       <div className="max-w-3xl mx-auto">
 
         {/* Breadcrumb */}
@@ -168,6 +175,7 @@ export default function Legal() {
           <a href="mailto:hallo@evertrace.de" className="underline" style={{ color: "#c9a96e" }}>hallo@evertrace.de</a>
         </p>
       </div>
+    </div>
     </div>
   );
 }

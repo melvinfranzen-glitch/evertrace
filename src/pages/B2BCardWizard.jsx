@@ -14,6 +14,7 @@ function sanitizePromptInput(str, maxLength = 500) {
 }
 import CardPrintPreview from "@/components/b2b/CardPrintPreview";
 import { Check, ChevronRight, RefreshCw, Loader2, QrCode, Mail, BookOpen, Building2, User } from "lucide-react";
+import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 
@@ -233,6 +234,7 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
           <button onClick={() => window.location.href = "/B2BOrders"} className="px-6 py-3 rounded-xl text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
             Zu den Bestellungen
           </button>
+          <Link to="/B2BCases" className="block text-center mt-3 text-sm" style={{ color: "#8a8278", fontFamily: "'DM Sans', sans-serif" }}>Zurück zur Fallübersicht →</Link>
         </div>
       </B2BLayout>
     );

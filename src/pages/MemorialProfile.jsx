@@ -282,7 +282,7 @@ export default function MemorialProfile() {
         </div>
         <p className="text-sm" style={{ color: "#6b5a44", fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic" }}>
           In liebevoller Erinnerung bewahrt mit{" "}
-          <a href="/" className="font-semibold" style={{ color: "#c9a96e" }}>Evertrace</a>
+          <a href="https://evertrace.de" target="_blank" rel="noopener noreferrer" className="font-semibold" style={{ color: "#c9a96e" }}>Evertrace</a>
         </p>
       </div>
     </div>

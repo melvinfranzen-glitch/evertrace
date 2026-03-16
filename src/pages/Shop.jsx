@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Check, Package, BookOpen, Loader2 } from "lucide-react";
+import { Check, Package, BookOpen, Loader2, ArrowLeft } from "lucide-react";
 import PlaqueConfigurator from "@/components/shop/PlaqueConfigurator";
 
 const PRICES = { plaque_brass: 149, plaque_slate: 129, plaque_steel: 219, print_book: 59 };
@@ -91,6 +91,9 @@ export default function Shop() {
   return (
     <div className="min-h-screen pt-24 pb-16 px-4" style={{ background: "#FAFAF8" }}>
       <div className="max-w-5xl mx-auto">
+        <button onClick={() => window.history.back()} className="flex items-center gap-1.5 text-sm mb-6" style={{ color: "#8a8278", fontFamily: "'DM Sans', sans-serif" }}>
+          <ArrowLeft className="w-4 h-4" /> Zurück
+        </button>
         <div className="text-center mb-12">
           <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>Grabplaketten mit QR-Code</p>
           <h1 className="text-4xl font-semibold text-gray-800 mb-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
