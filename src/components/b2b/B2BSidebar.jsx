@@ -57,6 +57,28 @@ export default function B2BSidebar() {
     );
   };
 
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  const LogoutButton = () => (
+    <button
+      onClick={async () => {
+        setLoggingOut(true);
+        await base44.auth.logout();
+        window.location.href = "/";
+      }}
+      disabled={loggingOut}
+      className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-sm transition-all"
+      style={{ color: "#5a554e" }}
+    >
+      {loggingOut ? (
+        <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin flex-shrink-0" />
+      ) : (
+        <LogOut className="w-4 h-4 flex-shrink-0" />
+      )}
+      {loggingOut ? "Abmelden…" : "Abmelden"}
+    </button>
+  );
+
   const SidebarContent = () => (
     <>
       {/* Logo */}
@@ -76,9 +98,7 @@ export default function B2BSidebar() {
 
       {/* Footer */}
       <div className="px-3 py-4 border-t" style={{ borderColor: "#302d28" }}>
-        <button onClick={() => base44.auth.logout()} className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-sm transition-all" style={{ color: "#5a554e" }}>
-          <LogOut className="w-4 h-4" /> Abmelden
-        </button>
+        <LogoutButton />
       </div>
     </>
   );

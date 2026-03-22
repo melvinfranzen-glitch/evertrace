@@ -25,14 +25,17 @@ export default function CuratedMusicLibrary({ selectedIds = [], onSelectionChang
     onSelectionChange(newSelection);
   };
 
+  const isPlaceholder = (url) => !url || url.startsWith("PIXABAY_URL");
+
   const handlePlayTrack = (track) => {
+    if (isPlaceholder(track.audio_url)) return;
     if (playingId === track.id && audioRef.current && !audioRef.current.paused) {
       audioRef.current.pause();
       setPlayingId(null);
     } else {
       if (audioRef.current) {
         audioRef.current.src = track.audio_url;
-        audioRef.current.play();
+        audioRef.current.play().catch(() => setPlayingId(null));
         setPlayingId(track.id);
       }
     }
@@ -88,8 +91,10 @@ export default function CuratedMusicLibrary({ selectedIds = [], onSelectionChang
                     e.stopPropagation();
                     handlePlayTrack(track);
                   }}
-                  className="flex-shrink-0 ml-2 w-6 h-6 flex items-center justify-center"
+                  disabled={isPlaceholder(track.audio_url)}
+                  className="flex-shrink-0 ml-2 w-6 h-6 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
                   style={{ color: "#c9a96e" }}
+                  title={isPlaceholder(track.audio_url) ? "Bald verfügbar" : undefined}
                 >
                   {isSelected ? (
                     <Check className="w-4 h-4" />
@@ -101,14 +106,14 @@ export default function CuratedMusicLibrary({ selectedIds = [], onSelectionChang
                 </button>
               </div>
               <p className="text-xs" style={{ color: "#8a8278" }}>
-                {track.duration_hint}
+                {isPlaceholder(track.audio_url) ? "Bald verfügbar" : track.duration_hint}
               </p>
             </div>
           );
         })}
       </div>
 
-      <audio ref={audioRef} onEnded={() => setPlayingId(null)} />
+      <audio ref={audioRef} onEnded={() => setPlayingId(null)} onError={() => setPlayingId(null)} />
 
       {hasUnsavedChanges && (
         <div style={{ color: "#b45309", fontSize: "12px", fontFamily: "'DM Sans', sans-serif" }}>

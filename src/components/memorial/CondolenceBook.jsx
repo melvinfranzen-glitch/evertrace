@@ -48,9 +48,9 @@ export default function CondolenceBook({ memorialId, condolences }) {
         </div>
 
         {/* Entries */}
-        {condolences.length > 0 && (
+        {condolences.filter(e => e.status === "approved" || !e.status).length > 0 && (
           <div className="space-y-4 mb-12">
-            {condolences.map((entry) => (
+            {condolences.filter(e => e.status === "approved" || !e.status).map((entry) => (
               <div key={entry.id} className="bg-white rounded-2xl p-6 border border-stone-100 shadow-sm">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
