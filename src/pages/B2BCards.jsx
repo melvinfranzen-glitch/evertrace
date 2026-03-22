@@ -76,9 +76,15 @@ export default function B2BCards() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-xs px-2.5 py-1 rounded-full" style={{ background: `${STATUS_COLORS[card.status]}20`, color: STATUS_COLORS[card.status] }}>
-                    {card.status}
-                  </span>
+                  {card.status === "entwurf" ? (
+                    <Link to={`/B2BCardWizard?draft_id=${card.id}`} className="text-xs px-2.5 py-1 rounded-full font-medium" style={{ background: "rgba(251,191,36,0.15)", color: "#f59e0b", border: "1px solid rgba(251,191,36,0.3)" }}>
+                      Entwurf — fortsetzen →
+                    </Link>
+                  ) : (
+                    <span className="text-xs px-2.5 py-1 rounded-full" style={{ background: `${STATUS_COLORS[card.status]}20`, color: STATUS_COLORS[card.status] }}>
+                      {card.status}
+                    </span>
+                  )}
                 </div>
               </div>
             );

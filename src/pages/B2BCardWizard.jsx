@@ -80,6 +80,9 @@ export default function B2BCardWizard() {
   const [generating, setGenerating] = useState(false);
   const [generatingMotif, setGeneratingMotif] = useState(false);
   const [editedText, setEditedText] = useState("");
+  const [variants, setVariants] = useState([]);
+  const [activeVariantIdx, setActiveVariantIdx] = useState(0);
+  const [generatingVariant, setGeneratingVariant] = useState(false);
 
   // Addons
   const [addonInvitation, setAddonInvitation] = useState(false);
