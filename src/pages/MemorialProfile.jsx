@@ -25,8 +25,10 @@ export default function MemorialProfile() {
   const [unlocked, setUnlocked] = useState(false);
   const [pwInput, setPwInput] = useState("");
   const [pwError, setPwError] = useState(false);
-  // Fix 4: Memorial Password Protection — lockout after 3 failed attempts
   const [attempts, setAttempts] = useState(0);
+  const [familyUnlocked, setFamilyUnlocked] = useState(false);
+  const [familyPwInput, setFamilyPwInput] = useState("");
+  const [familyPwError, setFamilyPwError] = useState(false);
   const [timeline, setTimeline] = useState([]);
   const [condolences, setCondolences] = useState([]);
   const [candles, setCandles] = useState([]);
