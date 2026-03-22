@@ -24,7 +24,7 @@ export default function CardDesigner() {
   const [previewSide, setPreviewSide] = useState("front");
   const [showQr, setShowQr] = useState(true);
   const [texts, setTexts] = useState({
-    name: "", birth: "", death: "", quote: "", body: "", font: "Playfair Display",
+    name: "", birth: "", death: "", quote: "", body: "", font: "Cormorant Garamond",
   });
 
   useEffect(() => {

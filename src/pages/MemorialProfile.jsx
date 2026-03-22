@@ -292,10 +292,12 @@ export default function MemorialProfile() {
 
       {canShow("memorywall") && <MemoryWallSection memorialId={memorial.id} entries={memoryWall} />}
 
-      <CondolenceBook
-        memorialId={memorial.id}
-        condolences={condolences}
-      />
+      {canShow("condolences") && (
+        <CondolenceBook
+          memorialId={memorial.id}
+          condolences={condolences}
+        />
+      )}
 
       <FloatingMusicPlayer spotifyUrl={memorial.spotify_url} name={memorial.name} curatedTracks={memorial.curated_track_ids ? CURATED_TRACKS.filter(t => memorial.curated_track_ids.includes(t.id)) : []} />
 
