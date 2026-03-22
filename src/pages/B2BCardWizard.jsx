@@ -501,6 +501,30 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
           {/* Step 2 — AI preview */}
           {step === 2 && (
             <div className="space-y-5">
+
+              {/* Variants row */}
+              {variants.length > 0 && (
+                <div>
+                  <p className="text-xs uppercase tracking-widest mb-2" style={{ color: "#5a554e" }}>Varianten</p>
+                  <div className="flex gap-2 overflow-x-auto pb-1">
+                    {variants.map((v, i) => (
+                      <div key={i} onClick={() => { setActiveVariantIdx(i); setEditedText(v.text); setGeneratedMotifUrl(v.motifUrl); }}
+                        className="flex-shrink-0 w-20 h-24 rounded-xl overflow-hidden cursor-pointer transition-all"
+                        style={{ border: `2px solid ${activeVariantIdx === i ? "#c9a96e" : "#302d28"}` }}>
+                        {v.motifUrl ? <img src={v.motifUrl} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full" style={{ background: "#201e1a" }} />}
+                      </div>
+                    ))}
+                    {variants.length < 3 && (
+                      <button onClick={addVariant} disabled={generatingVariant}
+                        className="flex-shrink-0 w-20 h-24 rounded-xl flex items-center justify-center text-xs font-medium transition-all disabled:opacity-50"
+                        style={{ border: "1.5px dashed rgba(201,169,110,0.4)", color: "#c9a96e" }}>
+                        {generatingVariant ? "…" : "＋ Neue Variante"}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+
               <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>KI-generierter Text</h3>
