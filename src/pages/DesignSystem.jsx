@@ -649,7 +649,7 @@ export default function DesignSystem() {
                 <Flame size={14} style={{ color: T.gold }} /> Kerze
               </button>
               <button style={{ ...sans, fontSize: 12, padding: "9px 16px", borderRadius: 10, background: T.sand, border: "none", color: T.anthracite, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
-                <Image size={14} /> Foto
+                <ImageIcon size={14} /> Foto
               </button>
               <button style={{ ...sans, flex: 1, fontSize: 13, fontWeight: 600, padding: "9px 0", borderRadius: 10, background: T.gold, color: T.white, border: "none", cursor: "pointer" }}>
                 Senden
