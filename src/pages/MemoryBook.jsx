@@ -45,7 +45,7 @@ export default function MemoryBook() {
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center pt-20">
-      <Loader2 className="w-8 h-8 animate-spin text-amber-700" />
+      <Loader2 className="w-8 h-8 animate-spin" style={{ color: "#c9a96e" }} />
     </div>
   );
 
@@ -110,7 +110,7 @@ export default function MemoryBook() {
               onClick={() => setActiveTab(id)}
               className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all"
               style={{
-                background: activeTab === id ? "#b45309" : "transparent",
+                background: activeTab === id ? "#c9a96e" : "transparent",
                 color: activeTab === id ? "white" : "#6b7280",
               }}
             >

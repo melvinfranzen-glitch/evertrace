@@ -116,7 +116,7 @@ export default function CuratedMusicLibrary({ selectedIds = [], onSelectionChang
       <audio ref={audioRef} onEnded={() => setPlayingId(null)} onError={() => setPlayingId(null)} />
 
       {hasUnsavedChanges && (
-        <div style={{ color: "#b45309", fontSize: "12px", fontFamily: "'DM Sans', sans-serif" }}>
+        <div style={{ color: "#c9a96e", fontSize: "12px", fontFamily: "'DM Sans', sans-serif" }}>
           Änderungen nicht vergessen zu speichern.
         </div>
       )}
