@@ -158,8 +158,15 @@ export default function B2BCardWizard() {
 Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Erstens ein eröffnender Satz, der den Charakter der Person in einer einzigen, präzisen Formulierung einfängt. Zweitens eine mittlere Passage von zwei bis drei Zeilen, die ihre Leidenschaften und ihren Beruf organisch verwebt. Drittens eine abschließende Zeile, die das angegebene Zitat oder einen würdigen Ersatz integriert, falls kein Zitat angegeben wurde. Gesamtlänge: 80 bis 110 Wörter. Der Text soll sich lesen, als wäre er von einem Menschen geschrieben worden, der die Person kannte — nicht wie ein KI-generierter Standardtext.`;
 
     const result = await base44.integrations.Core.InvokeLLM({ prompt });
-    setGeneratedText(result);
-    setEditedText(result);
+    if (typeof result === "string") {
+      setGeneratedText(result);
+      setEditedText(result);
+    } else {
+      console.warn("InvokeLLM returned unexpected type:", typeof result, result);
+      const fallback = "Ein Leben voller Würde und Wärme — in liebevoller Erinnerung.";
+      setGeneratedText(fallback);
+      setEditedText(fallback);
+    }
     setGenerating(false);
   };
 
@@ -174,8 +181,13 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
   };
 
   useEffect(() => {
-    if (step === 2 && !generatedText) generateText();
-    if (step === 2 && !generatedMotifUrl) generateMotif();
+    if (step === 2 && !generatedText) {
+      // Sequential: text first, then image
+      (async () => {
+        await generateText();
+        await generateMotif();
+      })();
+    }
   }, [step]);
 
   const tier = PRINT_TIERS.find(t => t.id === printTier);

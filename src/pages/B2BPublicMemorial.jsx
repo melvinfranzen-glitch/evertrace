@@ -25,12 +25,18 @@ export default function B2BPublicMemorial() {
   const [photoUrl, setPhotoUrl] = useState("");
   const [user, setUser] = useState(null);
   const [showPrintModal, setShowPrintModal] = useState(false);
+  const [showBioEdit, setShowBioEdit] = useState(false);
+  const [editBio, setEditBio] = useState("");
+  const [savingBio, setSavingBio] = useState(false);
+  const [uploadingHero, setUploadingHero] = useState(false);
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
   }, []);
 
-  const slug = new URLSearchParams(window.location.search).get("slug");
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const slug = urlSearchParams.get("slug");
+  const editMode = urlSearchParams.get("edit") === "true";
 
   useEffect(() => {
     if (!slug) { setLoading(false); return; }
@@ -300,6 +306,62 @@ export default function B2BPublicMemorial() {
       </section>
 
 
+
+      {/* Edit overlay — only in edit mode for logged-in users */}
+      {editMode && user && page && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between gap-3 px-4 py-3" style={{ background: "#181714", borderTop: "1px solid #c9a96e", height: 60 }}>
+          <span className="text-xs font-medium" style={{ color: "#c9a96e" }}>Bearbeitungsmodus</span>
+          <div className="flex items-center gap-2">
+            <button onClick={() => { setEditBio(page.biography || ""); setShowBioEdit(true); }}
+              className="px-3 py-1.5 rounded-lg text-xs font-medium"
+              style={{ background: "rgba(201,169,110,0.15)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}>
+              Biografie bearbeiten
+            </button>
+            <label className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer"
+              style={{ background: "rgba(201,169,110,0.15)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}>
+              {uploadingHero ? "Lädt…" : "Foto ändern"}
+              <input type="file" accept="image/*" className="hidden" disabled={uploadingHero} onChange={async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                setUploadingHero(true);
+                const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                await base44.entities.B2BMemorialPage.update(page.id, { main_photo_url: file_url });
+                setPage(p => ({ ...p, main_photo_url: file_url }));
+                setUploadingHero(false);
+              }} />
+            </label>
+            <a href="/B2BMemorial" className="px-3 py-1.5 rounded-lg text-xs font-medium"
+              style={{ background: "#302d28", color: "#8a8278" }}>
+              Einstellungen
+            </a>
+          </div>
+        </div>
+      )}
+
+      {/* Bio edit modal */}
+      {showBioEdit && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center px-4" style={{ background: "rgba(0,0,0,0.7)" }}>
+          <div className="w-full max-w-lg rounded-2xl p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
+            <h3 className="text-lg font-semibold mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Biografie bearbeiten</h3>
+            <textarea value={editBio} onChange={e => setEditBio(e.target.value)} rows={6}
+              className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none"
+              style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8", lineHeight: 1.7 }} />
+            <div className="flex gap-3 mt-4">
+              <button onClick={() => setShowBioEdit(false)} className="flex-1 py-2.5 rounded-xl text-sm border" style={{ borderColor: "#302d28", color: "#8a8278" }}>Abbrechen</button>
+              <button disabled={savingBio} onClick={async () => {
+                setSavingBio(true);
+                await base44.entities.B2BMemorialPage.update(page.id, { biography: editBio });
+                setPage(p => ({ ...p, biography: editBio }));
+                setSavingBio(false);
+                setShowBioEdit(false);
+              }} className="flex-1 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
+                {savingBio ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                Speichern
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showPrintModal && (
         <CondolenceBookPrintModal
