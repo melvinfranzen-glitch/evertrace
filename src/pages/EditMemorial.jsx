@@ -287,8 +287,15 @@ export default function EditMemorial() {
                 <div className="mt-2 border-2 border-dashed border-stone-300 rounded-xl p-5 text-center hover:border-amber-400 transition-colors">
                   {memorial.hero_image_url ? (
                     <div>
-                      <img src={memorial.hero_image_url} className="w-24 h-24 object-cover rounded-full mx-auto" alt="Portrait" />
+                      <img src={memorial.hero_image_url} className="w-24 h-24 object-cover rounded-full mx-auto" alt="Portrait"
+                        style={{ objectPosition: `center ${memorial.hero_image_position ?? 50}%` }} />
                       <button className="mt-2 text-xs text-gray-400 hover:text-red-500" onClick={() => set("hero_image_url", "")}>Entfernen</button>
+                      <div className="mt-3">
+                        <p className="text-xs text-gray-500 mb-1">Bildausschnitt anpassen</p>
+                        <input type="range" min={0} max={100} value={memorial.hero_image_position ?? 50}
+                          onChange={e => set("hero_image_position", parseInt(e.target.value))}
+                          className="w-full" />
+                      </div>
                     </div>
                   ) : (
                     <label className="cursor-pointer block">

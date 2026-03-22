@@ -100,8 +100,28 @@ export default function B2BCardWizard() {
 
   const [submitting, setSubmitting] = useState(false);
   const [orderDone, setOrderDone] = useState(false);
+  const [draftSaved, setDraftSaved] = useState(false);
 
   useEffect(() => {
+    const draftId = params.get("draft_id");
+    if (draftId) {
+      base44.entities.MourningCard.filter({ id: draftId }).then(([draft]) => {
+        if (!draft) return;
+        setSelectedCaseId(draft.case_id || "");
+        setCardFormat(draft.format || "DIN_A6_landscape");
+        setEditedText(draft.generated_text || "");
+        setGeneratedText(draft.generated_text || "");
+        setGeneratedMotifUrl(draft.motif_image_url || "");
+        setMotif(draft.motif_theme || "nature");
+        setAddonInvitation(draft.addon_invitation || false);
+        setAddonThankyou(draft.addon_thankyou || false);
+        setAddonQr(draft.addon_qr || false);
+        if (draft.questionnaire_answers) {
+          try { const qa = JSON.parse(draft.questionnaire_answers); setCharacter(qa.character || ""); setPassions(qa.passions || []); setQuote(qa.quote || ""); setReligion(qa.religion || "Weltlich"); setTone(qa.tone || "Warm & persönlich"); setProfession(qa.profession || ""); } catch {}
+        }
+        setStep(2);
+      });
+    }
     const user = base44.auth.me().then(u => {
       base44.entities.Case.filter({ created_by: u.email, status: "aktiv" }, "-created_date").then(setCases);
       base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1).then(([h]) => {
@@ -684,6 +704,15 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
             {step > 0 && (
               <button onClick={() => setStep(s => s - 1)} className="flex-1 py-3 rounded-xl text-sm border" style={{ borderColor: "#302d28", color: "#8a8278" }}>
                 Zurück
+              </button>
+            )}
+            {step === 2 && (
+              <button onClick={async () => {
+                await base44.entities.MourningCard.create({ case_id: selectedCaseId, format: cardFormat, generated_text: editedText, motif_image_url: generatedMotifUrl, motif_theme: motif, questionnaire_answers: JSON.stringify({ character, passions, quote, religion, tone, profession }), addon_invitation: addonInvitation, addon_thankyou: addonThankyou, addon_qr: addonQr, status: "entwurf" });
+                setDraftSaved(true);
+                setTimeout(() => setDraftSaved(false), 2000);
+              }} className="px-4 py-3 rounded-xl text-sm border flex-shrink-0" style={{ borderColor: "#c9a96e", color: "#c9a96e" }}>
+                {draftSaved ? "Entwurf gespeichert ✓" : "Entwurf speichern"}
               </button>
             )}
             {step < 4 ? (
