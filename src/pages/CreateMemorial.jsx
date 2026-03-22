@@ -296,12 +296,12 @@ export default function CreateMemorial() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="text-sm font-medium">Geburtsdatum</Label>
-                  <Input type="date" value={form.birth_date} onChange={(e) => set("birth_date", e.target.value)} className="mt-1" />
+                  <DateInput value={form.birth_date} onChange={(v) => set("birth_date", v)} className="mt-1 w-full" />
                   <p style={{ fontSize: 11, color: "#8a8278", marginTop: 4 }}>Falls unbekannt, lassen Sie das Feld frei.</p>
                 </div>
                 <div>
                   <Label className="text-sm font-medium">Sterbedatum</Label>
-                  <Input type="date" value={form.death_date} onChange={(e) => set("death_date", e.target.value)} className="mt-1" />
+                  <DateInput value={form.death_date} onChange={(v) => set("death_date", v)} className="mt-1 w-full" />
                   <p style={{ fontSize: 11, color: "#8a8278", marginTop: 4 }}>Dieses Datum erscheint auf der Gedenkseite.</p>
                 </div>
               </div>
