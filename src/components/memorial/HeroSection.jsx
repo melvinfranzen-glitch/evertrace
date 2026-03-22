@@ -19,7 +19,7 @@ export default function HeroSection({ memorial }) {
           ? `url(${memorial.hero_image_url})`
           : "linear-gradient(160deg,#1c1917,#3b2a1a)",
         backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundPosition: `center ${memorial.hero_image_position ?? 50}%`,
       }}
     >
       {/* Overlay — stronger at bottom for legibility, lighter at top */}

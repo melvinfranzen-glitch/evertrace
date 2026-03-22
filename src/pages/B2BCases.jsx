@@ -154,9 +154,10 @@ export default function B2BCases() {
                   {c.has_order && <span title="Bestellung"><Package className="w-4 h-4" style={{ color: "#60a5fa" }} /></span>}
                 </div>
                 <div className="col-span-2">
-                  <span className="text-xs px-2.5 py-1 rounded-full" style={{ background: `${STATUS_COLORS[c.status]}20`, color: STATUS_COLORS[c.status] }}>
-                    {c.status}
-                  </span>
+                  <select value={c.status} onChange={async e => { await base44.entities.Case.update(c.id, { status: e.target.value }); setCases(p => p.map(x => x.id === c.id ? { ...x, status: e.target.value } : x)); }}
+                    style={{ background: "transparent", border: "none", color: STATUS_COLORS[c.status], fontSize: 12, cursor: "pointer", fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>
+                    {STATUS_OPTS.map(s => <option key={s} value={s} style={{ color: "#f0ede8", background: "#201e1a" }}>{s}</option>)}
+                  </select>
                 </div>
                 <div className="col-span-1 flex justify-end">
                   <button onClick={() => setDeleteId(c.id)} className="p-1.5 rounded-lg transition-all" style={{ color: "#5a554e" }}>
@@ -172,9 +173,10 @@ export default function B2BCases() {
                     {c.deceased_first_name} {c.deceased_last_name}
                   </Link>
                   <div className="flex items-center gap-2 flex-shrink-0">
-                    <span className="text-xs px-2.5 py-1 rounded-full" style={{ background: `${STATUS_COLORS[c.status]}20`, color: STATUS_COLORS[c.status] }}>
-                      {c.status}
-                    </span>
+                    <select value={c.status} onChange={async e => { await base44.entities.Case.update(c.id, { status: e.target.value }); setCases(p => p.map(x => x.id === c.id ? { ...x, status: e.target.value } : x)); }}
+                      style={{ background: "transparent", border: "none", color: STATUS_COLORS[c.status], fontSize: 11, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>
+                      {STATUS_OPTS.map(s => <option key={s} value={s} style={{ color: "#f0ede8", background: "#201e1a" }}>{s}</option>)}
+                    </select>
                     <button onClick={() => setDeleteId(c.id)} className="p-1.5 rounded-lg" style={{ color: "#5a554e" }}>
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>

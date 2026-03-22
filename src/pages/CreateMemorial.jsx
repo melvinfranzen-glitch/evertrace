@@ -49,6 +49,9 @@ export default function CreateMemorial() {
   const [step, setStep] = useState(1);
   const [uploading, setUploading] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [bioMode, setBioMode] = useState("guided");
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [guidedAnswers, setGuidedAnswers] = useState({ passions: [], profession: "", quote: "", style: "chronologisch" });
   const [saving, setSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -371,81 +374,162 @@ export default function CreateMemorial() {
           {/* ── Step 2 ── */}
           {step === 2 && (
             <div className="space-y-5">
-              <div className="mb-6">
+              <div className="mb-4">
                 <h1 className="font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26 }}>
                   Erzählen Sie uns von ihm/ihr.
                 </h1>
-                <p className="text-sm mt-1" style={{ color: "#8a8278" }}>
-                  Schreiben Sie einfach drauflos — ganz ohne Perfektion. Unsere KI fasst daraus eine würdevolle Geschichte zusammen.
-                </p>
               </div>
 
-              <div>
-                <p className="mb-3" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#5a554e", fontWeight: 500 }}>
-                  Wie soll die Geschichte klingen?
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {STYLES.map((s) => (
-                    <div
-                      key={s.id}
-                      onClick={() => set("biography_style", s.id)}
-                      className="p-4 rounded-xl border-2 cursor-pointer transition-all"
-                      style={{
-                        borderColor: form.biography_style === s.id ? "#c9a96e" : "#e7e5e4",
-                        background: form.biography_style === s.id ? "#fffbf5" : "white",
-                      }}
-                    >
-                      <p className="font-semibold text-gray-800 text-sm">{s.label}</p>
-                      <p className="text-xs text-gray-500 mt-1 leading-relaxed">{s.desc}</p>
+              {/* Mode toggle */}
+              <div className="flex rounded-xl overflow-hidden border border-stone-200 w-fit">
+                {[{ id: "guided", label: "Geführt" }, { id: "direct", label: "Direkt" }].map(m => (
+                  <button key={m.id} onClick={() => { setBioMode(m.id); setQuestionIndex(0); }}
+                    className="px-5 py-2 text-sm font-medium transition-all"
+                    style={{ background: bioMode === m.id ? "#c9a96e" : "white", color: bioMode === m.id ? "white" : "#6b7280" }}>
+                    {m.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Guided mode */}
+              {bioMode === "guided" && !generating && !form.biography && (() => {
+                const PASSION_CHIPS = ["Familie", "Natur", "Musik", "Reisen", "Handwerk", "Tiere", "Glaube", "Kochen", "Sport", "Kunst"];
+                const togglePassion = (p) => setGuidedAnswers(a => ({ ...a, passions: a.passions.includes(p) ? a.passions.filter(x => x !== p) : [...a.passions, p] }));
+                return (
+                  <div className="space-y-5">
+                    <p className="text-xs font-medium uppercase tracking-widest" style={{ color: "#c9a96e" }}>Frage {questionIndex + 1} von 4</p>
+                    <div className="w-full h-1 rounded-full bg-stone-100 mb-2">
+                      <div className="h-1 rounded-full transition-all" style={{ width: `${((questionIndex + 1) / 4) * 100}%`, background: "#c9a96e" }} />
                     </div>
-                  ))}
+
+                    {questionIndex === 0 && (
+                      <div>
+                        <p className="font-medium text-gray-800 mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18 }}>
+                          Was hat {form.name || "er/sie"} am meisten geliebt im Leben?
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {PASSION_CHIPS.map(p => (
+                            <button key={p} onClick={() => togglePassion(p)}
+                              className="px-4 py-2 rounded-full text-sm transition-all"
+                              style={{ background: guidedAnswers.passions.includes(p) ? "rgba(201,169,110,0.15)" : "white", border: `1px solid ${guidedAnswers.passions.includes(p) ? "#c9a96e" : "#e5e7eb"}`, color: guidedAnswers.passions.includes(p) ? "#c9a96e" : "#6b7280", cursor: "pointer" }}>
+                              {p}
+                            </button>
+                          ))}
+                        </div>
+                        <button onClick={() => setQuestionIndex(1)} className="mt-5 px-6 py-2.5 rounded-xl text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>Weiter →</button>
+                      </div>
+                    )}
+
+                    {questionIndex === 1 && (
+                      <div>
+                        <p className="font-medium text-gray-800 mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18 }}>
+                          Welchen Beruf hatte {form.name || "er/sie"}?
+                        </p>
+                        <input value={guidedAnswers.profession} onChange={e => setGuidedAnswers(a => ({ ...a, profession: e.target.value }))}
+                          placeholder="z. B. Lehrerin, Schreiner, Bäcker… (optional)"
+                          className="w-full px-4 py-3 rounded-xl border border-stone-200 text-sm outline-none" />
+                        <button onClick={() => setQuestionIndex(2)} className="mt-5 px-6 py-2.5 rounded-xl text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>Weiter →</button>
+                      </div>
+                    )}
+
+                    {questionIndex === 2 && (
+                      <div>
+                        <p className="font-medium text-gray-800 mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18 }}>
+                          Gibt es einen Satz oder ein Zitat, das zu {form.name || "ihm/ihr"} passt?
+                        </p>
+                        <input value={guidedAnswers.quote} onChange={e => setGuidedAnswers(a => ({ ...a, quote: e.target.value }))}
+                          placeholder="z. B. »Das Beste, was wir hinterlassen, sind Erinnerungen.« (optional)"
+                          className="w-full px-4 py-3 rounded-xl border border-stone-200 text-sm outline-none" />
+                        <button onClick={() => setQuestionIndex(3)} className="mt-5 px-6 py-2.5 rounded-xl text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>Weiter →</button>
+                      </div>
+                    )}
+
+                    {questionIndex === 3 && (
+                      <div>
+                        <p className="font-medium text-gray-800 mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18 }}>
+                          Wie soll die Geschichte klingen?
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+                          {STYLES.map(s => (
+                            <div key={s.id} onClick={() => setGuidedAnswers(a => ({ ...a, style: s.id }))}
+                              className="p-4 rounded-xl border-2 cursor-pointer transition-all"
+                              style={{ borderColor: guidedAnswers.style === s.id ? "#c9a96e" : "#e7e5e4", background: guidedAnswers.style === s.id ? "#fffbf5" : "white" }}>
+                              <p className="font-semibold text-gray-800 text-sm">{s.label}</p>
+                              <p className="text-xs text-gray-500 mt-1 leading-relaxed">{s.desc}</p>
+                            </div>
+                          ))}
+                        </div>
+                        <button onClick={async () => {
+                          const rawInput = `Leidenschaften: ${guidedAnswers.passions.join(", ") || "keine Angabe"}. Beruf: ${guidedAnswers.profession || "keine Angabe"}. Zitat: ${guidedAnswers.quote || "keines"}.`;
+                          set("biography_raw_input", rawInput);
+                          set("biography_style", guidedAnswers.style);
+                          setGenerating(true);
+                          const style = STYLES.find(s => s.id === guidedAnswers.style);
+                          const result = await base44.integrations.Core.InvokeLLM({
+                            prompt: `Erstelle eine ${style.label.toLowerCase()} Biografie auf Deutsch für ${form.name} (geboren: ${form.birth_date || "unbekannt"} in ${form.birth_place || "unbekannt"}, gestorben: ${form.death_date || "unbekannt"} in ${form.death_place || "unbekannt"}). Basiere auf: "${sanitizePromptInput(rawInput)}". 3–4 würdevolle Absätze im Stil: ${style.desc}. Beginne direkt.`,
+                          });
+                          set("biography", result);
+                          setGenerating(false);
+                        }} className="w-full py-3 rounded-xl text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
+                          ✦ Lebensgeschichte verfassen lassen
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+
+              {/* Generating */}
+              {generating && (
+                <div className="flex items-center gap-3 py-6">
+                  <Loader2 className="w-5 h-5 animate-spin" style={{ color: "#c9a96e" }} />
+                  <span className="text-sm" style={{ color: "#8a8278" }}>Wir schreiben gerade die Lebensgeschichte…</span>
                 </div>
-              </div>
+              )}
 
-              <div>
-                <Label className="text-sm font-medium">Was sollen Menschen über ihn/sie wissen?</Label>
-                <Textarea
-                  value={form.biography_raw_input}
-                  onChange={(e) => set("biography_raw_input", e.target.value)}
-                  placeholder={`Schreiben Sie einfach, was Ihnen einfällt — zum Beispiel: Wo er/sie aufgewachsen ist, was ihn/sie begeistert hat, was er/sie geliebt hat, welche Eigenschaften ihn/sie besonders gemacht haben. Auch kurze Notizen sind vollkommen ausreichend.`}
-                  className="mt-1 h-44 resize-none"
-                />
-              </div>
+              {/* Direct mode */}
+              {bioMode === "direct" && !form.biography && (
+                <div className="space-y-4">
+                  <div>
+                    <p className="mb-3 text-sm font-medium" style={{ color: "#5a554e" }}>Wie soll die Geschichte klingen?</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {STYLES.map((s) => (
+                        <div key={s.id} onClick={() => set("biography_style", s.id)}
+                          className="p-4 rounded-xl border-2 cursor-pointer transition-all"
+                          style={{ borderColor: form.biography_style === s.id ? "#c9a96e" : "#e7e5e4", background: form.biography_style === s.id ? "#fffbf5" : "white" }}>
+                          <p className="font-semibold text-gray-800 text-sm">{s.label}</p>
+                          <p className="text-xs text-gray-500 mt-1 leading-relaxed">{s.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium">Was sollen Menschen über ihn/sie wissen?</Label>
+                    <Textarea value={form.biography_raw_input} onChange={(e) => set("biography_raw_input", e.target.value)}
+                      placeholder="Schreiben Sie einfach, was Ihnen einfällt…"
+                      className="mt-1 h-44 resize-none" />
+                  </div>
+                  <Button onClick={generateBio} disabled={!form.biography_raw_input.trim() || generating}
+                    className="w-full rounded-xl text-white py-5" style={{ background: "#c9a96e" }}>
+                    ✦ Lebensgeschichte von der KI verfassen lassen
+                  </Button>
+                </div>
+              )}
 
-              <div>
-                <Button
-                  onClick={generateBio}
-                  disabled={!form.biography_raw_input.trim() || generating}
-                  className="w-full rounded-xl text-white py-5"
-                  style={{ background: generating ? "#a07830" : "#c9a96e" }}
-                >
-                  {generating ? (
-                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Wir schreiben gerade die Lebensgeschichte — einen Moment bitte…</>
-                  ) : (
-                    <>✦ Lebensgeschichte von der KI verfassen lassen</>
-                  )}
-                </Button>
-                <p style={{ fontSize: 11, color: "#8a8278", marginTop: 6, textAlign: "center" }}>
-                  Die KI erstellt einen Entwurf, den Sie danach frei bearbeiten können.
-                </p>
-              </div>
-
-              {form.biography && (
+              {/* Biography result */}
+              {form.biography && !generating && (
                 <div className="rounded-xl p-6 border border-stone-200" style={{ background: "#fafaf8" }}>
                   <div className="flex items-center justify-between mb-3">
                     <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "#c9a96e" }}>
                       Ihr Entwurf — bitte lesen und bei Bedarf anpassen
                     </p>
-                    <button className="text-xs text-gray-400 hover:text-gray-600 underline" onClick={() => set("biography", "")}>
+                    <button className="text-xs text-gray-400 hover:text-gray-600 underline" onClick={() => { set("biography", ""); setQuestionIndex(0); }}>
                       ↺ Neu schreiben lassen
                     </button>
                   </div>
-                  <textarea
-                    value={form.biography}
-                    onChange={(e) => set("biography", e.target.value)}
+                  <textarea value={form.biography} onChange={(e) => set("biography", e.target.value)}
                     style={{ background: "transparent", border: "none", outline: "none", resize: "none", width: "100%", fontSize: 14, color: "#374151", lineHeight: 1.8 }}
-                    rows={Math.max(6, form.biography.split("\n").length + 2)}
-                  />
+                    rows={Math.max(6, form.biography.split("\n").length + 2)} />
                 </div>
               )}
 
@@ -453,12 +537,8 @@ export default function CreateMemorial() {
                 <Button variant="outline" onClick={() => setStep(1)} className="rounded-xl">
                   <ChevronLeft className="w-4 h-4 mr-1" /> Zurück
                 </Button>
-                <Button
-                  onClick={() => setStep(3)}
-                  disabled={!form.biography.trim()}
-                  className="text-white rounded-xl px-6"
-                  style={{ background: "#c9a96e" }}
-                >
+                <Button onClick={() => setStep(3)} disabled={!form.biography.trim()}
+                  className="text-white rounded-xl px-6" style={{ background: "#c9a96e" }}>
                   Weiter → Abschließen <ChevronRight className="w-4 h-4 ml-1" />
                 </Button>
               </div>
