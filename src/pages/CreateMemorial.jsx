@@ -413,7 +413,7 @@ export default function CreateMemorial() {
               </div>
 
               {/* Guided mode */}
-              {bioMode === "guided" && !generating && !form.biography && (() => {
+              {bioMode === "guided" && !generating && !form.biography && questionIndex < 4 && (() => {
                 const PASSION_CHIPS = ["Familie", "Natur", "Musik", "Reisen", "Handwerk", "Tiere", "Glaube", "Kochen", "Sport", "Kunst"];
                 const togglePassion = (p) => setGuidedAnswers(a => ({ ...a, passions: a.passions.includes(p) ? a.passions.filter(x => x !== p) : [...a.passions, p] }));
                 return (
@@ -493,7 +493,7 @@ export default function CreateMemorial() {
               {generating && (
                 <div className="flex items-center gap-3 py-6">
                   <Loader2 className="w-5 h-5 animate-spin" style={{ color: "#c9a96e" }} />
-                  <span className="text-sm" style={{ color: "#8a8278" }}>Wir schreiben gerade die Lebensgeschichte…</span>
+                  <span className="text-sm" style={{ color: "#8a8278" }}>Lebensgeschichte wird verfasst…</span>
                 </div>
               )}
 
