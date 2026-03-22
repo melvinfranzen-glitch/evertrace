@@ -168,12 +168,39 @@ export default function MemorialProfile() {
     );
   }
 
+  // Section visibility helper
+  const sv = memorial.section_visibility || {};
+  const canShow = (key) => {
+    const v = sv[key] || "public";
+    if (v === "private") return false;
+    if (v === "family") return familyUnlocked;
+    return true;
+  };
+  const needsFamilyLock = Object.values(sv).includes("family") && !familyUnlocked;
+
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", background: "#FAFAF8" }}>
       <HeroSection memorial={memorial} />
 
+      {/* Family lock prompt */}
+      {needsFamilyLock && (
+        <div className="py-6 px-6 flex justify-center">
+          <div className="flex items-center gap-3 rounded-xl border px-5 py-3" style={{ background: "white", border: "1px solid #e8dfd0" }}>
+            <span className="text-sm text-gray-600">Familienbereich:</span>
+            <input type="password" value={familyPwInput} onChange={e => { setFamilyPwInput(e.target.value); setFamilyPwError(false); }}
+              onKeyDown={e => { if (e.key === "Enter") { if (familyPwInput === (memorial.family_password || "")) { setFamilyUnlocked(true); } else { setFamilyPwError(true); } } }}
+              placeholder="Familienpasswort" className="border rounded-lg px-3 py-1.5 text-sm outline-none" style={{ borderColor: familyPwError ? "#ef4444" : "#e5e7eb" }} />
+            <button onClick={() => { if (familyPwInput === (memorial.family_password || "")) { setFamilyUnlocked(true); } else { setFamilyPwError(true); } }}
+              className="px-3 py-1.5 rounded-lg text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
+              Entsperren
+            </button>
+            {familyPwError && <span className="text-xs text-red-500">Falsches Passwort</span>}
+          </div>
+        </div>
+      )}
+
       {/* Biography */}
-      {memorial.biography && (
+      {memorial.biography && canShow("biography") && (
         <>
           <section className="py-24 px-6" style={{ background: "white" }}>
             <div className="max-w-3xl mx-auto">
