@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
 import { Plus, Search, ChevronDown, CreditCard, Globe, Package, Trash2, X } from "lucide-react";
+import DateInput from "@/components/ui/DateInput";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 

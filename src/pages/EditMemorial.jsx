@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Loader2, Save, ArrowLeft, Upload, Plus, Trash2, Sparkles, Eye, CreditCard, BookOpen, QrCode } from "lucide-react";
+import DateInput from "@/components/ui/DateInput";
 import FamilyEditor from "@/components/memorial/FamilyEditor";
 import TimelineEditor from "@/components/memorial/TimelineEditor";
 import QrSharePanel from "@/components/memorial/QrSharePanel";

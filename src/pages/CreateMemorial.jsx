@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Loader2, Upload, Sparkles, ChevronRight, ChevronLeft, Check, ArrowLeft, Copy } from "lucide-react";
+import DateInput from "@/components/ui/DateInput";
 
 const STYLES = [
   { id: "poetisch", label: "Poetisch", desc: "Gefühlvoll und bildreich — ein literarisches Denkmal" },
