@@ -480,19 +480,8 @@ export default function CreateMemorial() {
                             </div>
                           ))}
                         </div>
-                        <button onClick={async () => {
-                          const rawInput = `Leidenschaften: ${guidedAnswers.passions.join(", ") || "keine Angabe"}. Beruf: ${guidedAnswers.profession || "keine Angabe"}. Zitat: ${guidedAnswers.quote || "keines"}.`;
-                          set("biography_raw_input", rawInput);
-                          set("biography_style", guidedAnswers.style);
-                          setGenerating(true);
-                          const style = STYLES.find(s => s.id === guidedAnswers.style);
-                          const result = await base44.integrations.Core.InvokeLLM({
-                            prompt: `Erstelle eine ${style.label.toLowerCase()} Biografie auf Deutsch für ${form.name} (geboren: ${form.birth_date || "unbekannt"} in ${form.birth_place || "unbekannt"}, gestorben: ${form.death_date || "unbekannt"} in ${form.death_place || "unbekannt"}). Basiere auf: "${sanitizePromptInput(rawInput)}". 3–4 würdevolle Absätze im Stil: ${style.desc}. Beginne direkt.`,
-                          });
-                          set("biography", result);
-                          setGenerating(false);
-                        }} className="w-full py-3 rounded-xl text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
-                          ✦ Lebensgeschichte verfassen lassen
+                        <button onClick={() => setQuestionIndex(4)} className="w-full py-3 rounded-xl text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
+                          Weiter →
                         </button>
                       </div>
                     )}
