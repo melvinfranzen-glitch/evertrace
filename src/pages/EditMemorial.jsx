@@ -38,6 +38,9 @@ export default function EditMemorial() {
   const [activeTab, setActiveTab] = useState("info");
   const [newEvent, setNewEvent] = useState({ year: "", title: "", description: "" });
   const [musicTabView, setMusicTabView] = useState("spotify");
+  const [pendingCount, setPendingCount] = useState(0);
+  const [pendingCondolences, setPendingCondolences] = useState([]);
+  const [pendingMemoryWall, setPendingMemoryWall] = useState([]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -46,9 +49,14 @@ export default function EditMemorial() {
     Promise.all([
       base44.entities.Memorial.filter({ id }),
       base44.entities.TimelineEvent.filter({ memorial_id: id }, "sort_order"),
-    ]).then(([memorials, events]) => {
+      base44.entities.CondolenceEntry.filter({ memorial_id: id, status: "pending" }),
+      base44.entities.MemoryWallEntry.filter({ memorial_id: id, status: "pending" }),
+    ]).then(([memorials, events, pendCond, pendWall]) => {
       if (memorials.length) setMemorial(memorials[0]);
       setTimeline(events);
+      setPendingCondolences(pendCond);
+      setPendingMemoryWall(pendWall);
+      setPendingCount(pendCond.length + pendWall.length);
       setLoading(false);
     });
   }, []);
@@ -133,6 +141,7 @@ export default function EditMemorial() {
     { id: "wall", label: "Erinnerungen" },
     { id: "family", label: "Familie" },
     { id: "settings", label: "Einstellungen" },
+    { id: "approvals", label: pendingCount > 0 ? `Freigaben` : "Freigaben", badge: pendingCount },
   ];
 
   const showGuidanceBanner = showGuidance && !memorial.biography?.trim() && (memorial.gallery_images?.length || 0) < 2;
@@ -189,7 +198,7 @@ export default function EditMemorial() {
                   }, 0);
                 }}
                 data-active-tab={activeTab === t.id}
-                className="px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all flex-shrink-0"
+                className="px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all flex-shrink-0 flex items-center gap-1.5"
               style={{
                 background: activeTab === t.id ? "#c9a96e" : "white",
                 color: activeTab === t.id ? "white" : "#6b7280",
@@ -197,6 +206,9 @@ export default function EditMemorial() {
               }}
             >
                 {t.label}
+                {t.badge > 0 && (
+                  <span className="w-4 h-4 rounded-full text-xs flex items-center justify-center font-bold" style={{ background: "#ef4444", color: "white", fontSize: 10 }}>{t.badge}</span>
+                )}
               </button>
             ))}
           </div>
@@ -387,6 +399,56 @@ export default function EditMemorial() {
 
           {activeTab === "family" && (
             <FamilyEditor memorialId={memorial.id} />
+          )}
+
+          {activeTab === "approvals" && (
+            <div className="space-y-6">
+              <div>
+                <p className="text-sm font-semibold text-gray-700 mb-3">Ausstehende Kondolenzeinträge ({pendingCondolences.length})</p>
+                {pendingCondolences.length === 0 ? <p className="text-sm text-gray-400">Keine ausstehenden Einträge.</p> : (
+                  <div className="space-y-3">
+                    {pendingCondolences.map(c => (
+                      <div key={c.id} className="rounded-xl p-4" style={{ background: "#fafaf8", border: "1px solid #e8dfd0" }}>
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-sm text-gray-800">{c.author_name}</p>
+                            <p className="text-xs text-gray-400 mb-1">{c.created_date ? new Date(c.created_date).toLocaleDateString("de-DE") : ""}</p>
+                            <p className="text-sm text-gray-600 leading-relaxed">{c.message}</p>
+                          </div>
+                          <div className="flex gap-2 flex-shrink-0">
+                            <button onClick={async () => { await base44.entities.CondolenceEntry.update(c.id, { status: "approved" }); const updated = pendingCondolences.filter(x => x.id !== c.id); setPendingCondolences(updated); setPendingCount(updated.length + pendingMemoryWall.length); }} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>Freigeben</button>
+                            <button onClick={async () => { await base44.entities.CondolenceEntry.update(c.id, { status: "rejected" }); const updated = pendingCondolences.filter(x => x.id !== c.id); setPendingCondolences(updated); setPendingCount(updated.length + pendingMemoryWall.length); }} className="px-3 py-1.5 rounded-lg text-xs font-medium border" style={{ borderColor: "#e5e7eb", color: "#6b7280" }}>Ablehnen</button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-700 mb-3">Ausstehende Erinnerungen ({pendingMemoryWall.length})</p>
+                {pendingMemoryWall.length === 0 ? <p className="text-sm text-gray-400">Keine ausstehenden Erinnerungen.</p> : (
+                  <div className="space-y-3">
+                    {pendingMemoryWall.map(w => (
+                      <div key={w.id} className="rounded-xl p-4" style={{ background: "#fafaf8", border: "1px solid #e8dfd0" }}>
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-sm text-gray-800">{w.author_name}</p>
+                            {w.relation && <p className="text-xs text-gray-400">{w.relation}</p>}
+                            <p className="text-xs text-gray-400 mb-1">{w.created_date ? new Date(w.created_date).toLocaleDateString("de-DE") : ""}</p>
+                            <p className="text-sm text-gray-600 leading-relaxed">{w.message}</p>
+                          </div>
+                          <div className="flex gap-2 flex-shrink-0">
+                            <button onClick={async () => { await base44.entities.MemoryWallEntry.update(w.id, { status: "approved" }); const updated = pendingMemoryWall.filter(x => x.id !== w.id); setPendingMemoryWall(updated); setPendingCount(pendingCondolences.length + updated.length); }} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>Freigeben</button>
+                            <button onClick={async () => { await base44.entities.MemoryWallEntry.update(w.id, { status: "rejected" }); const updated = pendingMemoryWall.filter(x => x.id !== w.id); setPendingMemoryWall(updated); setPendingCount(pendingCondolences.length + updated.length); }} className="px-3 py-1.5 rounded-lg text-xs font-medium border" style={{ borderColor: "#e5e7eb", color: "#6b7280" }}>Ablehnen</button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
           )}
 
           {activeTab === "settings" && (
