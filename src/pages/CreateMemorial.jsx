@@ -79,6 +79,25 @@ export default function CreateMemorial() {
 
   const set = (k, v) => setForm((p) => ({ ...p, [k]: v }));
 
+  // Auto-trigger bio generation after guided question 4
+  useEffect(() => {
+    if (bioMode === "guided" && questionIndex >= 4 && !form.biography && !generating && !autoGenerating) {
+      const rawInput = `Leidenschaften: ${guidedAnswers.passions.join(", ") || "keine Angabe"}. Beruf: ${guidedAnswers.profession || "keine Angabe"}. Zitat: ${guidedAnswers.quote || "keines"}.`;
+      const style = STYLES.find(s => s.id === guidedAnswers.style);
+      setAutoGenerating(true);
+      setGenerating(true);
+      set("biography_raw_input", rawInput);
+      set("biography_style", guidedAnswers.style);
+      base44.integrations.Core.InvokeLLM({
+        prompt: `Erstelle eine ${style.label.toLowerCase()} Biografie auf Deutsch für ${form.name} (geboren: ${form.birth_date || "unbekannt"} in ${form.birth_place || "unbekannt"}, gestorben: ${form.death_date || "unbekannt"} in ${form.death_place || "unbekannt"}). Basiere auf: "${sanitizePromptInput(rawInput)}". 3–4 würdevolle Absätze im Stil: ${style.desc}. Beginne direkt.`,
+      }).then(result => {
+        set("biography", result);
+        setGenerating(false);
+        setAutoGenerating(false);
+      });
+    }
+  }, [bioMode, questionIndex]);
+
   const handlePhotoUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
