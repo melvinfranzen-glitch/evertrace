@@ -231,11 +231,12 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
 
   useEffect(() => {
     if (step === 2 && !generatedText) {
-      // Sequential: text first, then image
       (async () => {
         await generateText();
         await generateMotif();
-      })();
+      })().then(() => {
+        setVariants([{ text: editedText, motifUrl: generatedMotifUrl }]);
+      });
     }
   }, [step]);
 
