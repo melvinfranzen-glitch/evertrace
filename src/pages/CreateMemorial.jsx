@@ -53,6 +53,7 @@ export default function CreateMemorial() {
   const [bioMode, setBioMode] = useState("guided");
   const [questionIndex, setQuestionIndex] = useState(0);
   const [guidedAnswers, setGuidedAnswers] = useState({ passions: [], profession: "", quote: "", style: "chronologisch" });
+  const [autoGenerating, setAutoGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [copied, setCopied] = useState(false);

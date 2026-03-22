@@ -474,6 +474,7 @@ export default function EditMemorial() {
                   { key: "memorywall", label: "Erinnerungswand" },
                   { key: "audio", label: "Audio" },
                   { key: "events", label: "Trauerfeier" },
+                  { key: "condolences", label: "Kondolenzbuch" },
                 ].map(({ key, label }) => {
                   const visibility = memorial.section_visibility?.[key] || "public";
                   const opts = [{ id: "public", label: "Öffentlich" }, { id: "family", label: "Familie" }, { id: "private", label: "Privat" }];
