@@ -461,6 +461,46 @@ export default function EditMemorial() {
 
           {activeTab === "settings" && (
             <div className="space-y-4">
+
+              {/* Section visibility */}
+              <div>
+                <p className="text-sm font-medium text-gray-700 mb-3">Sichtbarkeit der Sektionen</p>
+                {[
+                  { key: "biography", label: "Biografie" },
+                  { key: "gallery", label: "Galerie" },
+                  { key: "family", label: "Stammbaum" },
+                  { key: "timeline", label: "Lebensstationen" },
+                  { key: "legacy", label: "Lebenswerk" },
+                  { key: "memorywall", label: "Erinnerungswand" },
+                  { key: "audio", label: "Audio" },
+                  { key: "events", label: "Trauerfeier" },
+                ].map(({ key, label }) => {
+                  const visibility = memorial.section_visibility?.[key] || "public";
+                  const opts = [{ id: "public", label: "Öffentlich" }, { id: "family", label: "Familie" }, { id: "private", label: "Privat" }];
+                  return (
+                    <div key={key} className="flex items-center justify-between py-2.5 border-b border-stone-100 last:border-0">
+                      <span className="text-sm text-gray-700">{label}</span>
+                      <div className="flex rounded-lg overflow-hidden border border-stone-200">
+                        {opts.map(o => (
+                          <button key={o.id} onClick={() => set("section_visibility", { ...(memorial.section_visibility || {}), [key]: o.id })}
+                            className="px-3 py-1 text-xs transition-all"
+                            style={{ background: visibility === o.id ? "#c9a96e" : "white", color: visibility === o.id ? "#0f0e0c" : "#6b7280" }}>
+                            {o.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {Object.values(memorial.section_visibility || {}).includes("family") && (
+                  <div className="mt-3">
+                    <Label>Passwort für Familienbereich</Label>
+                    <Input value={memorial.family_password || ""} onChange={(e) => set("family_password", e.target.value)} className="mt-1" placeholder="Familienpasswort" />
+                  </div>
+                )}
+              </div>
+
               <div className="flex items-center gap-3 p-4 rounded-xl border border-stone-200 cursor-pointer" onClick={() => set("is_private", !memorial.is_private)}>
                 <div className="w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all"
                   style={{ borderColor: memorial.is_private ? "#c9a96e" : "#d1d5db", background: memorial.is_private ? "#c9a96e" : "white" }}>
