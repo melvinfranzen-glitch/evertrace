@@ -200,7 +200,7 @@ export default function MemorialProfile() {
       )}
 
       {/* Biography */}
-      {memorial.biography && canShow("biography") ? (
+      {memorial.biography && canShow("biography") && (
         <>
           <section className="py-24 px-6" style={{ background: "white" }}>
             <div className="max-w-3xl mx-auto">
