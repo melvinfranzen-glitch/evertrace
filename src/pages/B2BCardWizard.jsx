@@ -193,6 +193,32 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
     setGenerating(false);
   };
 
+  const addVariant = async () => {
+    if (variants.length >= 3 || generatingVariant) return;
+    setGeneratingVariant(true);
+    const [textResult, imgResult] = await Promise.all([generateTextRaw(), generateMotifRaw()]);
+    const newVariants = [...variants, { text: textResult, motifUrl: imgResult }];
+    setVariants(newVariants);
+    setActiveVariantIdx(newVariants.length - 1);
+    setEditedText(textResult);
+    setGeneratedMotifUrl(imgResult);
+    setGeneratingVariant(false);
+  };
+
+  const generateTextRaw = async () => {
+    const allPassions = [...passions, ...(customPassion ? [customPassion] : [])].join(", ");
+    const result = await base44.integrations.Core.InvokeLLM({
+      prompt: `Erstelle einen personalisierten Trauerkartentext (80-110 Wörter) auf Deutsch für ${selectedCase ? `${selectedCase.deceased_first_name} ${selectedCase.deceased_last_name}` : "Unbekannte Person"}. Charakter: ${character || "gütig"}. Leidenschaften: ${allPassions || "das Leben"}. Zitat: ${quote || ""}. Ton: ${tone}.`,
+    });
+    return typeof result === "string" ? result : "";
+  };
+
+  const generateMotifRaw = async () => {
+    const prompt = `Minimalist memorial card front cover illustration. Style: elegant, dark background, single symbolic motif for theme: "${motif}". Thin gold lines, no text, no faces. Ultra-minimal, sophisticated, print-ready.`;
+    const { url } = await base44.integrations.Core.GenerateImage({ prompt });
+    return url;
+  };
+
   const generateMotif = async () => {
     setGeneratingMotif(true);
     const allPassions = [...passions, ...(customPassion ? [customPassion] : [])].join(", ");
