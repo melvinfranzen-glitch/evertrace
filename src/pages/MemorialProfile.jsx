@@ -301,7 +301,6 @@ export default function MemorialProfile() {
 
       {/* Footer */}
       <div className="py-12 text-center border-t border-stone-100" style={{ background: "#1a1410" }}>
-
         <div className="flex items-center justify-center gap-3 mb-4">
           <div className="h-px w-8" style={{ background: "rgba(201,169,110,0.3)" }} />
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
