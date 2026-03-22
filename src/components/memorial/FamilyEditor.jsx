@@ -112,7 +112,7 @@ export default function FamilyEditor({ memorialId }) {
                 type="button"
                 onClick={() => setForm((p) => ({ ...p, _showLinkInput: !p._showLinkInput }))}
                 className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium border border-stone-200 hover:bg-stone-50 transition-all"
-                style={{ color: "#b45309" }}
+                style={{ color: "#c9a96e" }}
               >
                 <Link2 className="w-3.5 h-3.5" /> Bestehende Seite verknüpfen
               </button>

@@ -86,7 +86,7 @@ export default function AdminDashboard() {
             <Shield className="w-5 h-5 text-amber-700" />
           </div>
           <div>
-            <h1 className="text-2xl font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>Admin-Dashboard</h1>
+            <h1 className="text-2xl font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Admin-Dashboard</h1>
             <p className="text-gray-500 text-sm">Verwaltung & Moderation</p>
           </div>
         </div>
@@ -115,15 +115,15 @@ export default function AdminDashboard() {
               onClick={() => setTab(t.id)}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all"
               style={{
-                background: tab === t.id ? "#b45309" : "white",
+                background: tab === t.id ? "#c9a96e" : "white",
                 color: tab === t.id ? "white" : "#6b7280",
-                border: `1px solid ${tab === t.id ? "#b45309" : "#e5e7eb"}`,
+                border: `1px solid ${tab === t.id ? "#c9a96e" : "#e5e7eb"}`,
               }}
             >
               <t.icon className="w-4 h-4" />
               {t.label}
               {t.count > 0 && (
-                <span className="rounded-full text-xs px-1.5 py-0.5" style={{ background: tab === t.id ? "rgba(255,255,255,0.3)" : "#fef3c7", color: tab === t.id ? "white" : "#b45309" }}>
+                <span className="rounded-full text-xs px-1.5 py-0.5" style={{ background: tab === t.id ? "rgba(255,255,255,0.3)" : "#fef3c7", color: tab === t.id ? "white" : "#c9a96e" }}>
                   {t.count}
                 </span>
               )}

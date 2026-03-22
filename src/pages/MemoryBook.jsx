@@ -67,7 +67,7 @@ export default function MemoryBook() {
               <ArrowLeft className="w-5 h-5" />
             </button>
             <div>
-              <h1 className="text-2xl font-semibold text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
+              <h1 className="text-2xl font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 Erinnerungsbuch
               </h1>
               <p className="text-sm text-gray-500 mt-0.5">{memorial.name}</p>
@@ -92,7 +92,7 @@ export default function MemoryBook() {
             <BookOpen className="w-7 h-7" style={{ color: "#c9a84c" }} />
           </div>
           <div className="text-center sm:text-left">
-            <h2 className="text-white font-semibold text-lg mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <h2 className="text-white font-semibold text-lg mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Ein bleibendes Buch der Erinnerung
             </h2>
             <p className="text-stone-400 text-sm leading-relaxed max-w-xl">
@@ -125,7 +125,7 @@ export default function MemoryBook() {
           <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="font-semibold text-gray-800 text-lg" style={{ fontFamily: "'Playfair Display', serif" }}>
+                <h3 className="font-semibold text-gray-800 text-lg" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                   Buchvorschau
                 </h3>
                 <p className="text-sm text-gray-500 mt-0.5">So sieht Ihr gedrucktes Buch aus</p>
@@ -133,7 +133,7 @@ export default function MemoryBook() {
               <Button
                 size="sm"
                 className="rounded-xl text-white"
-                style={{ background: "#b45309" }}
+                style={{ background: "#c9a96e" }}
                 onClick={() => setActiveTab("order")}
               >
                 <ShoppingCart className="w-4 h-4 mr-1.5" /> Jetzt bestellen
@@ -147,7 +147,7 @@ export default function MemoryBook() {
         {activeTab === "photos" && (
           <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
             <div className="mb-6">
-              <h3 className="font-semibold text-gray-800 text-lg mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>
+              <h3 className="font-semibold text-gray-800 text-lg mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 Fotos für das Buch auswählen
               </h3>
               <p className="text-sm text-gray-500">
@@ -203,7 +203,7 @@ export default function MemoryBook() {
                   </button>
                   <Button
                     className="rounded-xl text-white"
-                    style={{ background: "#b45309" }}
+                    style={{ background: "#c9a96e" }}
                     onClick={() => setActiveTab("preview")}
                   >
                     Vorschau ansehen →
@@ -218,7 +218,7 @@ export default function MemoryBook() {
         {activeTab === "order" && (
           <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
             <div className="mb-6">
-              <h3 className="font-semibold text-gray-800 text-lg mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>
+              <h3 className="font-semibold text-gray-800 text-lg mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 Erinnerungsbuch bestellen
               </h3>
               <p className="text-sm text-gray-500">Wählen Sie Format und Lieferadresse</p>

@@ -60,7 +60,7 @@ export default function MemorialProfile() {
     try {
       const [t, c, k, b, a, w, l, s] = await Promise.all([
         base44.entities.TimelineEvent.filter({ memorial_id: id }, "sort_order"),
-        base44.entities.CondolenceEntry.filter({ memorial_id: id }, "-created_date"),
+        base44.entities.CondolenceEntry.filter({ memorial_id: id, status: "approved" }, "-created_date"),
         base44.entities.Candle.filter({ memorial_id: id }, "-created_date"),
         base44.entities.MemorialBlogPost.filter({ memorial_id: id, is_published: true }, "-created_date"),
         base44.entities.MemorialAudio.filter({ memorial_id: id }, "created_date"),
