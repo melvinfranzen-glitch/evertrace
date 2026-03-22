@@ -223,36 +223,36 @@ export default function MemorialProfile() {
         </>
       )}
 
-      {memorial.gallery_images?.length > 0 && (
+      {memorial.gallery_images?.length > 0 && canShow("gallery") && (
         <>
           <GallerySection images={memorial.gallery_images} name={memorial.name} />
           <SectionDivider light />
         </>
       )}
 
-      {serviceEvents.length > 0 && (
+      {serviceEvents.length > 0 && canShow("events") && (
         <>
           <ServiceEventSection events={serviceEvents} />
         </>
       )}
 
-      {timeline.length > 0 && (
+      {timeline.length > 0 && canShow("timeline") && (
         <>
           <TimelineSection events={timeline} />
           <SectionDivider quote={`\u201EJeder Moment mit ihm / ihr war ein Geschenk.\u201C`} />
         </>
       )}
 
-      {legacyEntries.length > 0 && (
+      {legacyEntries.length > 0 && canShow("legacy") && (
         <>
           <LegacySection entries={legacyEntries} />
           <SectionDivider light />
         </>
       )}
 
-      <FamilyTreeSection memorial={memorial} />
+      {canShow("family") && <FamilyTreeSection memorial={memorial} />}
 
-      <AudioSection tracks={audioTracks} curatedTracks={memorial.curated_track_ids ? CURATED_TRACKS.filter(t => memorial.curated_track_ids.includes(t.id)) : []} />
+      {canShow("audio") && <AudioSection tracks={audioTracks} curatedTracks={memorial.curated_track_ids ? CURATED_TRACKS.filter(t => memorial.curated_track_ids.includes(t.id)) : []} />}
 
       {blogPosts.length > 0 && (
         <>
@@ -290,7 +290,7 @@ export default function MemorialProfile() {
         onNewCandle={(c) => setCandles((prev) => [c, ...prev])}
       />
 
-      <MemoryWallSection memorialId={memorial.id} entries={memoryWall} />
+      {canShow("memorywall") && <MemoryWallSection memorialId={memorial.id} entries={memoryWall} />}
 
       <CondolenceBook
         memorialId={memorial.id}
