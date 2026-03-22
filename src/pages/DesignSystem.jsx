@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import {
-  Heart, Flame, QrCode, BookOpen, Users, Image, Lock, CheckCircle,
-  XCircle, Clock, Upload, ChevronRight, Star, Feather, TreePine,
-  Home, Settings, BarChart3, CreditCard, Globe, Package, Menu, X,
-  Eye, EyeOff, Bell, LogOut, Plus, Search, Filter, Download, Share2
+  Heart, Flame, QrCode, BookOpen, Users, ImageIcon, Lock, CheckCircle,
+  XCircle, Upload, ChevronRight, Feather, TreePine,
+  Home, Settings, BarChart3, CreditCard, Globe, Package,
+  Plus
 } from "lucide-react";
 
 // ─── DESIGN TOKENS ────────────────────────────────────────────────────────────
