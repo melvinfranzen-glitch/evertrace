@@ -677,9 +677,9 @@ export default function DesignSystem() {
               </div>
               {/* Items */}
               {[
-                { name: "Hannelore Brandt", type: "Kondolenz", preview: "„Maria war für mich wie…"", time: "vor 2 Std." },
-                { name: "Klaus Fischer", type: "Erinnerungsfoto", preview: "Foto vom Sommerfest 2019", time: "vor 4 Std." },
-                { name: "Familie Berger", type: "Nachricht", preview: "„Wir denken an Sie…"", time: "gestern" },
+                { name: "Hannelore Brandt", type: "Kondolenz", preview: "Maria war für mich wie...", time: "vor 2 Std." },
+                  { name: "Klaus Fischer", type: "Erinnerungsfoto", preview: "Foto vom Sommerfest 2019", time: "vor 4 Std." },
+                  { name: "Familie Berger", type: "Nachricht", preview: "Wir denken an Sie...", time: "gestern" },
               ].map((item, i) => (
                 <div key={item.name} style={{ padding: "14px 20px", borderBottom: i < 2 ? `1px solid ${T.border}` : "none" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
