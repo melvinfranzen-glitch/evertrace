@@ -3,49 +3,44 @@ import { createPageUrl } from "@/utils";
 
 export default function CardTeaser() {
   return (
-    <section className="py-20 px-6" style={{ background: "#F5F0E8" }}>
+    <section className="py-20 px-6" style={{ background: "#F7F3ED" }}>
       <div className="max-w-6xl mx-auto">
         <div className="rounded-3xl overflow-hidden flex flex-col md:flex-row"
-          style={{ background: "linear-gradient(135deg, #1a1410 0%, #2d1f0a 100%)" }}>
+          style={{ background: "linear-gradient(160deg, #3D3326 0%, #2A2218 55%, #1E1A14 100%)" }}>
 
           {/* Text side */}
           <div className="flex-1 p-10 md:p-14 flex flex-col justify-center">
             <div className="flex items-center gap-2 mb-4">
-              <Sparkles className="w-4 h-4" style={{ color: "#c9a96e" }} />
-              <span className="text-xs uppercase tracking-[0.3em] font-medium" style={{ color: "#c9a96e", fontFamily: "'DM Sans', sans-serif" }}>
+              <Sparkles className="w-4 h-4" style={{ color: "#B07B34" }} />
+              <span style={{ fontSize: 11, letterSpacing: "0.25em", textTransform: "uppercase", color: "#B07B34", fontFamily: "'Lato', sans-serif", fontWeight: 400 }}>
                 Neu · KI-Trauerkarten
               </span>
             </div>
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4 leading-tight"
-              style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: 36, color: "#F7F3ED", lineHeight: 1.12, marginBottom: 16 }}>
               Trauerkarten, die wirklich berühren.
             </h2>
-            <p className="text-stone-400 text-base leading-relaxed mb-7 max-w-lg">
+            <p style={{ fontFamily: "'Lato', sans-serif", fontWeight: 300, fontSize: 15, color: "rgba(216,195,165,0.65)", lineHeight: 1.8, maxWidth: 460, marginBottom: 24 }}>
               Unsere KI liest die Geschichte eines Menschen und schreibt einen Text, der sich anfühlt, als wäre er von der Familie selbst verfasst. Sieben Motive, druckfertig, innerhalb von Minuten.
             </p>
             <div className="flex flex-wrap gap-3 mb-8">
-              {["7 einzigartige Motive", "KI-personaliserter Text", "PDF-Export", "Druck & Versand"].map((tag) => (
-                <span key={tag} className="px-3 py-1 rounded-full text-xs font-medium"
-                  style={{ background: "rgba(201,169,110,0.12)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.2)" }}>
+              {["7 einzigartige Motive", "KI-personalisierter Text", "PDF-Export", "Druck & Versand"].map((tag) => (
+                <span key={tag} className="px-3 py-1 rounded-full text-xs"
+                  style={{ background: "rgba(176,123,52,0.12)", color: "#B07B34", border: "1px solid rgba(176,123,52,0.25)", fontFamily: "'Lato', sans-serif", fontWeight: 400 }}>
                   {tag}
                 </span>
               ))}
             </div>
             <button
               onClick={() => window.location.href = createPageUrl("Dashboard")}
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-medium text-sm self-start transition-all duration-200"
-              style={{ background: "linear-gradient(135deg, #c9a96e, #a07830)", color: "#1c1917", boxShadow: "0 4px 20px rgba(201,169,110,0.35)" }}
-              onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 6px 28px rgba(201,169,110,0.5)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-              onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 4px 20px rgba(201,169,110,0.35)"; e.currentTarget.style.transform = ""; }}
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm self-start transition-all duration-200"
+              style={{ background: "#B07B34", color: "#F7F3ED", fontFamily: "'Lato', sans-serif", fontWeight: 400 }}
+              onMouseEnter={e => { e.currentTarget.style.background = "#7A5520"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "#B07B34"; e.currentTarget.style.transform = ""; }}
             >
               <CreditCard className="w-4 h-4" />
               Jetzt Trauerkarte erstellen
             </button>
-            <a
-              href="/B2BRegister"
-              className="mt-3 text-xs self-start"
-              style={{ color: "#c9a96e" }}
-            >
+            <a href="/B2BRegister" className="mt-3 text-xs self-start" style={{ color: "#B07B34", fontFamily: "'Lato', sans-serif", fontWeight: 300 }}>
               Sie sind Bestatter? Zur B2B-Plattform →
             </a>
           </div>
@@ -66,8 +61,8 @@ export default function CardTeaser() {
                 <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&q=80" alt="" className="w-full h-full object-cover opacity-60" />
                 <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(20,10,2,0.8) 0%, transparent 50%)" }} />
                 <div className="absolute bottom-4 left-0 right-0 text-center">
-                  <p className="text-white text-xs font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Maria Schmidt</p>
-                  <p className="text-stone-400 text-xs">1942 — 2024</p>
+                  <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 13, color: "#F7F3ED" }}>Maria Schmidt</p>
+                  <p style={{ fontFamily: "'Lato', sans-serif", fontWeight: 300, fontSize: 11, color: "rgba(216,195,165,0.6)" }}>1942 — 2024</p>
                 </div>
               </div>
             </div>

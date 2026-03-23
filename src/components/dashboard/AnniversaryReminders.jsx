@@ -32,7 +32,7 @@ export default function AnniversaryReminders({ memorials }) {
   const [dismissed, setDismissed] = useState(() => {
     try { return JSON.parse(localStorage.getItem("et_dismissed_reminders") || "[]"); } catch { return []; }
   });
-  const [blogModal, setBlogModal] = useState(null); // { memorial, occasion, year }
+  const [blogModal, setBlogModal] = useState(null);
   const [blogTitle, setBlogTitle] = useState("");
   const [blogContent, setBlogContent] = useState("");
   const [generating, setGenerating] = useState(false);
@@ -108,35 +108,36 @@ export default function AnniversaryReminders({ memorials }) {
     <>
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-4">
-          <Bell className="w-4 h-4" style={{ color: "#c9a96e" }} />
-          <h2 className="text-sm font-semibold uppercase tracking-widest" style={{ color: "#c9a96e" }}>Bevorstehende Jahrestage</h2>
+          <Bell className="w-4 h-4" style={{ color: "#B07B34" }} />
+          <h2 className="text-xs font-normal uppercase tracking-widest" style={{ color: "#B07B34", fontFamily: "'Lato', sans-serif", letterSpacing: "0.18em" }}>Bevorstehende Jahrestage</h2>
         </div>
         <div className="space-y-3">
           {visibleReminders.map((r) => (
             <div
               key={r.key}
               className="flex items-start gap-4 rounded-2xl px-5 py-4"
-              style={{ background: "rgba(201,169,110,0.08)", border: "1px solid rgba(201,169,110,0.25)" }}
+              style={{ background: "linear-gradient(to right, rgba(176,123,52,0.06), rgba(176,123,52,0.02))", border: "1px solid rgba(176,123,52,0.18)" }}
             >
               <div className="mt-0.5">
                 {r.occasion === "geburtstag"
-                  ? <Cake className="w-5 h-5" style={{ color: "#c9a96e" }} />
-                  : <Heart className="w-5 h-5" style={{ color: "#c9a96e" }} />}
+                  ? <Cake className="w-5 h-5" style={{ color: "#B07B34" }} />
+                  : <Heart className="w-5 h-5" style={{ color: "#B07B34" }} />}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium" style={{ color: "#f0ede8" }}>
+                <p className="text-sm" style={{ color: "#2F2D2A", fontFamily: "'Lato', sans-serif", fontWeight: 400 }}>
                   {r.days === 0
-                    ? `Heute ist der ${r.year}. ${r.occasion === "geburtstag" ? "Geburtstag" : "Todestag"} von ${r.memorial.name}`
-                    : `In ${r.days} Tag${r.days === 1 ? "" : "en"}: ${r.year}. ${r.occasion === "geburtstag" ? "Geburtstag" : "Todestag"} von ${r.memorial.name}`}
+                    ? `Heute ist der ${r.year}. ${r.occasion === "geburtstag" ? "Geburtstag" : "Todestag"} von `
+                    : `In ${r.days} Tag${r.days === 1 ? "" : "en"}: ${r.year}. ${r.occasion === "geburtstag" ? "Geburtstag" : "Todestag"} von `}
+                  <span style={{ fontWeight: 700, color: "#B07B34" }}>{r.memorial.name}</span>
                 </p>
-                <p className="text-xs mt-0.5" style={{ color: "#8a8278" }}>
+                <p className="text-xs mt-0.5" style={{ color: "#A89A8A", fontFamily: "'Lato', sans-serif", fontWeight: 300 }}>
                   {format(parseISO(r.date), "d. MMMM", { locale: de })}
                 </p>
                 <div className="flex gap-2 mt-3">
                   <Button
                     size="sm"
                     className="text-xs rounded-lg h-7 px-3"
-                    style={{ background: "#c9a96e", color: "#0f0e0c" }}
+                    style={{ background: "#B07B34", color: "#F7F3ED", fontFamily: "'Lato', sans-serif", fontWeight: 400 }}
                     onClick={() => openBlogModal(r)}
                   >
                     <PenLine className="w-3 h-3 mr-1" />
@@ -147,7 +148,9 @@ export default function AnniversaryReminders({ memorials }) {
               <button
                 onClick={() => dismiss(r.key)}
                 className="transition-colors mt-0.5 shrink-0"
-                style={{ color: "#5a554e" }}
+                style={{ color: "#A89A8A" }}
+                onMouseEnter={e => e.currentTarget.style.color = "#2F2D2A"}
+                onMouseLeave={e => e.currentTarget.style.color = "#A89A8A"}
               >
                 <X className="w-4 h-4" />
               </button>
@@ -156,33 +159,28 @@ export default function AnniversaryReminders({ memorials }) {
         </div>
       </div>
 
-      {/* Blog modal */}
       {blogModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.4)" }}>
-          <div className="rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col" style={{ background: "#181714", border: "1px solid #302d28" }}>
-            <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b" style={{ borderColor: "#302d28" }}>
+          <div className="rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col" style={{ background: "#2A2520", border: "1px solid #3A332C" }}>
+            <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b" style={{ borderColor: "#3A332C" }}>
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4" style={{ color: "#c9a96e" }} />
-                <h3 className="font-semibold" style={{ color: "#f0ede8" }}>Neuer Blog-Eintrag</h3>
+                <Sparkles className="w-4 h-4" style={{ color: "#B07B34" }} />
+                <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400, fontSize: 18, color: "#F7F3ED" }}>Neuer Blog-Eintrag</h3>
               </div>
-              <button onClick={() => setBlogModal(null)} style={{ color: "#5a554e" }}>
+              <button onClick={() => setBlogModal(null)} style={{ color: "#6B6257" }}>
                 <X className="w-5 h-5" />
               </button>
             </div>
             <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
               <div>
-                <label className="text-xs mb-1 block" style={{ color: "#8a8278" }}>Titel</label>
-                <Input
-                  value={blogTitle}
-                  onChange={(e) => setBlogTitle(e.target.value)}
-                  className="rounded-xl"
-                />
+                <label className="text-xs mb-1 block" style={{ color: "#A89A8A", fontFamily: "'Lato', sans-serif", fontWeight: 300 }}>Titel</label>
+                <Input value={blogTitle} onChange={(e) => setBlogTitle(e.target.value)} className="rounded-xl" />
               </div>
               <div>
-                <label className="text-xs mb-1 flex items-center gap-1.5" style={{ color: "#8a8278" }}>
+                <label className="text-xs mb-1 flex items-center gap-1.5" style={{ color: "#A89A8A", fontFamily: "'Lato', sans-serif", fontWeight: 300 }}>
                   Inhalt
-                  {generating && <Loader2 className="w-3 h-3 animate-spin" style={{ color: "#c9a96e" }} />}
-                  {generating && <span style={{ color: "#c9a96e" }}>KI schreibt…</span>}
+                  {generating && <Loader2 className="w-3 h-3 animate-spin" style={{ color: "#B07B34" }} />}
+                  {generating && <span style={{ color: "#B07B34" }}>KI schreibt…</span>}
                 </label>
                 <Textarea
                   value={blogContent}
@@ -194,15 +192,15 @@ export default function AnniversaryReminders({ memorials }) {
                 />
               </div>
             </div>
-            <div className="px-6 pb-5 pt-3 border-t flex justify-end gap-2" style={{ borderColor: "#302d28" }}>
-              <Button variant="outline" className="rounded-xl" onClick={() => setBlogModal(null)} style={{ borderColor: "#302d28", color: "#8a8278" }}>
+            <div className="px-6 pb-5 pt-3 border-t flex justify-end gap-2" style={{ borderColor: "#3A332C" }}>
+              <Button variant="outline" className="rounded-xl" onClick={() => setBlogModal(null)} style={{ borderColor: "#3A332C", color: "#A89A8A" }}>
                 Abbrechen
               </Button>
               <Button
                 onClick={saveBlogPost}
                 disabled={saving || generating || !blogContent.trim()}
                 className="rounded-xl"
-                style={{ background: "#c9a96e", color: "#0f0e0c" }}
+                style={{ background: "#B07B34", color: "#F7F3ED" }}
               >
                 {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : "Veröffentlichen"}
               </Button>

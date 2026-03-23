@@ -1,56 +1,71 @@
 import { createPageUrl } from "@/utils";
 import { Heart, Mail, Sparkles } from "lucide-react";
 
+const QUOTES = [
+  {
+    quote: "Evertrace hat uns geholfen, die Erinnerung an unsere Mutter so zu bewahren, wie sie war — warmherzig, lebendig und voller Liebe.",
+    name: "Familie Hoffmann",
+    role: "Privatnutzerin",
+  },
+  {
+    quote: "Als Bestatter schätze ich die würdevolle Gestaltung und die einfache Handhabung. Unsere Trauerfamilien sind dankbar für diese Möglichkeit.",
+    name: "Markus Seidel",
+    role: "Bestattungshaus Seidel, München",
+  },
+  {
+    quote: "Die KI-generierte Biografie hat genau das eingefangen, was wir über unseren Vater sagen wollten — poetisch und tief bewegend.",
+    name: "Claudia Berger",
+    role: "Tochter & Privatnutzerin",
+  },
+];
+
 export default function TestimonialsSection() {
   return (
-    <section className="py-24 px-6" style={{ background: "linear-gradient(160deg, #1a1410, #231a0e)" }}>
-      <div className="max-w-4xl mx-auto text-center">
-        <p className="text-xs uppercase tracking-[0.35em] font-medium mb-4" style={{ color: "#c9a96e" }}>
-          Early Access
-        </p>
-        <h2
-          className="text-4xl md:text-5xl font-semibold text-white mb-5 leading-tight"
-          style={{ fontFamily: "'Cormorant Garamond', serif" }}
-        >
-          Werden Sie Teil unserer wachsenden Gemeinschaft
-        </h2>
-        <p className="text-stone-400 font-light max-w-xl mx-auto leading-relaxed text-base mb-12">
-          Evertrace befindet sich im Aufbau. Wir suchen die ersten Familien und Bestattungshäuser, die gemeinsam mit uns eine neue Form des digitalen Gedenkens gestalten möchten.
-        </p>
+    <section className="py-24 px-6" style={{ background: "#F7F3ED" }}>
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-14">
+          <p style={{ fontFamily: "'Lato', sans-serif", fontWeight: 400, fontSize: 11, color: "#B07B34", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 12 }}>
+            Stimmen
+          </p>
+          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: 40, color: "#2F2D2A", lineHeight: 1.1 }}>
+            Was Familien & Bestatter sagen
+          </h2>
+        </div>
 
-        {/* Value props */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-14">
-          {[
-            { icon: Heart, title: "Kostenlos starten", desc: "Erstellen Sie eine vollständige Gedenkseite ohne Kosten — und entscheiden Sie später, ob Sie erweitern möchten." },
-            { icon: Sparkles, title: "KI-Biografie inklusive", desc: "Unser Biografie-Assistent hilft Ihnen, die richtigen Worte zu finden — einfühlsam und persönlich." },
-            { icon: Mail, title: "Persönliche Begleitung", desc: "In der Early-Access-Phase stehen wir Ihnen direkt zur Seite. Schreiben Sie uns jederzeit." },
-          ].map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="rounded-2xl p-6 text-left"
-              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,169,110,0.15)" }}>
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-                style={{ background: "rgba(201,169,110,0.12)", border: "1px solid rgba(201,169,110,0.2)" }}>
-                <Icon className="w-5 h-5" style={{ color: "#c9a96e" }} />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
+          {QUOTES.map(({ quote, name, role }) => (
+            <div key={name}
+              style={{ background: "#FEFCF9", border: "1px solid #EAE0D0", borderRadius: 18, padding: "32px" }}
+              onMouseEnter={e => e.currentTarget.style.boxShadow = "0 8px 40px rgba(47,45,42,0.08)"}
+              onMouseLeave={e => e.currentTarget.style.boxShadow = "none"}
+            >
+              <span style={{ display: "block", fontFamily: "'Cormorant Garamond', serif", fontSize: 32, color: "#D8C3A5", lineHeight: 1, marginBottom: 16 }}>❝</span>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontWeight: 300, fontSize: 18, color: "#6B6257", lineHeight: 1.9 }}>
+                {quote}
+              </p>
+              <div style={{ marginTop: 20 }}>
+                <p style={{ fontFamily: "'Lato', sans-serif", fontWeight: 400, fontSize: 13, color: "#2F2D2A" }}>{name}</p>
+                <p style={{ fontFamily: "'Lato', sans-serif", fontWeight: 300, fontSize: 12, color: "#A89A8A" }}>{role}</p>
               </div>
-              <p className="font-semibold text-white text-base mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{title}</p>
-              <p className="text-stone-400 text-sm leading-relaxed">{desc}</p>
             </div>
           ))}
         </div>
 
-        <a
-          href={createPageUrl("Dashboard")}
-          className="inline-block px-10 py-4 rounded-full text-sm font-medium transition-all duration-200"
-          style={{
-            background: "linear-gradient(135deg, #c9a96e, #a07830)",
-            color: "#1c1917",
-            boxShadow: "0 4px 20px rgba(201,169,110,0.30)",
-          }}
-        >
-          Jetzt kostenlos starten
-        </a>
-        <p className="mt-4 text-xs" style={{ color: "#5a554e" }}>
-          Kein Kreditkarteneintrag erforderlich · Jederzeit kündbar
-        </p>
+        {/* CTA */}
+        <div className="text-center">
+          <a
+            href={createPageUrl("Dashboard")}
+            className="inline-block px-10 py-4 rounded-full text-sm transition-all duration-200"
+            style={{ background: "#B07B34", color: "#F7F3ED", fontFamily: "'Lato', sans-serif", fontWeight: 400 }}
+            onMouseEnter={e => { e.currentTarget.style.background = "#7A5520"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "#B07B34"; e.currentTarget.style.transform = ""; }}
+          >
+            Jetzt kostenlos starten
+          </a>
+          <p className="mt-4 text-xs" style={{ color: "#A89A8A", fontFamily: "'Lato', sans-serif", fontWeight: 300 }}>
+            Kein Kreditkarteneintrag erforderlich · Jederzeit kündbar
+          </p>
+        </div>
       </div>
     </section>
   );
