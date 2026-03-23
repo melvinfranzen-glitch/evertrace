@@ -27,6 +27,7 @@ const EMPTY_FORM = {
 
 export default function B2BCases() {
   const [cases, setCases] = useState([]);
+  const [funeralHomeId, setFuneralHomeId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -41,7 +42,8 @@ export default function B2BCases() {
     base44.auth.me().then(u => {
       base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1).then(fh => {
         if (fh.length === 0) { window.location.href = "/B2BRegister"; return; }
-        base44.entities.Case.filter({ created_by: u.email }, "-created_date", 100).then(d => { setCases(d); setLoading(false); });
+        setFuneralHomeId(fh[0].id);
+        base44.entities.Case.filter({ funeral_home_id: fh[0].id }, "-created_date", 100).then(d => { setCases(d); setLoading(false); });
       });
     });
   }, []);
@@ -60,9 +62,8 @@ export default function B2BCases() {
   const save = async () => {
     if (!validate()) return;
     setSaving(true);
-    await base44.entities.Case.create(form);
-    const u = await base44.auth.me();
-    const updated = await base44.entities.Case.filter({ created_by: u.email }, "-created_date", 100);
+    await base44.entities.Case.create({ ...form, funeral_home_id: funeralHomeId });
+    const updated = await base44.entities.Case.filter({ funeral_home_id: funeralHomeId }, "-created_date", 100);
     setCases(updated);
     setShowModal(false);
     setForm(EMPTY_FORM);
