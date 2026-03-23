@@ -8,30 +8,30 @@
     --background: 36 33% 96%;          /* #F7F3ED Elfenbein */
     --foreground: 25 8% 17%;           /* #2F2D2A Anthrazit */
 
-    --card: 36 33% 98%;                /* #FDFAF6 Kartenweiss */
+    --card: 36 33% 98%;                /* #FEFCF9 */
     --card-foreground: 25 8% 17%;
 
     --popover: 36 33% 98%;
     --popover-foreground: 25 8% 17%;
 
-    --primary: 33 54% 44%;             /* #B07B34 Goldbraun */
+    --primary: 30 54% 44%;             /* #B07B34 Gold */
     --primary-foreground: 36 33% 96%;
 
-    --secondary: 33 38% 87%;           /* #EDE3D3 Sandbeige */
+    --secondary: 33 38% 87%;           /* #EDE3D3 Sand */
     --secondary-foreground: 25 8% 17%;
 
-    --muted: 33 38% 87%;               /* #EDE3D3 */
+    --muted: 33 38% 87%;
     --muted-foreground: 25 13% 55%;    /* #A89A8A Taupe */
 
-    --accent: 34 45% 75%;              /* #D8C3A5 Champagner */
+    --accent: 34 40% 72%;              /* #D8C3A5 Champagne */
     --accent-foreground: 25 8% 17%;
 
     --destructive: 348 38% 32%;        /* #7A3142 Bordeaux */
     --destructive-foreground: 36 33% 96%;
 
-    --border: 33 30% 85%;              /* #E5DBD0 */
-    --input: 33 30% 85%;
-    --ring: 33 54% 44%;                /* Goldbraun */
+    --border: 33 28% 83%;              /* #DDD4C4 */
+    --input: 33 28% 83%;
+    --ring: 30 54% 44%;                /* Gold */
 
     --radius: 0.75rem;
 

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { Menu, X } from "lucide-react";
+import EvertraceLogo from "@/components/EvertraceLogo";
 
 export default function HomeNav() {
   const [scrolled, setScrolled] = useState(false);
@@ -37,10 +38,7 @@ export default function HomeNav() {
 
         {/* Logo */}
         <Link to={createPageUrl("Home")} className="flex items-center gap-2 flex-shrink-0">
-          <span style={{ color: "#c9a96e", fontSize: 14, lineHeight: 1 }}>✦</span>
-          <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 600, color: "#e4c99a", letterSpacing: "0.02em" }}>
-            Evertrace
-          </span>
+          <EvertraceLogo variant="dark" size="sm" />
         </Link>
 
         {/* Center nav links */}
@@ -50,9 +48,9 @@ export default function HomeNav() {
               key={l.label}
               to={l.href}
               className="px-4 py-2 rounded-lg text-sm transition-colors duration-150"
-              style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#8a8278" }}
-              onMouseEnter={e => e.currentTarget.style.color = "#f0ede8"}
-              onMouseLeave={e => e.currentTarget.style.color = "#8a8278"}
+              style={{ fontFamily: "'Lato', sans-serif", fontWeight: 300, fontSize: 13, color: "#A89A8A" }}
+              onMouseEnter={e => e.currentTarget.style.color = "#F7F3ED"}
+              onMouseLeave={e => e.currentTarget.style.color = "#A89A8A"}
             >
               {l.label}
             </Link>
@@ -63,20 +61,20 @@ export default function HomeNav() {
         <div className="hidden md:flex items-center gap-4 flex-shrink-0">
           <Link
             to="/B2BRegister"
-            style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#c9a96e" }}
+            style={{ fontFamily: "'Lato', sans-serif", fontWeight: 300, fontSize: 13, color: "#B07B34" }}
           >
             Für Bestatter
           </Link>
           <button
             onClick={() => user ? window.location.href = createPageUrl("Dashboard") : base44.auth.redirectToLogin()}
             style={{
-              background: "#c9a96e",
-              color: "#0f0e0c",
+              background: "#B07B34",
+              color: "#F7F3ED",
               borderRadius: 8,
               padding: "8px 18px",
               fontSize: 13,
-              fontFamily: "'DM Sans', sans-serif",
-              fontWeight: 500,
+              fontFamily: "'Lato', sans-serif",
+              fontWeight: 400,
               border: "none",
               cursor: "pointer",
             }}
@@ -100,8 +98,8 @@ export default function HomeNav() {
         className="md:hidden overflow-hidden transition-all duration-300"
         style={{
           maxHeight: menuOpen ? 320 : 0,
-          background: "rgba(15,14,12,0.98)",
-          borderBottom: menuOpen ? "1px solid rgba(201,169,110,0.12)" : "none",
+          background: "rgba(47,45,42,0.98)",
+          borderBottom: menuOpen ? "1px solid rgba(176,123,52,0.12)" : "none",
         }}
       >
         <div className="px-4 py-4 space-y-1">
@@ -112,18 +110,18 @@ export default function HomeNav() {
               key={l.label}
               to={l.href}
               className="block px-4 py-3 rounded-xl text-sm"
-              style={{ fontFamily: "'DM Sans', sans-serif", background: isActive ? "rgba(201,169,110,0.1)" : "transparent", color: isActive ? "#c9a96e" : "#8a8278" }}
+              style={{ fontFamily: "'Lato', sans-serif", fontWeight: 300, background: isActive ? "rgba(176,123,52,0.1)" : "transparent", color: isActive ? "#B07B34" : "#A89A8A" }}
               onClick={() => setMenuOpen(false)}
             >
               {l.label}
             </Link>
             );
           })}
-          <div className="pt-3 border-t space-y-2" style={{ borderColor: "rgba(201,169,110,0.12)" }}>
+          <div className="pt-3 border-t space-y-2" style={{ borderColor: "rgba(176,123,52,0.12)" }}>
             <Link
               to="/B2BRegister"
               className="block px-4 py-3 rounded-xl text-sm"
-              style={{ color: "#c9a96e" }}
+              style={{ color: "#B07B34" }}
               onClick={() => setMenuOpen(false)}
             >
               Für Bestatter →
@@ -131,7 +129,7 @@ export default function HomeNav() {
             <button
               onClick={() => { setMenuOpen(false); user ? window.location.href = createPageUrl("Dashboard") : base44.auth.redirectToLogin(); }}
               className="w-full text-left px-4 py-3 rounded-xl text-sm font-medium"
-              style={{ background: "#c9a96e", color: "#0f0e0c" }}
+              style={{ background: "#B07B34", color: "#F7F3ED", fontWeight: 400 }}
             >
               {user ? "Dashboard" : "Anmelden"}
             </button>

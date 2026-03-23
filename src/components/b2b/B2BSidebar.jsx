@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { LayoutDashboard, Users, CreditCard, Globe, BarChart3, Settings, Package, LogOut } from "lucide-react";
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import EvertraceLogo from "@/components/EvertraceLogo";
 
 export default function B2BSidebar() {
   const location = useLocation();
@@ -36,19 +37,23 @@ export default function B2BSidebar() {
     const active = isActive(path);
     return (
       <Link key={path} to={path}
-        className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all relative"
+        className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all relative"
         style={{
-          background: active ? "rgba(201,169,110,0.1)" : "transparent",
-          color: active ? "#c9a96e" : "#8a8278",
-          borderLeft: active ? "2px solid #c9a96e" : "2px solid transparent",
-        }}>
+          fontFamily: "'Lato', sans-serif",
+          fontWeight: active ? 400 : 300,
+          background: active ? "rgba(176,123,52,0.1)" : "transparent",
+          color: active ? "#D8C3A5" : "rgba(216,195,165,0.5)",
+          borderLeft: active ? "2px solid #B07B34" : "2px solid transparent",
+        }}
+        onMouseEnter={e => { if (!active) { e.currentTarget.style.background = "rgba(216,195,165,0.04)"; e.currentTarget.style.color = "#D8C3A5"; } }}
+        onMouseLeave={e => { if (!active) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(216,195,165,0.5)"; } }}>
         <Icon className="w-4 h-4 flex-shrink-0" />
         {label}
         {badge > 0 && (
           <span className="ml-auto text-xs px-1.5 py-0.5 rounded-full font-semibold min-w-[20px] text-center"
             style={{
-              background: badgeRed ? "#ef4444" : badgeGold ? "rgba(201,169,110,0.2)" : "rgba(201,169,110,0.15)",
-              color: badgeRed ? "white" : "#c9a96e",
+              background: badgeRed ? "#ef4444" : badgeGold ? "rgba(176,123,52,0.2)" : "rgba(176,123,52,0.15)",
+              color: badgeRed ? "white" : "#B07B34",
             }}>
             {badge}
           </span>
@@ -68,7 +73,7 @@ export default function B2BSidebar() {
       }}
       disabled={loggingOut}
       className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-sm transition-all"
-      style={{ color: "#5a554e" }}
+      style={{ color: "#6B6257", fontFamily: "'Lato', sans-serif", fontWeight: 300 }}
     >
       {loggingOut ? (
         <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin flex-shrink-0" />
@@ -82,13 +87,8 @@ export default function B2BSidebar() {
   const SidebarContent = () => (
     <>
       {/* Logo */}
-      <div className="px-5 py-6 border-b" style={{ borderColor: "#302d28" }}>
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "#c9a96e" }}>
-            <span style={{ color: "#0f0e0c", fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: 14 }}>E</span>
-          </div>
-          <span style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8", fontSize: 18, fontWeight: 600 }}>Evertrace</span>
-        </div>
+      <div className="px-5 py-5 border-b" style={{ borderColor: "rgba(216,195,165,0.08)" }}>
+        <EvertraceLogo variant="dark" size="sm" />
       </div>
 
       {/* Nav */}
@@ -97,7 +97,7 @@ export default function B2BSidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="px-3 py-4 border-t" style={{ borderColor: "#302d28" }}>
+      <div className="px-3 py-4 border-t" style={{ borderColor: "rgba(216,195,165,0.08)" }}>
         <LogoutButton />
       </div>
     </>
@@ -106,22 +106,22 @@ export default function B2BSidebar() {
   return (
     <>
       {/* Sidebar — visible on md+ */}
-      <div className="hidden md:flex flex-col w-56 min-h-screen fixed left-0 top-0 bottom-0 z-30" style={{ background: "#181714", borderRight: "1px solid #302d28" }}>
+      <div className="hidden md:flex flex-col w-56 min-h-screen fixed left-0 top-0 bottom-0 z-30" style={{ background: "#231E1A", borderRight: "1px solid rgba(216,195,165,0.08)" }}>
         <SidebarContent />
       </div>
 
       {/* Mobile/Tablet bottom bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 flex items-center justify-around px-1 py-2 border-t safe-area-bottom" style={{ background: "#181714", borderColor: "#302d28" }}>
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 flex items-center justify-around px-1 py-2 border-t safe-area-bottom" style={{ background: "#231E1A", borderColor: "rgba(216,195,165,0.08)" }}>
         {NAV.map(({ path, icon: Icon, label, badge, badgeRed }) => {
           const active = isActive(path);
           return (
             <Link key={path} to={path} className="flex flex-col items-center gap-0.5 px-1.5 py-1 rounded-lg transition-all relative"
-              style={{ color: active ? "#c9a96e" : "#5a554e" }}>
+              style={{ color: active ? "#D8C3A5" : "rgba(216,195,165,0.4)" }}>
               <div className="relative">
                 <Icon className="w-5 h-5" />
                 {badge > 0 && (
                   <span className="absolute -top-1.5 -right-1.5 text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold"
-                    style={{ background: badgeRed ? "#ef4444" : "#c9a96e", color: badgeRed ? "white" : "#0f0e0c" }}>
+                    style={{ background: badgeRed ? "#ef4444" : "#B07B34", color: "white" }}>
                     {badge > 9 ? "9+" : badge}
                   </span>
                 )}
