@@ -250,8 +250,18 @@ export default function EditMemorial() {
             <div className="space-y-4">
               <div><Label>Vollständiger Name</Label><Input value={memorial.name || ""} onChange={(e) => set("name", e.target.value)} className="mt-1" /></div>
               <div className="grid grid-cols-2 gap-4">
-                <div><Label>Geburtsdatum</Label><DateInput value={memorial.birth_date || ""} onChange={(v) => set("birth_date", v)} className="mt-1 w-full" /></div>
-                <div><Label>Sterbedatum</Label><DateInput value={memorial.death_date || ""} onChange={(v) => set("death_date", v)} className="mt-1 w-full" /></div>
+                <div>
+                  <Label>Geburtsdatum</Label>
+                  <input type="date" value={memorial.birth_date || ""} onChange={(e) => set("birth_date", e.target.value)}
+                    className="mt-1 w-full px-3 py-2 rounded-md border border-input bg-transparent text-sm outline-none"
+                    style={{ colorScheme: "light" }} />
+                </div>
+                <div>
+                  <Label>Sterbedatum</Label>
+                  <input type="date" value={memorial.death_date || ""} onChange={(e) => set("death_date", e.target.value)}
+                    className="mt-1 w-full px-3 py-2 rounded-md border border-input bg-transparent text-sm outline-none"
+                    style={{ colorScheme: "light" }} />
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div><Label>Geburtsort</Label><Input value={memorial.birth_place || ""} onChange={(e) => set("birth_place", e.target.value)} className="mt-1" /></div>
