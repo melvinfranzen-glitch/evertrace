@@ -35,14 +35,11 @@ export default function CondolenceBook({ memorialId, condolences }) {
     <section className="py-20 px-6" style={{ background: "#F7F3ED" }}>
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-14">
-          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>Worte des Trostes</p>
-          <h2
-            className="text-3xl md:text-4xl font-semibold text-gray-800 mb-3"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
-          >
+          <p style={{ fontFamily: "'Lato', sans-serif", fontWeight: 400, fontSize: 11, color: "#B07B34", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 10 }}>Worte des Trostes</p>
+          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400, fontSize: 36, color: "#2F2D2A", marginBottom: 10 }}>
             Gedenkbuch
           </h2>
-          <p className="text-gray-400 text-sm font-light max-w-xs mx-auto" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontWeight: 300, fontSize: 16, color: "#A89A8A", maxWidth: 280, margin: "0 auto" }}>
             Hinterlassen Sie eine Nachricht — für die Familie und für die Ewigkeit.
           </p>
         </div>
@@ -51,23 +48,22 @@ export default function CondolenceBook({ memorialId, condolences }) {
         {condolences.filter(e => e.status === "approved" || !e.status).length > 0 && (
           <div className="space-y-4 mb-12">
             {condolences.filter(e => e.status === "approved" || !e.status).map((entry) => (
-              <div key={entry.id} className="bg-white rounded-2xl p-6 border border-stone-100 shadow-sm">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm flex-shrink-0"
-                      style={{ background: "linear-gradient(135deg,#c9a96e,#a07840)" }}
-                    >
-                      {entry.author_name?.[0]?.toUpperCase() || "?"}
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-800 text-sm">{entry.author_name}</p>
-                      <p className="text-xs text-gray-400">{formatDate(entry.created_date)}</p>
-                    </div>
+              <div key={entry.id}
+                style={{ background: "#FEFCF9", border: "1px solid #EAE0D0", borderRadius: 14, padding: "22px 26px", transition: "box-shadow 0.2s" }}
+                onMouseEnter={e => e.currentTarget.style.boxShadow = "0 2px 16px rgba(47,45,42,0.06)"}
+                onMouseLeave={e => e.currentTarget.style.boxShadow = "none"}
+              >
+                <div className="flex items-start gap-3 mb-3">
+                  <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #D8C3A5, #EDE3D3)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, color: "#2F2D2A" }}>{entry.author_name?.[0]?.toUpperCase() || "?"}</span>
+                  </div>
+                  <div>
+                    <p style={{ fontFamily: "'Lato', sans-serif", fontWeight: 400, fontSize: 14, color: "#2F2D2A" }}>{entry.author_name}</p>
+                    <p style={{ fontFamily: "'Lato', sans-serif", fontWeight: 300, fontSize: 12, color: "#A89A8A" }}>{formatDate(entry.created_date)}</p>
                   </div>
                 </div>
-                <p className="text-gray-600 text-sm leading-relaxed ml-13 italic" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                  „{entry.message}"
+                <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontWeight: 300, fontSize: 16, color: "#6B6257", lineHeight: 1.85 }}>
+                  <span style={{ color: "#D8C3A5" }}>„</span>{entry.message}<span style={{ color: "#D8C3A5" }}>"</span>
                 </p>
               </div>
             ))}
@@ -76,40 +72,36 @@ export default function CondolenceBook({ memorialId, condolences }) {
 
         {/* Form */}
         {submitted ? (
-          <div className="bg-white rounded-2xl p-10 text-center border border-stone-100 shadow-sm">
+          <div style={{ background: "#FEFCF9", border: "1px solid #EAE0D0", borderRadius: 14, padding: "40px", textAlign: "center" }}>
             <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="h-px w-8 bg-amber-400/40" />
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2C12 2 7 7 7 12C7 17 12 22 12 22C12 22 17 17 17 12C17 7 12 2 12 2Z" fill="#c9a84c" opacity="0.6"/>
-                <circle cx="12" cy="12" r="2.5" fill="#c9a84c"/>
-              </svg>
-              <div className="h-px w-8 bg-amber-400/40" />
+              <div className="h-px w-8" style={{ background: "rgba(176,123,52,0.3)" }} />
+              <span style={{ color: "#B07B34", fontSize: 14 }}>✦</span>
+              <div className="h-px w-8" style={{ background: "rgba(176,123,52,0.3)" }} />
             </div>
-            <h3 className="font-semibold text-gray-800 mb-2 text-lg" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400, fontSize: 22, color: "#2F2D2A", marginBottom: 10 }}>
               Vielen Dank für Ihre Worte
             </h3>
-            <p className="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto">
+            <p style={{ fontFamily: "'Lato', sans-serif", fontWeight: 300, fontSize: 14, color: "#A89A8A", lineHeight: 1.7, maxWidth: 280, margin: "0 auto 20px" }}>
               Ihre Nachricht bedeutet der Familie sehr viel und wird nach kurzer Prüfung sichtbar.
             </p>
             <button
-              className="mt-6 text-sm underline-offset-4 hover:underline transition-all"
-              style={{ color: "#c9a96e" }}
+              style={{ color: "#B07B34", fontFamily: "'Lato', sans-serif", fontWeight: 300, fontSize: 13, background: "none", border: "none", cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 4 }}
               onClick={() => setSubmitted(false)}
             >
               Weitere Nachricht schreiben
             </button>
           </div>
         ) : (
-          <div className="bg-white rounded-2xl p-8 border border-stone-100 shadow-sm">
+          <div style={{ background: "#FEFCF9", border: "1px solid #EAE0D0", borderRadius: 14, padding: "32px" }}>
             <div className="flex items-center gap-2 mb-6">
-              <Feather className="w-4 h-4" style={{ color: "#c9a96e" }} />
-              <h3 className="font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              <Feather className="w-4 h-4" style={{ color: "#B07B34" }} />
+              <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400, fontSize: 20, color: "#2F2D2A" }}>
                 Ihre Worte an die Familie
               </h3>
             </div>
             <div className="space-y-4">
               <div>
-                <label className="text-sm text-gray-600 block mb-1.5">Ihr Name</label>
+                <label style={{ fontFamily: "'Lato', sans-serif", fontWeight: 300, fontSize: 13, color: "#6B6257", display: "block", marginBottom: 6 }}>Ihr Name</label>
                 <Input
                   value={form.name}
                   onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
@@ -118,7 +110,7 @@ export default function CondolenceBook({ memorialId, condolences }) {
                 />
               </div>
               <div>
-                <label className="text-sm text-gray-600 block mb-1.5">Ihre Nachricht</label>
+                <label style={{ fontFamily: "'Lato', sans-serif", fontWeight: 300, fontSize: 13, color: "#6B6257", display: "block", marginBottom: 6 }}>Ihre Nachricht</label>
                 <Textarea
                   value={form.message}
                   onChange={(e) => setForm((p) => ({ ...p, message: e.target.value }))}
@@ -126,14 +118,14 @@ export default function CondolenceBook({ memorialId, condolences }) {
                   className="rounded-xl h-32 resize-none"
                 />
               </div>
-              <p className="text-xs text-gray-400 leading-relaxed">
+              <p style={{ fontFamily: "'Lato', sans-serif", fontWeight: 300, fontSize: 12, color: "#A89A8A" }}>
                 Ihre Nachricht wird von der Familie gesichtet, bevor sie erscheint.
               </p>
               <Button
                 onClick={submit}
                 disabled={!form.name.trim() || !form.message.trim() || loading}
-                className="w-full text-white rounded-xl py-5"
-                style={{ background: "#c9a96e" }}
+                className="w-full rounded-xl py-5"
+                style={{ background: "#B07B34", color: "#F7F3ED", fontFamily: "'Lato', sans-serif", fontWeight: 400 }}
               >
                 {loading
                   ? <Loader2 className="w-4 h-4 mr-2 animate-spin" />
