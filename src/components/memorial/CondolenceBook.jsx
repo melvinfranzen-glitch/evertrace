@@ -32,7 +32,7 @@ export default function CondolenceBook({ memorialId, condolences }) {
   };
 
   return (
-    <section className="py-20 px-6" style={{ background: "#F5F0E8" }}>
+    <section className="py-20 px-6" style={{ background: "#F7F3ED" }}>
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-14">
           <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>Worte des Trostes</p>

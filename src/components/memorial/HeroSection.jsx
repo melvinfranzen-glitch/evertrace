@@ -13,22 +13,21 @@ export default function HeroSection({ memorial }) {
 
   return (
     <section
-      className="relative min-h-screen flex flex-col items-center justify-center parallax-hero"
+      className="relative min-h-screen flex flex-col items-center justify-center"
       style={{
         backgroundImage: memorial.hero_image_url
           ? `url(${memorial.hero_image_url})`
-          : "linear-gradient(160deg,#1c1917,#3b2a1a)",
+          : "linear-gradient(160deg, #3A2F22 0%, #2A2218 55%, #1E1A14 100%)",
         backgroundSize: "cover",
         backgroundPosition: `center ${memorial.hero_image_position ?? 50}%`,
       }}
     >
-      {/* Overlay — stronger at bottom for legibility, lighter at top */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 45%, rgba(0,0,0,0.25) 100%)",
-        }}
+      {/* Overlay */}
+      <div className="absolute inset-0"
+        style={{ background: "linear-gradient(to top, rgba(30,26,20,0.92) 0%, rgba(30,26,20,0.55) 45%, rgba(30,26,20,0.3) 100%)" }}
       />
+      {/* Warm glow */}
+      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 55% 65% at 75% 35%, rgba(216,195,165,0.13) 0%, transparent 60%)", pointerEvents: "none" }} />
 
       {/* Content */}
       <div className="relative text-white text-center px-6 w-full max-w-3xl mx-auto fade-in flex flex-col items-center justify-center flex-1">
