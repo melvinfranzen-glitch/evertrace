@@ -60,8 +60,10 @@ export default function B2BCases() {
   const save = async () => {
     if (!validate()) return;
     setSaving(true);
-    const newCase = await base44.entities.Case.create(form);
-    setCases(p => [newCase, ...p]);
+    await base44.entities.Case.create(form);
+    const u = await base44.auth.me();
+    const updated = await base44.entities.Case.filter({ created_by: u.email }, "-created_date", 100);
+    setCases(updated);
     setShowModal(false);
     setForm(EMPTY_FORM);
     setSaving(false);
