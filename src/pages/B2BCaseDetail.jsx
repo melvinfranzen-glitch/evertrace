@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
-import { ArrowLeft, CreditCard, Globe, Package, Clock, CheckCircle2, AlertCircle } from "lucide-react";
+import { ArrowLeft, CreditCard, Globe, Package, Clock, CheckCircle2, Pencil, X, Check } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 
@@ -19,6 +19,8 @@ function fmtDateTime(d) {
 }
 
 const STATUS_COLORS = { aktiv: "#c9a96e", abgeschlossen: "#4ade80", archiviert: "#5a554e" };
+const BURIAL_TYPES = ["Erdbestattung", "Feuerbestattung", "Seebestattung", "Waldbestattung", "Urnenbeisetzung"];
+const STATUS_OPTS = ["aktiv", "abgeschlossen", "archiviert"];
 
 function Section({ title, children }) {
   return (
@@ -44,6 +46,9 @@ export default function B2BCaseDetail() {
   const [memorial, setMemorial] = useState(null);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(false);
+  const [editForm, setEditForm] = useState({});
+  const [saving, setSaving] = useState(false);
 
   const id = new URLSearchParams(window.location.search).get("id");
 
@@ -76,6 +81,16 @@ export default function B2BCaseDetail() {
     </B2BLayout>
   );
 
+  const openEdit = () => { setEditForm({ ...caseData }); setEditing(true); };
+  const setF = (k, v) => setEditForm(p => ({ ...p, [k]: v }));
+  const saveEdit = async () => {
+    setSaving(true);
+    await base44.entities.Case.update(caseData.id, editForm);
+    setCaseData({ ...caseData, ...editForm });
+    setEditing(false);
+    setSaving(false);
+  };
+
   if (!caseData) return (
     <B2BLayout title="Fall-Details">
       <div className="text-center py-20" style={{ color: "#5a554e" }}>Fall nicht gefunden.</div>
@@ -94,9 +109,14 @@ export default function B2BCaseDetail() {
       title={`${caseData.deceased_first_name} ${caseData.deceased_last_name}`}
       subtitle={`Fall-Details · ${fmtDate(caseData.date_of_birth)} – ${fmtDate(caseData.date_of_death)}`}
       action={
-        <Link to="/B2BCases" className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm border transition-all" style={{ borderColor: "#302d28", color: "#8a8278" }}>
-          <ArrowLeft className="w-4 h-4" /> Zurück
-        </Link>
+        <div className="flex items-center gap-3">
+          <button onClick={openEdit} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm border transition-all" style={{ borderColor: "#c9a96e", color: "#c9a96e" }}>
+            <Pencil className="w-4 h-4" /> Bearbeiten
+          </button>
+          <Link to="/B2BCases" className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm border transition-all" style={{ borderColor: "#302d28", color: "#8a8278" }}>
+            <ArrowLeft className="w-4 h-4" /> Zurück
+          </Link>
+        </div>
       }
     >
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -173,6 +193,66 @@ export default function B2BCaseDetail() {
           </Section>
         </div>
       </div>
+      {/* Edit Modal */}
+      {editing && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4" style={{ background: "rgba(0,0,0,0.7)" }}>
+          <div className="w-full max-w-lg rounded-2xl p-8 relative max-h-[90vh] overflow-y-auto" style={{ background: "#181714", border: "1px solid #302d28" }}>
+            <button onClick={() => setEditing(false)} className="absolute top-5 right-5" style={{ color: "#5a554e" }}><X className="w-5 h-5" /></button>
+            <h2 className="text-2xl font-semibold mb-6" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Fall bearbeiten</h2>
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                {[{ k: "deceased_first_name", label: "Vorname" }, { k: "deceased_last_name", label: "Nachname" }].map(({ k, label }) => (
+                  <div key={k}>
+                    <label className="text-xs mb-1.5 block" style={{ color: "#8a8278" }}>{label}</label>
+                    <input value={editForm[k] || ""} onChange={e => setF(k, e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
+                      style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }} />
+                  </div>
+                ))}
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                {[{ k: "date_of_birth", label: "Geburtsdatum" }, { k: "date_of_death", label: "Sterbedatum" }].map(({ k, label }) => (
+                  <div key={k}>
+                    <label className="text-xs mb-1.5 block" style={{ color: "#8a8278" }}>{label}</label>
+                    <input type="date" value={editForm[k] || ""} onChange={e => setF(k, e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
+                      style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8", colorScheme: "dark" }} />
+                  </div>
+                ))}
+              </div>
+              <div>
+                <label className="text-xs mb-1.5 block" style={{ color: "#8a8278" }}>Bestattungsart</label>
+                <select value={editForm.burial_type || ""} onChange={e => setF("burial_type", e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
+                  style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }}>
+                  {BURIAL_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="text-xs mb-1.5 block" style={{ color: "#8a8278" }}>Status</label>
+                <select value={editForm.status || ""} onChange={e => setF("status", e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
+                  style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }}>
+                  {STATUS_OPTS.map(s => <option key={s} value={s}>{s}</option>)}
+                </select>
+              </div>
+              <div className="pt-2 border-t" style={{ borderColor: "#302d28" }}>
+                <p className="text-xs mb-3" style={{ color: "#8a8278" }}>Angehörige/r</p>
+                {[{ k: "next_of_kin_name", label: "Name" }, { k: "next_of_kin_email", label: "E-Mail" }, { k: "next_of_kin_phone", label: "Telefon" }].map(({ k, label }) => (
+                  <div key={k} className="mb-3">
+                    <label className="text-xs mb-1.5 block" style={{ color: "#8a8278" }}>{label}</label>
+                    <input value={editForm[k] || ""} onChange={e => setF(k, e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
+                      style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }} />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex gap-3 mt-6">
+              <button onClick={() => setEditing(false)} className="flex-1 py-3 rounded-xl text-sm border" style={{ borderColor: "#302d28", color: "#8a8278" }}>Abbrechen</button>
+              <button onClick={saveEdit} disabled={saving} className="flex-1 py-3 rounded-xl text-sm font-medium flex items-center justify-center gap-2" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
+                {saving && <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />}
+                Speichern
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </B2BLayout>
   );
 }
