@@ -11,7 +11,8 @@ module.exports = {
   		},
   		fontFamily: {
   			serif: ["'Cormorant Garamond'", 'serif'],
-  			sans: ["'DM Sans'", 'sans-serif'],
+  			sans: ["'Lato'", "'DM Sans'", 'sans-serif'],
+  			display: ["'Cormorant Garamond'", 'serif'],
   		},
   		colors: {
   			background: 'hsl(var(--background))',

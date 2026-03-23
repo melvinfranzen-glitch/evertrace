@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Lato:wght@300;400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,18 +7,28 @@
 * { box-sizing: border-box; }
 
 :root {
-  --ivory:      #F7F3ED;
-  --sand:       #EDE3D3;
-  --champagne:  #D8C3A5;
-  --taupe:      #A89A8A;
+  --ivory: #F7F3ED;
+  --sand: #EDE3D3;
+  --champagne: #D8C3A5;
+  --taupe: #A89A8A;
   --anthracite: #2F2D2A;
-  --gold:       #B07B34;
-  --bordeaux:   #7A3142;
-  --border-warm:#E5DBD0;
+  --gold: #B07B34;
+  --gold-light: #C99A56;
+  --gold-dim: #7A5520;
+  --bordeaux: #7A3142;
+  --border: #DDD4C4;
+  --border-light: #EAE0D0;
+  --white: #FEFCF9;
+  --text-muted: #6B6257;
+  --text-dim: #9A8F84;
+  --shadow-soft: 0 2px 16px rgba(47,45,42,0.06);
+  --shadow-card: 0 4px 24px rgba(47,45,42,0.08);
+  --shadow-hover: 0 8px 40px rgba(47,45,42,0.12);
 }
 
 body {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
   background-color: var(--ivory);
   color: var(--anthracite);
   line-height: 1.7;
@@ -31,8 +41,29 @@ h1, h2, h3, h4 {
   letter-spacing: -0.01em;
 }
 
-button, a {
+button, a, input, textarea, select {
+  font-family: 'Lato', sans-serif;
   transition: all 0.25s ease-in-out;
+}
+
+/* Utility classes */
+.font-display { font-family: 'Cormorant Garamond', serif; }
+.text-gold { color: var(--gold); }
+.text-champagne { color: var(--champagne); }
+.text-taupe { color: var(--taupe); }
+.bg-ivory { background: var(--ivory); }
+.bg-sand { background: var(--sand); }
+
+.card-warm {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
+}
+.card-warm:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
 }
 
 /* Serif utility */
@@ -68,33 +99,20 @@ button, a {
 }
 .fade-in { animation: fadeIn 0.55s ease forwards; }
 
-/* Warm card surface */
-.card-warm {
-  background: #FDFAF6;
-  border: 1px solid var(--border-warm);
-  border-radius: 1.25rem;
-  box-shadow: 0 2px 20px rgba(47, 45, 42, 0.06);
-}
-
 /* Gold accent button */
 .btn-gold {
   background: var(--gold);
   color: var(--ivory);
   border: none;
   border-radius: 0.75rem;
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 500;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
   cursor: pointer;
   transition: background 0.2s, transform 0.15s;
 }
 .btn-gold:hover {
-  background: #96671f;
+  background: #7A5520;
   transform: translateY(-1px);
-}
-
-/* Warm input */
-input, textarea, select {
-  font-family: 'DM Sans', sans-serif;
 }
 
 /* Scrollbar */
