@@ -34,6 +34,7 @@ export default function B2BSettings() {
   const [form, setForm] = useState({});
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -48,13 +49,23 @@ export default function B2BSettings() {
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
   const save = async () => {
-    if (!home) return;
+    if (!home?.id) {
+      setSaveError("Konto nicht geladen. Bitte Seite neu laden.");
+      return;
+    }
     setSaving(true);
-    await base44.entities.FuneralHome.update(home.id, form);
-    setHome(form);
-    setSaving(false);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2500);
+    setSaveError("");
+    try {
+      const { id, created_date, updated_date, created_by, ...updateData } = form;
+      await base44.entities.FuneralHome.update(home.id, updateData);
+      setHome({ ...home, ...updateData });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    } catch (err) {
+      setSaveError(err?.message || "Speichern fehlgeschlagen. Bitte erneut versuchen.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const uploadLogo = async (e) => {
@@ -74,11 +85,14 @@ export default function B2BSettings() {
     <B2BLayout
       title="Einstellungen"
       action={
-        <button onClick={save} disabled={saving} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
-          style={{ background: saved ? "rgba(74,222,128,0.15)" : "#c9a96e", color: saved ? "#4ade80" : "#0f0e0c", border: saved ? "1px solid rgba(74,222,128,0.3)" : "none" }}>
-          {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
-          {saved ? "Gespeichert" : "Speichern"}
-        </button>
+        <div className="flex flex-col items-end gap-1">
+          <button onClick={save} disabled={saving} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
+            style={{ background: saved ? "rgba(74,222,128,0.15)" : "#c9a96e", color: saved ? "#4ade80" : "#0f0e0c", border: saved ? "1px solid rgba(74,222,128,0.3)" : "none" }}>
+            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
+            {saved ? "Gespeichert" : "Speichern"}
+          </button>
+          {saveError && <p className="text-xs" style={{ color: "#f87171" }}>{saveError}</p>}
+        </div>
       }
     >
       {/* Tabs */}
