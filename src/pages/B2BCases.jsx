@@ -225,8 +225,9 @@ export default function B2BCases() {
                 ].map(({ k, label }) => (
                   <div key={k}>
                     <label className="text-xs mb-1.5 block" style={{ color: "#8a8278" }}>{label}</label>
-                    <DateInput value={form[k]} onChange={v => set(k, v)}
-                      className="w-full rounded-xl text-sm" style={{ background: "#201e1a", borderColor: errors[k] ? "#e57373" : "#302d28", color: "#f0ede8" }} />
+                    <input type="date" value={form[k]} onChange={e => set(k, e.target.value)}
+                      className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
+                      style={{ background: "#201e1a", border: `1px solid ${errors[k] ? "#e57373" : "#302d28"}`, color: "#f0ede8", colorScheme: "dark" }} />
                     {errors[k] && <p className="text-xs mt-1" style={{ color: "#e57373" }}>{errors[k]}</p>}
                   </div>
                 ))}
