@@ -20,41 +20,41 @@ export default function B2BPricingGrid({ selectedPlan, onSelect, compact = false
             onClick={() => onSelect && onSelect(plan.id)}
             className={`relative rounded-2xl flex flex-col ${onSelect ? "cursor-pointer" : ""} transition-all`}
             style={{
-              background: isHighlight ? "rgba(201,169,110,0.05)" : isSelected ? "rgba(201,169,110,0.06)" : "#181714",
+              background: isHighlight ? "rgba(176,123,52,0.06)" : isSelected ? "rgba(176,123,52,0.05)" : "rgba(216,195,165,0.04)",
               border: isHighlight
-                ? `1.5px solid #c9a96e`
+                ? `1.5px solid #B07B34`
                 : isSelected
-                ? "1.5px solid #c9a96e"
-                : "1px solid #302d28",
+                ? "1.5px solid #B07B34"
+                : "1px solid rgba(216,195,165,0.12)",
             }}
           >
             {/* Empfohlen badge */}
             {isHighlight && (
               <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap z-10"
-                style={{ background: "#c9a96e", color: "#0f0e0c" }}>
+                style={{ background: "#B07B34", color: "#F7F3ED", fontFamily: "'Lato', sans-serif", fontWeight: 700, fontSize: 10 }}>
                 ✦ {plan.badge}
               </div>
             )}
 
             <div className={`p-6 flex flex-col flex-1 ${isHighlight ? "pt-7" : ""}`}>
-              <h3 className="text-xl font-semibold mb-1" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>
+              <h3 className="text-xl mb-1" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400, color: "#D8C3A5" }}>
                 {plan.name}
               </h3>
               <div className="flex items-baseline gap-1 mb-0.5">
-                <span className="text-3xl font-bold" style={{ color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>{plan.price}</span>
-                <span className="text-sm" style={{ color: "#8a8278" }}>{plan.period}</span>
+                <span style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: 32, color: "#D8C3A5" }}>{plan.price}</span>
+                <span style={{ fontFamily: "'Lato', sans-serif", fontWeight: 300, fontSize: 13, color: "rgba(216,195,165,0.5)" }}>{plan.period}</span>
               </div>
-              <p className="text-xs mb-1" style={{ color: "#5a554e" }}>{plan.vat}</p>
-              <p className="text-sm mb-5" style={{ color: "#8a8278" }}>{plan.description}</p>
+              <p className="text-xs mb-1" style={{ color: "rgba(216,195,165,0.4)", fontFamily: "'Lato', sans-serif", fontWeight: 300 }}>{plan.vat}</p>
+              <p className="text-sm mb-5" style={{ color: "rgba(216,195,165,0.55)", fontFamily: "'Lato', sans-serif", fontWeight: 300 }}>{plan.description}</p>
 
               <ul className="space-y-2 flex-1">
                 {plan.features.map((f, i) => (
                   <li key={i} className="flex items-start gap-2 text-xs leading-snug">
                     {f.included
-                      ? <Check className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style={{ color: "#7a9688" }} />
-                      : <X className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style={{ color: "#5a554e" }} />
+                      ? <Check className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style={{ color: "#B07B34" }} />
+                      : <X className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style={{ color: "#6B6257" }} />
                     }
-                    <span style={{ color: f.included ? "#d4c5a9" : "#5a554e" }}>{f.text}</span>
+                    <span style={{ fontFamily: "'Lato', sans-serif", fontWeight: 300, fontSize: 12, color: f.included ? "rgba(216,195,165,0.7)" : "#6B6257" }}>{f.text}</span>
                   </li>
                 ))}
               </ul>
@@ -63,9 +63,10 @@ export default function B2BPricingGrid({ selectedPlan, onSelect, compact = false
                 <button
                   className="mt-5 w-full py-2.5 rounded-xl text-sm font-medium transition-all"
                   style={{
-                    background: isSelected ? "#c9a96e" : isHighlight ? "rgba(201,169,110,0.15)" : "#201e1a",
-                    color: isSelected ? "#0f0e0c" : "#c9a96e",
-                    border: `1px solid ${isSelected || isHighlight ? "#c9a96e" : "#302d28"}`,
+                    background: isSelected ? "#B07B34" : isHighlight ? "rgba(176,123,52,0.15)" : "transparent",
+                    color: isSelected ? "#F7F3ED" : "#B07B34",
+                    border: `1px solid ${isSelected || isHighlight ? "#B07B34" : "rgba(176,123,52,0.3)"}`,
+                    fontFamily: "'Lato', sans-serif", fontWeight: 400,
                   }}
                 >
                   {isSelected ? "✓ Gewählt" : plan.cta}

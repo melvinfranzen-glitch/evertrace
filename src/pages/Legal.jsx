@@ -119,10 +119,10 @@ export default function Legal() {
   const section = SECTIONS[active] || SECTIONS.impressum;
 
   return (
-    <div className="min-h-screen pb-20" style={{ background: "#FAFAF8" }}>
-      <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: "1px solid #e8dfd0" }}>
-        <Link to="/" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, color: "#c9a96e", fontWeight: 600 }}>Evertrace</Link>
-        <button onClick={() => window.history.back()} className="flex items-center gap-1.5" style={{ color: "#8a8278", fontFamily: "'DM Sans', sans-serif", fontSize: 13, background: "none", border: "none", cursor: "pointer" }}>
+    <div className="min-h-screen pb-20" style={{ background: "#F7F3ED" }}>
+      <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: "1px solid #EAE0D0", background: "#FEFCF9" }}>
+        <Link to="/" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, color: "#B07B34", fontWeight: 400 }}>Evertrace</Link>
+        <button onClick={() => window.history.back()} className="flex items-center gap-1.5" style={{ color: "#A89A8A", fontFamily: "'Lato', sans-serif", fontSize: 13, background: "none", border: "none", cursor: "pointer" }}>
           <ArrowLeft className="w-4 h-4" /> Zurück
         </button>
       </div>
@@ -130,16 +130,16 @@ export default function Legal() {
       <div className="max-w-3xl mx-auto">
 
         {/* Breadcrumb */}
-        <div className="flex items-center gap-1.5 text-xs mb-8" style={{ color: "#8a8278" }}>
+        <div className="flex items-center gap-1.5 text-xs mb-8" style={{ color: "#A89A8A", fontFamily: "'Lato', sans-serif", fontWeight: 300 }}>
           <Link to={createPageUrl("Home")} className="hover:underline">Startseite</Link>
           <ChevronRight className="w-3 h-3" />
-          <span style={{ color: "#c9a96e" }}>Rechtliches</span>
+          <span style={{ color: "#B07B34" }}>Rechtliches</span>
         </div>
 
         {/* Header */}
         <div className="mb-8">
-          <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>Rechtliches</p>
-          <h1 className="text-4xl font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          <p style={{ fontFamily: "'Lato', sans-serif", fontWeight: 400, fontSize: 11, color: "#B07B34", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 10 }}>Rechtliches</p>
+          <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400, fontSize: 36, color: "#2F2D2A" }}>
             {section.label}
           </h1>
         </div>
@@ -150,13 +150,14 @@ export default function Legal() {
             <button key={key} onClick={() => setActive(key)}
               className="flex-shrink-0 transition-all"
               style={{
-                background: active === key ? "rgba(201,169,110,0.12)" : "white",
-                border: `1px solid ${active === key ? "rgba(201,169,110,0.5)" : "#e5e7eb"}`,
-                color: active === key ? "#c9a96e" : "#6b7280",
+                background: active === key ? "rgba(176,123,52,0.1)" : "#FEFCF9",
+                border: `1px solid ${active === key ? "rgba(176,123,52,0.35)" : "#EAE0D0"}`,
+                color: active === key ? "#B07B34" : "#A89A8A",
                 borderRadius: 24,
                 padding: "7px 18px",
                 fontSize: 13,
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: "'Lato', sans-serif",
+                fontWeight: 400,
                 cursor: "pointer",
               }}>
               {s.label}
@@ -165,14 +166,14 @@ export default function Legal() {
         </div>
 
         {/* Content card */}
-        <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-8">
+        <div style={{ background: "#FEFCF9", border: "1px solid #EAE0D0", borderRadius: 16, padding: 32 }}>
           {section.content}
         </div>
 
         {/* Footer note */}
-        <p className="text-xs text-center mt-8" style={{ color: "#b0a898" }}>
+        <p className="text-xs text-center mt-8" style={{ color: "#A89A8A", fontFamily: "'Lato', sans-serif", fontWeight: 300 }}>
           Stand: März 2026 · Bei Fragen wenden Sie sich an{" "}
-          <a href="mailto:hallo@evertrace.de" className="underline" style={{ color: "#c9a96e" }}>hallo@evertrace.de</a>
+          <a href="mailto:hallo@evertrace.de" className="underline" style={{ color: "#B07B34" }}>hallo@evertrace.de</a>
         </p>
       </div>
     </div>

@@ -18,7 +18,7 @@ function fmtDate(d) {
   catch { return d; }
 }
 
-const STATUS_COLORS = { aktiv: "#c9a96e", abgeschlossen: "#4ade80", archiviert: "#5a554e" };
+const STATUS_COLORS = { aktiv: "#B07B34", abgeschlossen: "#6A9A6A", archiviert: "#6B6257" };
 
 export default function B2BDashboard() {
   const [cases, setCases] = useState([]);
@@ -71,7 +71,7 @@ export default function B2BDashboard() {
       <B2BLayout title="Übersicht">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="rounded-2xl h-32 animate-pulse" style={{ background: "#181714" }} />
+            <div key={i} className="rounded-2xl h-32 animate-pulse" style={{ background: "rgba(216,195,165,0.06)" }} />
           ))}
         </div>
       </B2BLayout>
@@ -87,7 +87,7 @@ export default function B2BDashboard() {
       title="Übersicht"
       subtitle={`${format(new Date(), "EEEE, dd. MMMM yyyy", { locale: de })}`}
       action={
-        <Link to="/B2BCases" className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
+        <Link to="/B2BCases" className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium" style={{ background: "#B07B34", color: "#F7F3ED", fontFamily: "'Lato', sans-serif", fontWeight: 400 }}>
           <Plus className="w-4 h-4" /> Neuer Fall
         </Link>
       }
@@ -105,43 +105,43 @@ export default function B2BDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Chart */}
-        <div className="lg:col-span-2 rounded-2xl p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
-          <h2 className="text-lg font-semibold mb-6" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>
+        <div className="lg:col-span-2 rounded-2xl p-6" style={{ background: "rgba(216,195,165,0.04)", border: "1px solid rgba(216,195,165,0.1)" }}>
+          <h2 className="text-lg font-semibold mb-6" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#D8C3A5" }}>
             Trauerkarten — letzte 6 Monate
           </h2>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={chartData} barSize={28}>
-              <XAxis dataKey="monat" axisLine={false} tickLine={false} tick={{ fill: "#5a554e", fontSize: 12 }} />
-              <YAxis axisLine={false} tickLine={false} tick={{ fill: "#5a554e", fontSize: 12 }} />
+              <XAxis dataKey="monat" axisLine={false} tickLine={false} tick={{ fill: "#6B6257", fontSize: 12 }} />
+               <YAxis axisLine={false} tickLine={false} tick={{ fill: "#6B6257", fontSize: 12 }} />
               <Tooltip
-                contentStyle={{ background: "#201e1a", border: "1px solid #302d28", borderRadius: 10, color: "#f0ede8" }}
-                cursor={{ fill: "rgba(201,169,110,0.05)" }}
+                contentStyle={{ background: "#2A2520", border: "1px solid #3A332C", borderRadius: 10, color: "#F7F3ED" }}
+                cursor={{ fill: "rgba(176,123,52,0.05)" }}
               />
-              <Bar dataKey="Karten" fill="#c9a96e" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="Karten" fill="#B07B34" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
         {/* Recent cases */}
-        <div className="rounded-2xl p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
+        <div className="rounded-2xl p-6" style={{ background: "rgba(216,195,165,0.04)", border: "1px solid rgba(216,195,165,0.1)" }}>
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-lg font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Letzte Fälle</h2>
-            <Link to="/B2BCases" className="text-xs flex items-center gap-1 transition-all" style={{ color: "#c9a96e" }}>
+            <h2 className="text-lg font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#D8C3A5" }}>Letzte Fälle</h2>
+            <Link to="/B2BCases" className="text-xs flex items-center gap-1 transition-all" style={{ color: "#B07B34" }}>
               Alle <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
           {cases.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-sm" style={{ color: "#5a554e" }}>Noch keine Fälle angelegt.</p>
-              <Link to="/B2BCases" className="text-sm mt-3 inline-block" style={{ color: "#c9a96e" }}>Ersten Fall anlegen →</Link>
+              <p className="text-sm" style={{ color: "#6B6257", fontFamily: "'Lato', sans-serif", fontWeight: 300 }}>Noch keine Fälle angelegt.</p>
+              <Link to="/B2BCases" className="text-sm mt-3 inline-block" style={{ color: "#B07B34" }}>Ersten Fall anlegen →</Link>
             </div>
           ) : (
             <div className="space-y-3">
               {cases.slice(0, 5).map(c => (
-                <Link key={c.id} to={`/B2BCaseDetail?id=${c.id}`} className="flex items-center justify-between p-3 rounded-xl transition-all" style={{ background: "#201e1a" }}>
+                <Link key={c.id} to={`/B2BCaseDetail?id=${c.id}`} className="flex items-center justify-between p-3 rounded-xl transition-all" style={{ background: "rgba(216,195,165,0.03)", border: "1px solid rgba(216,195,165,0.07)" }}>
                   <div>
-                    <p className="text-sm font-medium" style={{ color: "#f0ede8" }}>{c.deceased_first_name} {c.deceased_last_name}</p>
-                    <p className="text-xs mt-0.5" style={{ color: "#5a554e" }}>† {fmtDate(c.date_of_death)}</p>
+                    <p className="text-sm" style={{ color: "#D8C3A5", fontFamily: "'Lato', sans-serif", fontWeight: 400 }}>{c.deceased_first_name} {c.deceased_last_name}</p>
+                    <p className="text-xs mt-0.5" style={{ color: "rgba(216,195,165,0.4)", fontFamily: "'Lato', sans-serif", fontWeight: 300 }}>† {fmtDate(c.date_of_death)}</p>
                   </div>
                   <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: `${STATUS_COLORS[c.status]}20`, color: STATUS_COLORS[c.status] }}>
                     {c.status}

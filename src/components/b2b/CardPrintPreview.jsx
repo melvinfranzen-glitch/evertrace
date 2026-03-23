@@ -100,7 +100,7 @@ function MotifSVG({ motif }) {
 
 export default function CardPrintPreview({ caseData, generatedText, motif, motifImageUrl, cardFormat, side, funeralHome }) {
   const bg = MOTIF_BG[motif] || MOTIF_BG.minimalist;
-  const gold = "#c9a96e";
+  const gold = "#B07B34";
   const name = caseData ? `${caseData.deceased_first_name} ${caseData.deceased_last_name}` : "Vorname Nachname";
 
   // Aspect ratio based on format
@@ -114,7 +114,7 @@ export default function CardPrintPreview({ caseData, generatedText, motif, motif
 
   if (side === "front") {
     return (
-      <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ background: bg, border: "1px solid rgba(201,169,110,0.2)", aspectRatio: aspect, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative" }}>
+      <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ background: bg, border: "1px solid rgba(176,123,52,0.2)", aspectRatio: aspect, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative" }}>
         {/* Motif image or SVG */}
         <div className="absolute inset-0 flex items-center justify-center opacity-40">
           {motifImageUrl ? (
@@ -128,28 +128,28 @@ export default function CardPrintPreview({ caseData, generatedText, motif, motif
         <div className="relative z-10 flex flex-col items-center text-center px-8 py-6 w-full">
           {/* Top decorative line */}
           <div className="flex items-center gap-3 mb-5">
-            <div className="h-px w-8" style={{ background: `rgba(201,169,110,0.5)` }} />
+            <div style={{ height: 1, width: 36, background: "rgba(216,195,165,0.25)" }} />
             <div className="w-1.5 h-1.5 rounded-full" style={{ background: gold }} />
-            <div className="h-px w-8" style={{ background: `rgba(201,169,110,0.5)` }} />
+            <div style={{ height: 1, width: 36, background: "rgba(216,195,165,0.25)" }} />
           </div>
 
-          <p className="text-xs uppercase tracking-[0.3em] mb-3" style={{ color: gold }}>In liebevoller Erinnerung</p>
+          <p style={{ fontFamily: "'Lato', sans-serif", fontWeight: 400, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase", color: "#B07B34", opacity: 0.75, marginBottom: 12 }}>In liebevoller Erinnerung</p>
 
-          <h2 className="text-2xl md:text-3xl font-semibold mb-2" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>
+          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: 22, letterSpacing: "0.04em", color: "#F7F3ED", marginBottom: 8 }}>
             {name}
           </h2>
 
           {caseData && (
-            <p className="text-xs tracking-widest mb-4" style={{ color: "#8a8278" }}>
+            <p style={{ fontFamily: "'Lato', sans-serif", fontWeight: 300, fontSize: 11, letterSpacing: "0.12em", color: "rgba(216,195,165,0.55)", marginBottom: 16 }}>
               * {fmtDate(caseData.date_of_birth)} &nbsp;·&nbsp; † {fmtDate(caseData.date_of_death)}
             </p>
           )}
 
           {/* Bottom line */}
           <div className="flex items-center gap-3 mt-3">
-            <div className="h-px w-12" style={{ background: `rgba(201,169,110,0.3)` }} />
-            <div className="w-1 h-1 rounded-full" style={{ background: `rgba(201,169,110,0.5)` }} />
-            <div className="h-px w-12" style={{ background: `rgba(201,169,110,0.3)` }} />
+            <div style={{ height: 1, width: 36, background: "rgba(216,195,165,0.25)" }} />
+            <div className="w-1 h-1 rounded-full" style={{ background: "rgba(216,195,165,0.5)" }} />
+            <div style={{ height: 1, width: 36, background: "rgba(216,195,165,0.25)" }} />
           </div>
 
           {/* Funeral home branding */}
@@ -163,16 +163,16 @@ export default function CardPrintPreview({ caseData, generatedText, motif, motif
 
   // Inside
   return (
-    <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ background: "linear-gradient(160deg,#181614,#100e0c)", border: "1px solid rgba(201,169,110,0.15)", aspectRatio: aspect, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "2rem" }}>
+    <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ background: "#FEFCF9", border: "1px solid #EAE0D0", aspectRatio: aspect, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "2rem" }}>
       <div className="w-full text-center">
         <div className="flex items-center gap-3 justify-center mb-5">
-          <div className="h-px w-6" style={{ background: `rgba(201,169,110,0.4)` }} />
-          <div className="w-1 h-1 rounded-full" style={{ background: gold }} />
-          <div className="h-px w-6" style={{ background: `rgba(201,169,110,0.4)` }} />
+          <div style={{ height: 1, width: 24, background: "#D8C3A5" }} />
+          <div className="w-1 h-1 rounded-full" style={{ background: "#D8C3A5" }} />
+          <div style={{ height: 1, width: 24, background: "#D8C3A5" }} />
         </div>
 
         {generatedText ? (
-          <p className="text-sm leading-8 italic" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#d4c5a9", fontStyle: "italic" }}>
+          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontWeight: 300, fontSize: 16, color: "#6B6257", lineHeight: 1.9, textAlign: "center" }}>
             {generatedText}
           </p>
         ) : (
@@ -184,13 +184,13 @@ export default function CardPrintPreview({ caseData, generatedText, motif, motif
         )}
 
         <div className="flex items-center gap-3 justify-center mt-5">
-          <div className="h-px w-6" style={{ background: `rgba(201,169,110,0.4)` }} />
-          <div className="w-1 h-1 rounded-full" style={{ background: gold }} />
-          <div className="h-px w-6" style={{ background: `rgba(201,169,110,0.4)` }} />
+        <div style={{ height: 1, width: 24, background: "#D8C3A5" }} />
+        <div className="w-1 h-1 rounded-full" style={{ background: "#D8C3A5" }} />
+        <div style={{ height: 1, width: 24, background: "#D8C3A5" }} />
         </div>
 
         {/* Name repeated inside */}
-        <p className="text-xs mt-4 tracking-[0.2em]" style={{ color: "#5a554e" }}>
+        <p style={{ fontFamily: "'Lato', sans-serif", fontWeight: 300, fontSize: 12, letterSpacing: "0.06em", color: "#A89A8A", marginTop: 16, textAlign: "center" }}>
           {caseData ? `${caseData.deceased_first_name} ${caseData.deceased_last_name}` : ""}
         </p>
       </div>
