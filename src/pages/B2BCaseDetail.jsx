@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
-import { ArrowLeft, CreditCard, Globe, Package, Clock, CheckCircle2, Pencil, X, Check } from "lucide-react";
+import { ArrowLeft, CreditCard, Globe, Package, Clock, CheckCircle2, Pencil, X, Check, Users } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 
@@ -49,20 +49,21 @@ export default function B2BCaseDetail() {
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState({});
   const [saving, setSaving] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const id = new URLSearchParams(window.location.search).get("id");
 
   useEffect(() => {
     if (!id) return;
-    base44.auth.me().then(currentUser => {
+    base44.auth.me().then(user => {
+      setCurrentUser(user);
       Promise.all([
         base44.entities.Case.filter({ id }),
         base44.entities.MourningCard.filter({ case_id: id }),
         base44.entities.B2BMemorialPage.filter({ case_id: id }),
         base44.entities.PrintOrder.filter({ case_id: id }),
       ]).then(([cases, k, mem, o]) => {
-        // Fix 3: B2BCaseDetail ownership verification
-        if (cases.length && cases[0].created_by !== currentUser.email) {
+        if (cases.length && cases[0].created_by !== user.email) {
           window.location.href = "/B2BCases";
           return;
         }
@@ -150,7 +151,7 @@ export default function B2BCaseDetail() {
                 className="p-4 rounded-xl flex flex-col items-center gap-2 text-center transition-all border"
                 style={{ background: memorial ? "rgba(74,222,128,0.06)" : "#201e1a", borderColor: memorial ? "#4ade80" : "#302d28" }}>
                 <Globe className="w-6 h-6" style={{ color: memorial ? "#4ade80" : "#5a554e" }} />
-                <span className="text-sm font-medium" style={{ color: "#f0ede8" }}>Gedenkseite</span>
+                <span className="text-sm font-medium" style={{ color: "#f0ede8" }}>B2B-Gedenkseite</span>
                 <span className="text-xs" style={{ color: "#5a554e" }}>{memorial ? "Aktiv" : "Erstellen"}</span>
               </Link>
               <Link to={`/B2BOrders?case_id=${caseData.id}`}
@@ -160,6 +161,30 @@ export default function B2BCaseDetail() {
                 <span className="text-sm font-medium" style={{ color: "#f0ede8" }}>Bestellungen</span>
                 <span className="text-xs" style={{ color: "#5a554e" }}>{orders.length ? `${orders.length} Bestellungen` : "Keine"}</span>
               </Link>
+            </div>
+
+            {/* Full B2C Memorial section */}
+            <div className="mt-5 pt-5 border-t" style={{ borderColor: "#302d28" }}>
+              <p className="text-sm font-semibold mb-3" style={{ color: "#f0ede8" }}>Vollständige Gedenkseite (B2C)</p>
+              <p className="text-xs mb-4" style={{ color: "#8a8278" }}>
+                Erstellen Sie eine vollständige Evertrace-Gedenkseite für die Angehörigen — mit Biografie, Fotos, Timeline und mehr. Sie als Bestatter und die Angehörigen können gemeinsam daran arbeiten.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <a
+                  href={`/CreateMemorial?case_id=${caseData.id}&funeral_home_id=${caseData.funeral_home_id || ""}&collab_email=${encodeURIComponent(currentUser?.email || "")}`}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium"
+                  style={{ background: "#c9a96e", color: "#0f0e0c" }}
+                >
+                  <Globe className="w-4 h-4" /> Jetzt erstellen
+                </a>
+                {caseData.next_of_kin_email && (
+                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm" style={{ background: "rgba(201,169,110,0.08)", border: "1px solid #302d28", color: "#8a8278" }}>
+                    <Users className="w-4 h-4" />
+                    <span>Angehörige/r: {caseData.next_of_kin_email}</span>
+                    <span className="text-xs" style={{ color: "#5a554e" }}>(wird als Mitbearbeiter eingeladen)</span>
+                  </div>
+                )}
+              </div>
             </div>
           </Section>
         </div>

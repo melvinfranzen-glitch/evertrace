@@ -57,6 +57,13 @@ export default function CreateMemorial() {
   const [saving, setSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [prefillCase, setPrefillCase] = useState(null);
+
+  // Read URL params for B2B prefill
+  const urlParams = new URLSearchParams(window.location.search);
+  const prefillCaseId = urlParams.get("case_id");
+  const prefillFuneralHomeId = urlParams.get("funeral_home_id");
+  const prefillCollabEmail = urlParams.get("collab_email"); // bestatter email to add as collab
 
   const [form, setForm] = useState({
     name: "",
@@ -75,9 +82,28 @@ export default function CreateMemorial() {
     status: "active",
     short_id: Math.random().toString(36).substr(2, 8).toUpperCase(),
     candle_count: 0,
+    funeral_home_case_id: prefillCaseId || "",
+    collaborator_emails: prefillCollabEmail ? [prefillCollabEmail] : [],
   });
 
   const set = (k, v) => setForm((p) => ({ ...p, [k]: v }));
+
+  // Prefill from B2B Case
+  useEffect(() => {
+    if (!prefillCaseId) return;
+    base44.entities.Case.filter({ id: prefillCaseId }).then(cases => {
+      if (!cases.length) return;
+      const c = cases[0];
+      setPrefillCase(c);
+      setForm(p => ({
+        ...p,
+        name: `${c.deceased_first_name} ${c.deceased_last_name}`.trim(),
+        birth_date: c.date_of_birth || "",
+        death_date: c.date_of_death || "",
+        funeral_home_case_id: c.id,
+      }));
+    });
+  }, []);
 
   // Auto-trigger bio generation after guided question 4
   useEffect(() => {
@@ -128,6 +154,14 @@ export default function CreateMemorial() {
     setSaving(true);
     const data = { ...form };
     if (!data.access_password) delete data.access_password;
+    // Add next_of_kin_email as collaborator if from B2B case
+    if (prefillCase?.next_of_kin_email) {
+      const collabs = [...(data.collaborator_emails || [])];
+      if (!collabs.includes(prefillCase.next_of_kin_email)) {
+        collabs.push(prefillCase.next_of_kin_email);
+      }
+      data.collaborator_emails = collabs;
+    }
     await base44.entities.Memorial.create(data);
     // Send confirmation email
     try {

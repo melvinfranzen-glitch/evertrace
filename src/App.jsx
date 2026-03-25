@@ -15,6 +15,7 @@ import B2BOrders from './pages/B2BOrders';
 import B2BAnalytics from './pages/B2BAnalytics';
 import B2BSettings from './pages/B2BSettings';
 import B2BPublicMemorial from './pages/B2BPublicMemorial';
+import MemorialCollabInvite from './pages/MemorialCollabInvite';
 import Legal from './pages/Legal';
 import DesignSystem from './pages/DesignSystem';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
@@ -83,6 +84,7 @@ const AuthenticatedApp = () => {
       <Route path="/B2BPublicMemorial" element={<B2BPublicMemorial />} />
       <Route path="/Legal" element={<LayoutWrapper currentPageName="Legal"><Legal /></LayoutWrapper>} />
       <Route path="/DesignSystem" element={<DesignSystem />} />
+      <Route path="/MemorialCollabInvite" element={<MemorialCollabInvite />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

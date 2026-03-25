@@ -47,18 +47,30 @@ export default function EditMemorial() {
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
     if (!id) { window.location.href = createPageUrl("Dashboard"); return; }
-    Promise.all([
-      base44.entities.Memorial.filter({ id }),
-      base44.entities.TimelineEvent.filter({ memorial_id: id }, "sort_order"),
-      base44.entities.CondolenceEntry.filter({ memorial_id: id, status: "pending" }),
-      base44.entities.MemoryWallEntry.filter({ memorial_id: id, status: "pending" }),
-    ]).then(([memorials, events, pendCond, pendWall]) => {
-      if (memorials.length) setMemorial(memorials[0]);
+    base44.auth.me().then(async (user) => {
+      const [memorials, events, pendCond, pendWall] = await Promise.all([
+        base44.entities.Memorial.filter({ id }),
+        base44.entities.TimelineEvent.filter({ memorial_id: id }, "sort_order"),
+        base44.entities.CondolenceEntry.filter({ memorial_id: id, status: "pending" }),
+        base44.entities.MemoryWallEntry.filter({ memorial_id: id, status: "pending" }),
+      ]);
+      if (memorials.length) {
+        const m = memorials[0];
+        // Allow access to owner OR collaborators
+        const collabs = m.collaborator_emails || [];
+        if (m.created_by !== user.email && !collabs.includes(user.email)) {
+          window.location.href = createPageUrl("Dashboard");
+          return;
+        }
+        setMemorial(m);
+      }
       setTimeline(events);
       setPendingCondolences(pendCond);
       setPendingMemoryWall(pendWall);
       setPendingCount(pendCond.length + pendWall.length);
       setLoading(false);
+    }).catch(() => {
+      base44.auth.redirectToLogin(window.location.href);
     });
   }, []);
 
@@ -487,7 +499,7 @@ export default function EditMemorial() {
                   { key: "condolences", label: "Kondolenzbuch" },
                 ].map(({ key, label }) => {
                   const visibility = memorial.section_visibility?.[key] || "public";
-                  const opts = [{ id: "public", label: "Öffentlich" }, { id: "family", label: "Familie" }, { id: "private", label: "Privat" }];
+                  const opts = [{ id: "public", label: "\u00d6ffentlich" }, { id: "family", label: "Familie" }, { id: "private", label: "Privat" }];
                   return (
                     <div key={key} className="flex items-center justify-between py-2.5 border-b border-stone-100 last:border-0">
                       <span className="text-sm text-gray-700">{label}</span>
@@ -522,6 +534,43 @@ export default function EditMemorial() {
               {memorial.is_private && (
                 <div><Label>Passwort</Label><Input value={memorial.access_password || ""} onChange={(e) => set("access_password", e.target.value)} className="mt-1" /></div>
               )}
+
+              {/* Collaborators */}
+              <div className="pt-2 border-t border-stone-100">
+                <p className="text-sm font-medium text-gray-700 mb-1">Mitbearbeiter einladen</p>
+                <p className="text-xs text-gray-400 mb-3">Personen mit diesem Link können die Gedenkseite gemeinsam mit Ihnen bearbeiten (z.B. Bestatter oder Angehörige).</p>
+                <div className="rounded-xl border border-stone-200 p-3 bg-stone-50">
+                  <p className="text-xs font-mono break-all mb-2" style={{ color: "#c9a96e" }}>
+                    {`${window.location.origin}/MemorialCollabInvite?memorial_id=${memorial.id}`}
+                  </p>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(`${window.location.origin}/MemorialCollabInvite?memorial_id=${memorial.id}`);
+                    }}
+                    className="text-xs px-3 py-1.5 rounded-lg border"
+                    style={{ borderColor: "rgba(201,169,110,0.4)", color: "#c9a96e", background: "white" }}
+                  >
+                    Link kopieren
+                  </button>
+                </div>
+                {(memorial.collaborator_emails || []).length > 0 && (
+                  <div className="mt-3 space-y-1">
+                    <p className="text-xs text-gray-500 mb-1">Aktuelle Mitbearbeiter:</p>
+                    {(memorial.collaborator_emails || []).map(email => (
+                      <div key={email} className="flex items-center justify-between px-3 py-2 rounded-lg bg-white border border-stone-100">
+                        <span className="text-xs text-gray-600">{email}</span>
+                        <button
+                          onClick={() => set("collaborator_emails", memorial.collaborator_emails.filter(e => e !== email))}
+                          className="text-xs text-red-400 hover:text-red-600"
+                        >
+                          Entfernen
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               <div>
                 <Label>QR-Code & Teilen</Label>
                 <QrSharePanel memorial={memorial} />
