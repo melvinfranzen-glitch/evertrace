@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
@@ -51,6 +52,21 @@ export default function B2BSettings() {
 
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
+  const handleLogoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      set("logo_url", file_url);
+    } catch (err) {
+      console.error("Logo upload failed:", err);
+    } finally {
+      setUploading(false);
+      e.target.value = "";
+    }
+  };
+
   const save = async () => {
     if (!home?.id) {
       setSaveError("Konto nicht geladen. Bitte Seite neu laden.");
@@ -84,7 +100,7 @@ export default function B2BSettings() {
   const plan = PLAN_META[form.plan] || PLAN_META.free;
   const limits = getPlanLimits(form.plan || "free");
 
-  const { branding, updateBranding } = useB2BBranding() || {};
+  const { branding, updateBranding } = useB2BBranding() || {}; // eslint-disable-line no-unused-vars
   const contextAccent = branding?.accent_color || accent;
 
   return (

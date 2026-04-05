@@ -239,7 +239,6 @@ function PersonDetailSheet({ person, isDeceased, memorialId, onClose, onUpdate, 
             </div>
             </div>
           </div>
-        </div>
 
         <div className="mx-6 h-px" style={{ background: "linear-gradient(90deg, transparent, #e8dfd0, transparent)" }} />
 
