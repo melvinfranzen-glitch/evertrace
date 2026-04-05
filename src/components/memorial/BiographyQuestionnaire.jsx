@@ -15,6 +15,43 @@ export default function BiographyQuestionnaire({ memorial, onComplete }) {
   const [timelineEvents, setTimelineEvents] = useState([]);
   const [generatedQuestions, setGeneratedQuestions] = useState([]);
 
+  const generateQuestionsFromTimeline = useCallback(async (events) => {
+    const timelineText = events
+      .map(e => `${e.year}: ${e.title}${e.description ? " - " + e.description : ""}`)
+      .join("\n");
+
+    const prompt = `Analysiere den Lebenstrahl und generiere 3-6 zielgerichtete Fragen auf Deutsch, um die Biografie zu ergänzen.
+
+Lebenstrahl:
+${timelineText || "(leer)"}
+
+Generiere Fragen, die Lücken füllen (z.B. frühe Jahre, Familie, Karriere, Leidenschaften, Vermächtnis). 
+
+Format: JSON-Array mit Objekten {"title": "Frage als Überschrift", "description": "Erklärende Frage", "placeholder": "Beispiel-Text"}.
+Rückgabe AUSSCHLIESSLICH gültiges JSON-Array ohne zusätzlichen Text.`;
+
+    try {
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              title: { type: "string" },
+              description: { type: "string" },
+              placeholder: { type: "string" },
+            },
+          },
+        },
+      });
+      return (Array.isArray(result) ? result : result.items || []).slice(0, 6);
+    } catch (err) {
+      console.error("Fehler beim Generieren von Fragen:", err);
+      return [];
+    }
+  }, []);
+
   const generateBiography = useCallback(async () => {
     setGenerating(true);
     try {
@@ -58,42 +95,7 @@ Integriere den Lebenstrahl chronologisch und ergänze mit den zusätzlichen Info
     init();
   }, [memorial.id]);
 
-  const generateQuestionsFromTimeline = useCallback(async (events) => {
-    const timelineText = events
-      .map(e => `${e.year}: ${e.title}${e.description ? " - " + e.description : ""}`)
-      .join("\n");
 
-    const prompt = `Analysiere den Lebenstrahl und generiere 3-6 zielgerichtete Fragen auf Deutsch, um die Biografie zu ergänzen.
-
-Lebenstrahl:
-${timelineText || "(leer)"}
-
-Generiere Fragen, die Lücken füllen (z.B. frühe Jahre, Familie, Karriere, Leidenschaften, Vermächtnis). 
-
-Format: JSON-Array mit Objekten {"title": "Frage als Überschrift", "description": "Erklärende Frage", "placeholder": "Beispiel-Text"}.
-Rückgabe AUSSCHLIESSLICH gültiges JSON-Array ohne zusätzlichen Text.`;
-
-    try {
-      const result = await base44.integrations.Core.InvokeLLM({
-        prompt,
-        response_json_schema: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              title: { type: "string" },
-              description: { type: "string" },
-              placeholder: { type: "string" },
-            },
-          },
-        },
-      });
-      return (Array.isArray(result) ? result : result.items || []).slice(0, 6);
-    } catch (err) {
-      console.error("Fehler beim Generieren von Fragen:", err);
-      return [];
-    }
-  }, []);
 
   if (loading) {
     return (
@@ -159,7 +161,9 @@ Rückgabe AUSSCHLIESSLICH gültiges JSON-Array ohne zusätzlichen Text.`;
     setAnswers(prev => ({ ...prev, [step]: value }));
   };
 
-  const currentAnswer = answers[currentQuestion.id] || "";
+  const currentAnswer = step >= 0 && answers[step] ? answers[step] : "";
+
+
 
   return (
     <div className="space-y-6">
