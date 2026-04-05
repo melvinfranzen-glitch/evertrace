@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
+import { useB2BBranding } from "@/contexts/B2BBrandingContext";
 import { Upload, Loader2, Check, Save, Users, Building2, Palette, Eye } from "lucide-react";
 
 const ACCENT_COLORS = [
@@ -61,6 +62,15 @@ export default function B2BSettings() {
       const { id, created_date, updated_date, created_by, ...updateData } = form;
       await base44.entities.FuneralHome.update(home.id, updateData);
       setHome({ ...home, ...updateData });
+      if (updateBranding) {
+        updateBranding({
+          name: updateData.name,
+          tagline: updateData.tagline,
+          logo_url: updateData.logo_url,
+          accent_color: updateData.accent_color,
+          whitelabel_enabled: updateData.whitelabel_enabled,
+        });
+      }
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
@@ -70,18 +80,12 @@ export default function B2BSettings() {
     }
   };
 
-  const uploadLogo = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    set("logo_url", file_url);
-    setUploading(false);
-  };
-
   const accent = form.accent_color || "#c9a96e";
   const plan = PLAN_META[form.plan] || PLAN_META.free;
   const limits = getPlanLimits(form.plan || "free");
+
+  const { branding, updateBranding } = useB2BBranding() || {};
+  const contextAccent = branding?.accent_color || accent;
 
   return (
     <B2BLayout
@@ -89,7 +93,7 @@ export default function B2BSettings() {
       action={
         <div className="flex flex-col items-end gap-1">
           <button onClick={save} disabled={saving} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
-            style={{ background: saved ? "rgba(74,222,128,0.15)" : "#c9a96e", color: saved ? "#4ade80" : "#0f0e0c", border: saved ? "1px solid rgba(74,222,128,0.3)" : "none" }}>
+            style={{ background: saved ? "rgba(74,222,128,0.15)" : contextAccent, color: saved ? "#4ade80" : "#0f0e0c", border: saved ? "1px solid rgba(74,222,128,0.3)" : "none" }}>
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
             {saved ? "Gespeichert" : "Speichern"}
           </button>
@@ -103,9 +107,9 @@ export default function B2BSettings() {
           <button key={id} onClick={() => setTab(id)}
             className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all"
             style={{
-              background: tab === id ? "rgba(201,169,110,0.1)" : "transparent",
-              color: tab === id ? "#c9a96e" : "#8a8278",
-              border: `1px solid ${tab === id ? "#c9a96e" : "transparent"}`,
+              background: tab === id ? `${contextAccent}1A` : "transparent",
+              color: tab === id ? contextAccent : "#8a8278",
+              border: `1px solid ${tab === id ? contextAccent : "transparent"}`,
             }}>
             <Icon className="w-4 h-4" /> {label}
           </button>

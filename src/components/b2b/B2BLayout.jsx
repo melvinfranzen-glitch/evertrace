@@ -1,6 +1,7 @@
 import B2BSidebar from "./B2BSidebar";
+import { B2BBrandingProvider } from "@/contexts/B2BBrandingContext";
 
-export default function B2BLayout({ children, title, subtitle, action }) {
+function B2BLayoutInner({ children, title, subtitle, action }) {
   return (
     <div className="min-h-screen" style={{ background: "#0f0e0c", fontFamily: "'DM Sans', sans-serif" }}>
       <B2BSidebar />
@@ -20,5 +21,13 @@ export default function B2BLayout({ children, title, subtitle, action }) {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function B2BLayout(props) {
+  return (
+    <B2BBrandingProvider>
+      <B2BLayoutInner {...props} />
+    </B2BBrandingProvider>
   );
 }
