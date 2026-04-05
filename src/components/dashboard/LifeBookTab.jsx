@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Check, ChevronLeft, Minus, Plus } from "lucide-react";
 import { createPageUrl } from "@/utils";
@@ -62,6 +63,7 @@ function MemorialSelectorGrid({ memorials, selected, onSelect }) {
 }
 
 export default function LifeBookTab({ memorials }) {
+  const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [selectedMemorial, setSelectedMemorial] = useState(null);
   const [qty, setQty] = useState(1);
@@ -128,7 +130,7 @@ export default function LifeBookTab({ memorials }) {
                   Buch erstellen →
                 </button>
               ) : (
-                <button onClick={() => window.location.href = createPageUrl("EditMemorial") + `?id=${selectedMemorial.id}`}
+                <button onClick={() => navigate(createPageUrl("EditMemorial") + `?id=${selectedMemorial.id}`)}
                   className="px-6 py-2.5 rounded-xl text-sm font-medium border" style={{ borderColor: "#c9a96e", color: "#c9a96e" }}>
                   Gedenkseite vervollständigen →
                 </button>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import FamilyMemberModal from "./FamilyMemberModal";
 import { ExternalLink } from "lucide-react";
@@ -13,11 +14,12 @@ const RELATION_LABEL = {
 };
 
 function PersonNode({ person, isDeceased, onClick, linkedId }) {
+  const navigate = useNavigate();
   const initials = person.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
   const hasLinked = !!person.linked_memorial_short_id;
   const handleClick = () => {
     if (linkedId) {
-      window.location.href = `/MemorialProfile?id=${linkedId}`;
+      navigate(`/MemorialProfile?id=${linkedId}`);
     } else {
       onClick();
     }

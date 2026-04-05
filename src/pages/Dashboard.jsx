@@ -4,10 +4,12 @@ import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 
 import { sanitizePromptInput } from "@/utils/sanitize";
-import { Plus, Loader2, BookOpen, X, Check, ChevronLeft, Minus, QrCode, RefreshCw } from "lucide-react";
+import { Plus, Loader2, X, Check, ChevronLeft, Minus, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MemorialCard from "@/components/memorial/MemorialCard";
 import AnniversaryReminders from "@/components/dashboard/AnniversaryReminders";
+import LifeBookTab from "@/components/dashboard/LifeBookTab";
+import PlaqueOrderTab from "@/components/dashboard/PlaqueOrderTab";
 
 // ─── Shared helpers ──────────────────────────────────────────────────────────
 
@@ -91,167 +93,6 @@ function ConfirmSuccess({ title, sub, btnLabel, onReset }) {
   );
 }
 
-// ─── PLAQUE MODAL ─────────────────────────────────────────────────────────────
-
-const PLAQUE_PRODUCTS = [
-  { id: "plaque_aluminium", label: "Aluminium-Plakette", desc: "Gebürstetes Aluminium, Lasergravur, wetterfest — 20 × 11 cm", price: 129, badge: null },
-  { id: "plaque_slate", label: "Schiefer-Plakette", desc: "Naturschiefer, Lasergravur, zeitlos — 20 × 11 cm", price: 149, badge: null },
-  { id: "plaque_steel", label: "Edelstahl Premium", desc: "Edelstahl gebürstet, Tiefengravur, UV-Schutz, Montageset — 20 × 11 cm", price: 219, badge: "Bestseller" },
-];
-
-function PlaqueModal({ memorial, onClose }) {
-  const [step, setStep] = useState(0);
-  const [product, setProduct] = useState(PLAQUE_PRODUCTS[0]);
-  const [engravingText, setEngravingText] = useState("");
-  const [addr, setAddr] = useState({});
-  const [saving, setSaving] = useState(false);
-  const [done, setDone] = useState(false);
-
-  const memorialUrl = `${window.location.origin}/MemorialProfile?id=${memorial.short_id}`;
-  const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(memorialUrl)}`;
-
-  const submit = async () => {
-    if (!addrValid(addr)) return;
-    setSaving(true);
-    await base44.entities.Order.create({
-      product_type: "memorial_plaque",
-      memorial_id: memorial.id,
-      plaque_type: product.id,
-      engraving_text: engravingText,
-      qr_memorial_url: memorialUrl,
-      customer_name: `${addr.firstName} ${addr.lastName}`,
-      customer_email: addr.email,
-      shipping_street: addr.street,
-      shipping_city: addr.city,
-      shipping_zip: addr.zip,
-      notes: JSON.stringify(addr),
-      price: product.price,
-      status: "pending",
-    });
-    setSaving(false);
-    setDone(true);
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}>
-      <div className="relative w-full overflow-hidden overflow-y-auto" style={{ maxWidth: 560, maxHeight: "90vh", background: "#FAFAF8", borderRadius: 16 }}>
-        {/* Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b" style={{ background: "#FAFAF8", borderColor: "#e8dfd0" }}>
-          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, color: "#1c1917", fontWeight: 600 }}>
-            Grabplakette · {memorial.name}
-          </p>
-          <button onClick={onClose} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-stone-100">
-            <X className="w-4 h-4 text-gray-500" />
-          </button>
-        </div>
-
-        <div className="p-6">
-          {done ? (
-            <ConfirmSuccess
-              title="Bestellung aufgenommen"
-              sub="Ihre Plakette wird mit dem personalisierten QR-Code gefertigt und innerhalb von 7–10 Werktagen geliefert. Der QR-Code bleibt dauerhaft aktiv, solange die Gedenkseite besteht."
-              btnLabel="Schließen"
-              onReset={onClose}
-            />
-          ) : (
-            <>
-              <StepDots steps={["Plakette wählen", "QR-Code prüfen", "Bestellen"]} current={step} />
-
-              {/* Step 0 */}
-              {step === 0 && (
-                <div>
-                  <div className="space-y-3 mb-6">
-                    {PLAQUE_PRODUCTS.map(p => (
-                      <div key={p.id} onClick={() => setProduct(p)} className="cursor-pointer p-5 rounded-xl flex items-center gap-4 transition-all"
-                        style={{ border: `1.5px solid ${product.id === p.id ? "#c9a96e" : "#e5e7eb"}`, background: product.id === p.id ? "rgba(201,169,110,0.03)" : "white" }}>
-                        <div className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center"
-                          style={{ border: `2px solid ${product.id === p.id ? "#c9a96e" : "#d1d5db"}`, background: product.id === p.id ? "#c9a96e" : "white" }}>
-                          {product.id === p.id && <div className="w-2 h-2 rounded-full bg-white" />}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <span className="font-semibold text-sm text-gray-800">{p.label}</span>
-                            {p.badge && <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: "rgba(201,169,110,0.15)", color: "#c9a96e" }}>{p.badge}</span>}
-                          </div>
-                          <p className="text-xs text-gray-500 mt-0.5">{p.desc}</p>
-                        </div>
-                        <p className="font-bold text-gray-800 flex-shrink-0">€ {p.price},–</p>
-                      </div>
-                    ))}
-                  </div>
-                  <button onClick={() => setStep(1)} className="w-full py-3 rounded-xl font-medium text-sm"
-                    style={{ background: "#c9a96e", color: "#0f0e0c", fontFamily: "'DM Sans', sans-serif" }}>
-                    Weiter →
-                  </button>
-                </div>
-              )}
-
-              {/* Step 1 */}
-              {step === 1 && (
-                <div>
-                  <div className="rounded-xl p-6 flex gap-5 mb-5" style={{ background: "#f7f3ed", border: "1px solid #e8dfd0" }}>
-                    <img src={qrSrc} alt="QR" className="w-24 h-24 rounded-lg flex-shrink-0" />
-                    <div className="min-w-0">
-                      <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, color: "#1c1917", fontWeight: 600 }} className="mb-1">{memorial.name}</p>
-                      <p className="text-sm mb-1" style={{ color: "#5a554e", fontFamily: "'DM Sans', sans-serif" }}>Dieser QR-Code wird dauerhaft auf Ihrer Plakette graviert.</p>
-                      <p className="font-mono text-xs break-all mb-2" style={{ color: "#c9a96e" }}>{memorialUrl}</p>
-                      <p className="text-xs" style={{ color: "#8a8278" }}>Besucher scannen direkt am Grab und gelangen sofort zur Gedenkseite.</p>
-                    </div>
-                  </div>
-                  <div className="mb-5">
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Gravurtext (optional)</label>
-                    <div className="relative">
-                      <input value={engravingText} onChange={e => setEngravingText(e.target.value.slice(0, 40))}
-                        placeholder="»In liebevoller Erinnerung«"
-                        className="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm outline-none"
-                        style={{ background: "white" }}
-                      />
-                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{engravingText.length} / 40</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between">
-                    <button onClick={() => setStep(0)} className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm border" style={{ borderColor: "#e5e7eb", color: "#6b7280" }}>
-                      <ChevronLeft className="w-4 h-4" /> Zurück
-                    </button>
-                    <button onClick={() => setStep(2)} className="px-6 py-2.5 rounded-xl text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
-                      Weiter zur Bestellung →
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Step 2 */}
-              {step === 2 && (
-                <div>
-                  <div className="rounded-xl p-5 mb-5" style={{ background: "white", border: "1px solid #e8dfd0" }}>
-                    <p className="font-semibold text-gray-800 text-sm mb-1">{product.label} · € {product.price},–</p>
-                    <p className="text-xs text-gray-500 mb-1">Gedenkseite: {memorial.name}</p>
-                    {engravingText && <p className="text-xs text-gray-500">Gravur: „{engravingText}"</p>}
-                    <p className="font-mono text-xs mt-1" style={{ color: "#c9a96e" }}>QR → {memorialUrl}</p>
-                  </div>
-                  <div className="mb-5">
-                    <AddressForm addr={addr} setAddr={setAddr} />
-                  </div>
-                  <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, color: "#2c2419", fontWeight: 600 }}>€ {product.price},–</p>
-                  <p className="text-xs mb-4" style={{ color: "#8a8278" }}>inkl. Versand & Gravur · Lieferzeit 7–10 Werktage</p>
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <button onClick={() => setStep(1)} className="flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl text-sm border sm:w-auto" style={{ borderColor: "#e5e7eb", color: "#6b7280" }}>
-                      <ChevronLeft className="w-4 h-4" /> Zurück
-                    </button>
-                    <button onClick={submit} disabled={saving || !addrValid(addr)} className="flex-1 flex items-center justify-center disabled:opacity-50"
-                      style={{ background: "#c9a96e", color: "#0f0e0c", borderRadius: 10, height: 52, fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontWeight: 600 }}>
-                      {saving ? "Wird bestellt…" : "Plakette jetzt bestellen"}
-                    </button>
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // ─── TAB 2: TRAUERKARTEN ─────────────────────────────────────────────────────
 
@@ -675,203 +516,6 @@ function CardTab({ memorials }) {
   );
 }
 
-// ─── TAB 3: LEBENSGESCHICHTEN-BUCH ────────────────────────────────────────────
-
-function getUnitPrice(qty) { return qty >= 5 ? 39 : qty >= 2 ? 49 : 59; }
-
-function BookTab({ memorials }) {
-  const navigate = useNavigate();
-  const [step, setStep] = useState(0);
-  const [selected, setSelected] = useState(null);
-  const [qty, setQty] = useState(1);
-  const [addr, setAddr] = useState({});
-  const [saving, setSaving] = useState(false);
-  const [done, setDone] = useState(false);
-
-  const unit = getUnitPrice(qty);
-  const total = qty * unit;
-
-  const ready = selected && !!(selected.biography?.trim()) && !!(selected.gallery_images?.length > 0);
-  const missBio = selected && !selected.biography?.trim();
-  const missPhotos = selected && !(selected.gallery_images?.length > 0);
-
-  const submit = async () => {
-    if (!addrValid(addr)) return;
-    setSaving(true);
-    await base44.entities.Order.create({
-      product_type: "life_book",
-      memorial_id: selected.id,
-      quantity: qty,
-      notes: JSON.stringify({ ...addr, unit_price: unit }),
-      customer_name: `${addr.firstName} ${addr.lastName}`,
-      customer_email: addr.email,
-      shipping_street: addr.street,
-      shipping_city: addr.city,
-      shipping_zip: addr.zip,
-      price: total,
-      status: "pending",
-    });
-    setSaving(false);
-    setDone(true);
-  };
-
-  if (done) return (
-    <div>
-      <ConfirmSuccess
-        title="Bestellung aufgenommen"
-        sub="Wir generieren Ihr persönliches Lebensgeschichten-Buch aus den Inhalten der Gedenkseite und lassen es in Deutschland drucken. Lieferzeit: 7–10 Werktage. Sie erhalten eine Versandbestätigung per E-Mail."
-        btnLabel="Weiteres Buch bestellen"
-        onReset={() => { setDone(false); setStep(0); setSelected(null); setQty(1); setAddr({}); }}
-      />
-    </div>
-  );
-
-  return (
-    <div>
-      {/* Step 0 */}
-      {step === 0 && (
-        <div>
-          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26, color: "#1c1917", fontWeight: 600 }} className="mb-2">
-            Für wen möchten Sie ein Buch erstellen?
-          </h2>
-          <p className="text-sm mb-7" style={{ color: "#8a8278", fontFamily: "'DM Sans', sans-serif" }}>
-            Das Lebensgeschichten-Buch wird aus den Inhalten Ihrer Gedenkseite generiert — Biografie, Fotos, Timeline und Lebenswerk.
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            {memorials.map(m => {
-              const isSel = selected?.id === m.id;
-              return (
-                <div key={m.id} onClick={() => setSelected(m)} className="cursor-pointer transition-all rounded-xl p-4"
-                  style={{ background: isSel ? "rgba(201,169,110,0.04)" : "white", border: `1px solid ${isSel ? "#c9a96e" : "#e5e7eb"}`, borderRadius: 12 }}>
-                  <div className="flex items-center gap-3 mb-2">
-                    {m.hero_image_url
-                      ? <img src={m.hero_image_url} alt={m.name} className="w-12 h-12 rounded-full object-cover flex-shrink-0" />
-                      : <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-lg font-semibold"
-                          style={{ background: "rgba(201,169,110,0.15)", color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>
-                          {m.name?.[0]}
-                        </div>
-                    }
-                    <div>
-                      <p className="font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, color: "#1c1917" }}>{m.name}</p>
-                      {m.death_date && <p className="text-xs" style={{ color: "#8a8278" }}>† {m.death_date}</p>}
-                    </div>
-                  </div>
-                  {isSel && (
-                    <div className="flex flex-wrap gap-1.5 mt-1">
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${m.biography?.trim() ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"}`}>
-                        {m.biography?.trim() ? "✓ Biografie" : "Biografie fehlt"}
-                      </span>
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${m.gallery_images?.length > 0 ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"}`}>
-                        {m.gallery_images?.length > 0 ? "✓ Fotos" : "Fotos fehlen"}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-          {selected && (
-            <div className="flex flex-wrap items-center gap-3">
-              {ready && (
-                <button onClick={() => setStep(1)} className="px-6 py-2.5 rounded-xl text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
-                  Buch gestalten →
-                </button>
-              )}
-              {missBio && (
-                <button onClick={() => navigate(createPageUrl("EditMemorial") + `?id=${selected.id}&tab=bio`)}
-                  className="px-5 py-2.5 rounded-xl text-sm border" style={{ borderColor: "#c9a96e", color: "#c9a96e" }}>
-                  Biografie hinzufügen →
-                </button>
-              )}
-              {missPhotos && (
-                <button onClick={() => navigate(createPageUrl("EditMemorial") + `?id=${selected.id}&tab=media`)}
-                  className="px-5 py-2.5 rounded-xl text-sm border" style={{ borderColor: "#c9a96e", color: "#c9a96e" }}>
-                  Fotos hinzufügen →
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Step 1 */}
-      {step === 1 && selected && (
-        <div>
-          <StepDots steps={["Gedenkseite", "Buch bestellen"]} current={1} />
-          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, color: "#1c1917", fontWeight: 600 }} className="mb-7">Ihr Lebensgeschichten-Buch</h2>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-8">
-            {/* Book mockup */}
-            <div>
-              <div style={{ background: "linear-gradient(160deg, #f7f3ed, #ede8df)", border: "1px solid #d4c9b0", borderRadius: "6px 10px 10px 6px", padding: "32px 24px 32px 28px", boxShadow: "-5px 5px 0 #c9a96e, -10px 10px 0 rgba(201,169,110,0.25)" }}>
-                <div className="flex flex-col items-center text-center">
-                  {selected.hero_image_url
-                    ? <img src={selected.hero_image_url} alt="" className="w-16 h-16 rounded-full object-cover mb-3" />
-                    : <div className="w-16 h-16 rounded-full flex items-center justify-center mb-3 text-2xl font-semibold"
-                        style={{ background: "rgba(201,169,110,0.2)", color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>{selected.name?.[0]}</div>
-                  }
-                  <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontStyle: "italic", color: "#2c2419", fontWeight: 600 }} className="mb-1">{selected.name}</p>
-                  <p className="text-xs mb-4" style={{ color: "#8a8278" }}>{selected.birth_date?.slice(0, 4)}{selected.birth_date && selected.death_date ? " – " : ""}{selected.death_date?.slice(0, 4)}</p>
-                  <div className="w-full h-px mb-3" style={{ background: "#c9a96e", opacity: 0.35 }} />
-                  {[...Array(3)].map((_, i) => <div key={i} className="w-full h-2 rounded-full mb-1.5" style={{ background: "#c0b9ae", width: `${82 - i * 10}%` }} />)}
-                </div>
-              </div>
-              <ul className="mt-5 space-y-1.5">
-                {["Aus Ihren Einträgen entsteht eine persönliche Lebensgeschichte", "Alle Fotos in würdevollem Layout", "Hardcover Soft-Touch · A4 · Gedruckt in Deutschland"].map((f, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                    <span className="mt-0.5 flex-shrink-0 font-bold" style={{ color: "#c9a96e" }}>·</span>{f}
-                  </li>
-                ))}
-              </ul>
-              <p className="text-xs mt-3" style={{ color: "#8a8278" }}>
-                {selected.gallery_images?.length || 0} Fotos · {selected.biography?.split(" ").length || 0} Wörter Biografie
-              </p>
-            </div>
-
-            {/* Config */}
-            <div>
-              <div className="space-y-2 mb-5">
-                {[{ label: "1 Exemplar", min: 1, max: 1, unit: 59 }, { label: "2–4 Exemplare", min: 2, max: 4, unit: 49 }, { label: "5 oder mehr Exemplare", min: 5, max: 999, unit: 39 }].map(t => {
-                  const active = qty >= t.min && qty <= t.max;
-                  return (
-                    <div key={t.label} className="flex items-center justify-between p-3.5 rounded-xl transition-all"
-                      style={{ border: `1px solid ${active ? "#c9a96e" : "#e5e7eb"}`, background: active ? "rgba(201,169,110,0.08)" : "white" }}>
-                      <span className="text-sm" style={{ color: active ? "#c9a96e" : "#6b7280" }}>{t.label}</span>
-                      <span className="text-sm font-semibold" style={{ color: active ? "#c9a96e" : "#6b7280" }}>€ {t.unit},– / Stk.</span>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="flex items-center gap-3 mb-5">
-                <button onClick={() => setQty(q => Math.max(1, q - 1))} className="w-9 h-9 rounded-lg border flex items-center justify-center" style={{ borderColor: "#e5e7eb" }}><Minus className="w-4 h-4 text-gray-500" /></button>
-                <input type="number" value={qty} onChange={e => setQty(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="w-16 text-center py-2 rounded-lg border text-sm font-semibold outline-none" style={{ borderColor: "#c9a96e", color: "#2c2419" }} />
-                <button onClick={() => setQty(q => q + 1)} className="w-9 h-9 rounded-lg border flex items-center justify-center" style={{ borderColor: "#e5e7eb" }}><Plus className="w-4 h-4 text-gray-500" /></button>
-                <span className="text-sm text-gray-500">Exemplare</span>
-              </div>
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 32, color: "#2c2419", fontWeight: 600 }}>€ {total},–</p>
-              <p className="text-xs mb-6" style={{ color: "#8a8278" }}>inkl. Versand · Lieferzeit 7–10 Werktage</p>
-
-              <AddressForm addr={addr} setAddr={setAddr} />
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-3">
-            <button onClick={() => setStep(0)} className="flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl text-sm border sm:w-auto" style={{ borderColor: "#e5e7eb", color: "#6b7280" }}>
-              <ChevronLeft className="w-4 h-4" /> Zurück
-            </button>
-            <button onClick={submit} disabled={saving || !addrValid(addr)} className="flex-1 flex items-center justify-center disabled:opacity-50"
-              style={{ background: "#c9a96e", color: "#0f0e0c", borderRadius: 10, height: 52, fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontWeight: 600 }}>
-              {saving ? "Wird bestellt…" : "Lebensgeschichten-Buch bestellen"}
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
 
 // ─── MAIN DASHBOARD ────────────────────────────────────────────────────────────
 
@@ -1006,12 +650,24 @@ export default function Dashboard() {
         {activeTab === "cards" && <CardTab memorials={memorials} />}
 
         {/* Tab 3 */}
-        {activeTab === "book" && <BookTab memorials={memorials} />}
+        {activeTab === "book" && <LifeBookTab memorials={memorials} />}
       </div>
 
       {/* Plaque modal */}
       {plaqueMemorial && (
-        <PlaqueModal memorial={plaqueMemorial} onClose={() => setPlaqueMemorial(null)} />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}>
+          <div className="relative w-full overflow-y-auto" style={{ maxWidth: 620, maxHeight: "90vh", background: "#FAFAF8", borderRadius: 16 }}>
+            <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b" style={{ background: "#FAFAF8", borderColor: "#e8dfd0" }}>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, color: "#1c1917", fontWeight: 600 }}>Grabplakette · {plaqueMemorial.name}</p>
+              <button onClick={() => setPlaqueMemorial(null)} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-stone-100">
+                <X className="w-4 h-4 text-gray-500" />
+              </button>
+            </div>
+            <div className="p-6">
+              <PlaqueOrderTab memorials={memorials} initialMemorialId={plaqueMemorial.short_id} />
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 
@@ -40,6 +41,7 @@ function StepDot({ n, current }) {
 }
 
 export default function CreateMemorial() {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [uploading, setUploading] = useState(false);
   const [generating, setGenerating] = useState(false);
@@ -231,7 +233,7 @@ export default function CreateMemorial() {
               Link kopieren
             </button>
           </div>
-          <button onClick={() => { setShowShare(false); setCreated(true); }}
+          <button onClick={() => navigate(createPageUrl("Dashboard"))}
             style={{ fontSize: 13, color: "#8a8278" }}>
             Weiter zum Dashboard →
           </button>
@@ -270,7 +272,7 @@ export default function CreateMemorial() {
             <h2 className="text-2xl font-semibold text-gray-800 mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Gedenkseite erstellt</h2>
             <p className="text-gray-500 text-sm">Die Gedenkseite für {form.name} ist jetzt aktiv.</p>
           </div>
-          <Button onClick={() => window.location.href = createPageUrl("Dashboard")} className="text-white rounded-xl px-8" style={{ background: "#c9a96e" }}>
+          <Button onClick={() => navigate(createPageUrl("Dashboard"))} className="text-white rounded-xl px-8" style={{ background: "#c9a96e" }}>
             Zum Dashboard
           </Button>
           <div className="text-left" style={{ background: "#181714", border: "1px solid rgba(201,169,110,0.25)", borderRadius: 14, padding: 24 }}>
@@ -284,7 +286,7 @@ export default function CreateMemorial() {
               Eine gravierte Plakette mit QR-Code verbindet den Grabstein direkt mit dieser Gedenkseite. Besucher scannen den Code und landen sofort auf der persönlichen Erinnerungsseite.
             </p>
             <button
-              onClick={() => window.location.href = `/Shop?memorial_id=${createdShortId}`}
+              onClick={() => navigate(`/Shop?memorial_id=${createdShortId}`)}
               className="w-full py-2.5 rounded-xl text-sm font-medium"
               style={{ background: "#c9a96e", color: "#0f0e0c" }}
             >
@@ -300,7 +302,7 @@ export default function CreateMemorial() {
     <div className="min-h-screen pt-24 pb-16 px-4" style={{ background: "#FAFAF8" }}>
       <div className="max-w-2xl mx-auto">
         <button
-          onClick={() => window.location.href = createPageUrl("Dashboard")}
+          onClick={() => navigate(createPageUrl("Dashboard"))}
           className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 mb-6"
         >
           <ArrowLeft className="w-4 h-4" /> Zurück zum Dashboard
