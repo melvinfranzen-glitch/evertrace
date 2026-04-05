@@ -23,6 +23,7 @@ import ReportContentModal from "@/components/memorial/ReportContentModal";
 
 export default function MemorialProfile() {
   const [memorial, setMemorial] = useState(null);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [unlocked, setUnlocked] = useState(false);
   const [pwInput, setPwInput] = useState("");
@@ -42,6 +43,7 @@ export default function MemorialProfile() {
   const [showReportModal, setShowReportModal] = useState(false);
 
   useEffect(() => {
+    base44.auth.me().then(u => setUser(u)).catch(() => setUser(null));
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
     if (!id) { setLoading(false); return; }
@@ -260,7 +262,7 @@ export default function MemorialProfile() {
         </>
       )}
 
-      {canShow("family") && <FamilyTreeSection memorial={memorial} isOwner={false} />}
+      {canShow("family") && <FamilyTreeSection memorial={memorial} isOwner={user && user.id === memorial.created_by} />}
 
       {canShow("audio") && <AudioSection tracks={audioTracks} curatedTracks={memorial.curated_track_ids ? CURATED_TRACKS.filter(t => memorial.curated_track_ids.includes(t.id)) : []} />}
 

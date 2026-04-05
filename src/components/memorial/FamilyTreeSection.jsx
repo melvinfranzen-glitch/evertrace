@@ -228,7 +228,7 @@ function PersonDetailSheet({ person, isDeceased, memorialId, onClose, onUpdate, 
               <div>
                 <label className="text-xs block mb-1" style={{ color: "#8a8278" }}>Persönliche Erinnerung / Kurztext</label>
                 <Textarea value={editForm.notes} onChange={e => setEditForm(f => ({ ...f, notes: e.target.value }))}
-                  placeholder="z.B. War immer für uns da, liebte seinen Garten…"
+                  placeholder="z.B. War immer für uns da…"
                   className="text-sm resize-none h-20" />
               </div>
               <div className="flex gap-2">
