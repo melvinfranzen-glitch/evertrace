@@ -9,7 +9,7 @@ export default function HeroLanding() {
     <section className="relative min-h-screen flex items-center justify-center text-white overflow-hidden"
       style={{ background: "linear-gradient(160deg, #3D3326 0%, #2A2218 55%, #1E1A14 100%)" }}>
       {/* Subtle forest background */}
-      <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.08, zIndex: 0, pointerEvents: "none" }} preserveAspectRatio="xMidYMid slice" viewBox="0 0 1200 1000">
+      <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.25, zIndex: 0, pointerEvents: "none" }} preserveAspectRatio="xMidYMid slice" viewBox="0 0 1200 1000">
         {/* Distant trees */}
         <defs>
           <pattern id="forest" x="0" y="0" width="400" height="400" patternUnits="userSpaceOnUse">
