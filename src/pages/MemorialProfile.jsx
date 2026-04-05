@@ -309,7 +309,7 @@ export default function MemorialProfile() {
         />
       )}
 
-      <FloatingMusicPlayer spotifyUrl={memorial.spotify_url} name={memorial.name} curatedTracks={memorial.curated_track_ids ? CURATED_TRACKS.filter(t => memorial.curated_track_ids.includes(t.id)) : []} />
+
 
       {/* Footer */}
       <div className="py-12 text-center border-t border-stone-100" style={{ background: "#1a1410" }}>
