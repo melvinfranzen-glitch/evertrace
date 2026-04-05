@@ -3,7 +3,8 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, Users, Link2, ExternalLink } from "lucide-react";
+import { Plus, Trash2, Users, Link2, ExternalLink, Camera, X } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 
 const RELATION_LABEL = {
   vater: "Vater", mutter: "Mutter",
@@ -14,7 +15,7 @@ const RELATION_LABEL = {
   sohn: "Sohn", tochter: "Tochter",
 };
 
-const EMPTY = { name: "", relation: "vater", birth_year: "", death_year: "", linked_memorial_short_id: "" };
+const EMPTY = { name: "", relation: "vater", birth_year: "", death_year: "", linked_memorial_short_id: "", photo_url: "", notes: "" };
 
 export default function FamilyEditor({ memorialId }) {
   const [members, setMembers] = useState([]);
@@ -86,6 +87,31 @@ export default function FamilyEditor({ memorialId }) {
             <Input value={form.name} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))} placeholder="Vollständiger Name" className="mt-1" />
           </div>
           <div className="col-span-2">
+            <Label className="text-xs">Foto (optional)</Label>
+            <div className="mt-1 flex items-center gap-3">
+              {form.photo_url ? (
+                <div className="relative">
+                  <img src={form.photo_url} className="w-12 h-12 rounded-full object-cover object-face" alt="" />
+                  <button onClick={() => setForm(p => ({ ...p, photo_url: "" }))} className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                    <X className="w-2.5 h-2.5 text-white" />
+                  </button>
+                </div>
+              ) : (
+                <label className="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center cursor-pointer hover:bg-stone-200 transition-colors">
+                  <Camera className="w-5 h-5 text-stone-400" />
+                  <input type="file" accept="image/*" className="hidden" onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                    setForm(p => ({ ...p, photo_url: file_url }));
+                    e.target.value = "";
+                  }} />
+                </label>
+              )}
+              <span className="text-xs text-stone-400">Foto hinzufügen</span>
+            </div>
+          </div>
+          <div className="col-span-2">
             <Label className="text-xs">Beziehung</Label>
             <select
               value={form.relation}
@@ -104,6 +130,11 @@ export default function FamilyEditor({ memorialId }) {
           <div>
             <Label className="text-xs">Todesjahr</Label>
             <Input value={form.death_year} onChange={(e) => setForm((p) => ({ ...p, death_year: e.target.value }))} placeholder="z.B. 2010" className="mt-1" />
+          </div>
+          <div className="col-span-2">
+            <Label className="text-xs">Kurztext / Erinnerung (optional)</Label>
+            <Textarea value={form.notes || ""} onChange={(e) => setForm(p => ({ ...p, notes: e.target.value }))}
+              placeholder="z.B. War immer für seine Familie da…" className="mt-1 resize-none h-16 text-sm" />
           </div>
           <div className="col-span-2">
             <Label className="text-xs">Gedenkseite verknüpfen (optional)</Label>

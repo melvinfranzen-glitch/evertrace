@@ -260,7 +260,7 @@ export default function MemorialProfile() {
         </>
       )}
 
-      {canShow("family") && <FamilyTreeSection memorial={memorial} />}
+      {canShow("family") && <FamilyTreeSection memorial={memorial} isOwner={false} />}
 
       {canShow("audio") && <AudioSection tracks={audioTracks} curatedTracks={memorial.curated_track_ids ? CURATED_TRACKS.filter(t => memorial.curated_track_ids.includes(t.id)) : []} />}
 
