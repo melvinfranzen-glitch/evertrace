@@ -226,12 +226,7 @@ export default function EditMemorial() {
             {tabs.map((t) => (
               <button
                 key={t.id}
-                onClick={() => {
-                  setActiveTab(t.id);
-                  setTimeout(() => {
-                    document.querySelector('[data-active-tab]')?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                  }, 0);
-                }}
+                onClick={() => setActiveTab(t.id)}
                 data-active-tab={activeTab === t.id}
                 className="px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all flex-shrink-0 flex items-center gap-1.5"
               style={{
