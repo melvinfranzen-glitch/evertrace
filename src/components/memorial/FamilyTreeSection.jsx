@@ -13,137 +13,139 @@ const RELATION_LABEL = {
   sohn: "Sohn", tochter: "Tochter",
 };
 
-// ─── Person Node (Desktop) ────────────────────────────────
+// ─── Desktop PersonNode (horizontal tree) ─────────────────
 
 function PersonNode({ person, isDeceased, onClick, linkedId }) {
   const navigate = useNavigate();
   const initials = person.name?.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase() || "?";
   const hasLinked = !!person.linked_memorial_short_id;
-
   const handleClick = () => {
     if (linkedId) navigate(`/MemorialProfile?id=${linkedId}`);
     else onClick();
   };
 
   return (
-    <button onClick={handleClick} className="flex flex-col items-center gap-1.5 group focus:outline-none" style={{ minWidth: 70 }}>
+    <button onClick={handleClick} className="flex flex-col items-center gap-1.5 group focus:outline-none" style={{ minWidth: 72 }}>
       <div className="relative">
         <div className={`rounded-full flex items-center justify-center font-semibold overflow-hidden transition-all group-hover:scale-105 ${
-          isDeceased
-            ? "w-14 h-14 text-white shadow-lg ring-2 ring-amber-500 ring-offset-2 text-sm"
-            : "w-10 h-10 text-stone-600 bg-stone-200 text-xs"
-        }`}
-          style={isDeceased ? { background: "linear-gradient(135deg,#92400e,#c9a96e)" } : {}}>
+          isDeceased ? "w-16 h-16 text-white shadow-lg ring-2 ring-amber-500 ring-offset-2 text-base"
+            : "w-11 h-11 text-stone-600 bg-stone-200 text-sm"
+        }`} style={isDeceased ? { background: "linear-gradient(135deg,#92400e,#c9a96e)" } : {}}>
           {person.photo_url
             ? <img src={person.photo_url} className="w-full h-full object-cover object-face" alt={person.name} />
             : initials}
         </div>
         {hasLinked && (
-          <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center shadow-sm" style={{ background: "#c9a96e" }}>
-            <ExternalLink className="w-2 h-2 text-white" />
+          <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center shadow-sm" style={{ background: "#c9a96e" }}>
+            <ExternalLink className="w-2.5 h-2.5 text-white" />
           </div>
         )}
       </div>
-      <div className="text-center" style={{ maxWidth: 80 }}>
-        <p className={`text-xs leading-tight truncate ${isDeceased ? "font-semibold text-amber-800" : "text-gray-700"}`}>
+      <div className="text-center max-w-[88px]">
+        <p className={`text-xs font-semibold leading-tight truncate group-hover:underline ${isDeceased ? "text-amber-800" : "text-gray-700"}`}>
           {person.name}
         </p>
-        {!isDeceased && (
-          <p className="text-xs text-stone-400 leading-tight truncate">{RELATION_LABEL[person.relation] || person.relation}</p>
+        {!isDeceased && <p className="text-xs text-stone-400 leading-tight">{RELATION_LABEL[person.relation] || person.relation}</p>}
+        {(person.birth_year || person.death_year) && (
+          <p className="text-xs text-stone-400">{person.birth_year || "?"}{person.death_year ? `–${person.death_year}` : ""}</p>
         )}
       </div>
     </button>
   );
 }
 
-// ─── Person Card (Mobile) ─────────────────────────────────
+// ─── Mobile Tree Node (vertical tree) ─────────────────────
 
-function PersonCard({ person, isDeceased, onClick, linkedId }) {
+function MobileTreeNode({ person, isDeceased, onClick, linkedId, isLast = false }) {
   const navigate = useNavigate();
   const initials = person.name?.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase() || "?";
   const hasLinked = !!person.linked_memorial_short_id;
-
   const handleClick = () => {
     if (linkedId) navigate(`/MemorialProfile?id=${linkedId}`);
     else onClick();
   };
 
+  const avatarSize = isDeceased ? "w-14 h-14" : "w-10 h-10";
+  const avatarText = isDeceased ? "text-sm" : "text-xs";
+
   return (
-    <button onClick={handleClick} className="w-full flex items-center gap-3 p-3 rounded-xl transition-all active:scale-[0.98]"
-      style={{ background: isDeceased ? "rgba(201,169,110,0.08)" : "white", border: `1px solid ${isDeceased ? "rgba(201,169,110,0.3)" : "#e7e5e4"}` }}>
-      <div className="relative flex-shrink-0">
-        <div className={`rounded-full flex items-center justify-center font-semibold overflow-hidden ${
-          isDeceased
-            ? "w-12 h-12 text-white text-sm ring-2 ring-amber-500 ring-offset-1"
-            : "w-10 h-10 text-stone-600 bg-stone-200 text-xs"
-        }`}
-          style={isDeceased ? { background: "linear-gradient(135deg,#92400e,#c9a96e)" } : {}}>
-          {person.photo_url
-            ? <img src={person.photo_url} className="w-full h-full object-cover object-face" alt={person.name} />
-            : initials}
-        </div>
-        {hasLinked && (
-          <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center shadow-sm" style={{ background: "#c9a96e" }}>
-            <ExternalLink className="w-2 h-2 text-white" />
+    <div className="relative flex items-start">
+      {/* Vertikale Stammlinie + horizontaler Ast */}
+      <div className="flex flex-col items-center flex-shrink-0" style={{ width: 28 }}>
+        {/* Obere vertikale Linie */}
+        <div className="w-px flex-1" style={{ background: "#d4c9b0", minHeight: 8 }} />
+        {/* Horizontaler Ast-Punkt */}
+        <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" 
+          style={{ background: isDeceased ? "#c9a96e" : "#d4c9b0", border: isDeceased ? "2px solid #a07830" : "none" }} />
+        {/* Untere vertikale Linie (nicht beim letzten Element) */}
+        {!isLast && <div className="w-px flex-1" style={{ background: "#d4c9b0", minHeight: 8 }} />}
+        {isLast && <div className="flex-1" />}
+      </div>
+
+      {/* Horizontaler Ast */}
+      <div className="w-4 h-px self-center flex-shrink-0 -ml-px" style={{ background: "#d4c9b0", marginTop: isDeceased ? 0 : -2 }} />
+
+      {/* Person Card */}
+      <button onClick={handleClick} className="flex items-center gap-3 py-2 pr-3 flex-1 min-w-0 rounded-xl transition-all active:bg-stone-50"
+        style={{ marginTop: isDeceased ? -4 : -6, marginBottom: isDeceased ? -4 : -6 }}>
+        <div className="relative flex-shrink-0">
+          <div className={`${avatarSize} rounded-full flex items-center justify-center font-semibold overflow-hidden ${avatarText} ${
+            isDeceased ? "text-white ring-2 ring-amber-500 ring-offset-1 shadow-md" : "text-stone-600 bg-stone-200"
+          }`} style={isDeceased ? { background: "linear-gradient(135deg,#92400e,#c9a96e)" } : {}}>
+            {person.photo_url
+              ? <img src={person.photo_url} className="w-full h-full object-cover object-face" alt={person.name} />
+              : initials}
           </div>
-        )}
-      </div>
-      <div className="flex-1 min-w-0 text-left">
-        <p className={`text-sm leading-tight truncate ${isDeceased ? "font-semibold text-amber-800" : "font-medium text-gray-800"}`}>
-          {person.name}
-        </p>
-        <p className="text-xs text-stone-400 truncate">
-          {isDeceased ? "In liebevoller Erinnerung" : (RELATION_LABEL[person.relation] || person.relation)}
-          {(person.birth_year || person.death_year) && (
-            <span className="ml-1">· {person.birth_year || "?"}{person.death_year ? `–${person.death_year}` : ""}</span>
+          {hasLinked && (
+            <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center shadow-sm" style={{ background: "#c9a96e" }}>
+              <ExternalLink className="w-2 h-2 text-white" />
+            </div>
           )}
-        </p>
-      </div>
-      {hasLinked && (
-        <ExternalLink className="w-4 h-4 flex-shrink-0" style={{ color: "#c9a96e" }} />
-      )}
-    </button>
-  );
-}
-
-// ─── Verbindungslinien (Desktop) ──────────────────────────
-
-function VLine() {
-  return <div className="hidden md:flex justify-center my-1"><div className="w-px h-6 bg-stone-300" /></div>;
-}
-
-function HLine() {
-  return <div className="hidden md:block w-6 h-px bg-stone-300 self-center flex-shrink-0" />;
-}
-
-// ─── Generations-Gruppe (Mobile) ──────────────────────────
-
-function MobileGeneration({ label, members, onSelect }) {
-  if (!members.length) return null;
-  return (
-    <div>
-      <p className="text-xs uppercase tracking-widest mb-2 ml-1" style={{ color: "#c9a96e", letterSpacing: "0.15em" }}>{label}</p>
-      <div className="space-y-2">
-        {members.map(m => (
-          <PersonCard key={m.id || m.name} person={m} isDeceased={!!m._isDeceased}
-            linkedId={m.linked_memorial_short_id}
-            onClick={() => onSelect({ person: m, isDeceased: !!m._isDeceased })} />
-        ))}
-      </div>
+        </div>
+        <div className="min-w-0">
+          <p className={`text-sm leading-tight truncate ${isDeceased ? "font-semibold text-amber-800" : "font-medium text-gray-800"}`}>
+            {person.name}
+          </p>
+          <p className="text-xs text-stone-400 truncate">
+            {isDeceased ? "In liebevoller Erinnerung" : (RELATION_LABEL[person.relation] || person.relation)}
+            {(person.birth_year || person.death_year) && (
+              <span> · {person.birth_year || "?"}{person.death_year ? `–${person.death_year}` : ""}</span>
+            )}
+          </p>
+        </div>
+        {hasLinked && <ExternalLink className="w-3.5 h-3.5 flex-shrink-0 ml-auto" style={{ color: "#c9a96e" }} />}
+      </button>
     </div>
   );
 }
 
-// ─── Desktop-Reihe ────────────────────────────────────────
+// ─── Mobile Generation Label ──────────────────────────────
 
-function DesktopGenRow({ label, children }) {
+function MobileGenLabel({ label }) {
+  return (
+    <div className="relative flex items-start">
+      <div className="flex flex-col items-center flex-shrink-0" style={{ width: 28 }}>
+        <div className="w-px flex-1" style={{ background: "#d4c9b0" }} />
+      </div>
+      <p className="text-xs uppercase tracking-widest py-2 pl-4" style={{ color: "#c9a96e", letterSpacing: "0.15em", fontWeight: 500 }}>
+        {label}
+      </p>
+    </div>
+  );
+}
+
+// ─── Desktop Helpers ──────────────────────────────────────
+
+function GenRow({ label, children }) {
   return (
     <div className="flex flex-col items-center">
-      {label && <p className="text-xs uppercase tracking-widest text-stone-400 mb-3" style={{ letterSpacing: "0.15em" }}>{label}</p>}
-      <div className="flex items-end justify-center gap-4 flex-wrap">{children}</div>
+      {label && <p className="text-xs uppercase tracking-widest text-stone-400 mb-4">{label}</p>}
+      <div className="flex items-end justify-center gap-5 flex-wrap">{children}</div>
     </div>
   );
 }
+function VLine() { return <div className="flex justify-center my-1"><div className="w-px h-7 bg-stone-300" /></div>; }
+function HLine() { return <div className="w-8 h-px bg-stone-300 self-center flex-shrink-0" />; }
 
 // ─── HAUPTKOMPONENTE ──────────────────────────────────────
 
@@ -154,14 +156,12 @@ export default function FamilyTreeSection({ memorial }) {
 
   useEffect(() => {
     base44.entities.FamilyMember.filter({ memorial_id: memorial.id })
-      .then(setMembers)
-      .finally(() => setLoading(false));
+      .then(setMembers).finally(() => setLoading(false));
   }, [memorial.id]);
 
   if (loading || members.length === 0) return null;
 
   const by = (...rels) => members.filter(m => rels.includes(m.relation));
-
   const grandparents = by("grossvater_vaterseite", "grossmutter_vaterseite", "grossvater_mutterseite", "grossmutter_mutterseite");
   const parents = by("vater", "mutter");
   const siblings = by("bruder", "schwester");
@@ -173,95 +173,98 @@ export default function FamilyTreeSection({ memorial }) {
     photo_url: memorial.hero_image_url,
     birth_year: memorial.birth_date?.slice(0, 4),
     death_year: memorial.death_date?.slice(0, 4),
-    _isDeceased: true,
   };
 
   const hasSibsOrSpouse = siblings.length > 0 || spouses.length > 0;
 
+  const onSelect = (person, isDec = false) => setSelected({ person, isDeceased: isDec });
+
+  // Baue die Mobile-Reihenfolge: Großeltern → Eltern → Geschwister → Verstorbene/r + Partner → Kinder
+  const mobileGroups = [];
+  if (grandparents.length) mobileGroups.push({ label: "Großeltern", members: grandparents });
+  if (parents.length) mobileGroups.push({ label: "Eltern", members: parents });
+  if (siblings.length) mobileGroups.push({ label: "Geschwister", members: siblings });
+  mobileGroups.push({ label: null, members: [{ ...deceased, _isDeceased: true }] });
+  if (spouses.length) mobileGroups.push({ label: "Partner", members: spouses });
+  if (children.length) mobileGroups.push({ label: "Kinder", members: children });
+
+  // Flatten für isLast Berechnung
+  const allMobileNodes = mobileGroups.flatMap(g => g.members);
+  let nodeIndex = 0;
+
   return (
     <section className="py-20 px-6" style={{ background: "#FAF8F4" }}>
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
+        <div className="text-center mb-14">
           <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>Familie</p>
           <h2 className="text-3xl md:text-4xl font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             Stammbaum
           </h2>
         </div>
 
-        {/* ═══ DESKTOP BAUM (md+) ═══ */}
+        {/* ═══ DESKTOP (md+): Horizontaler Baum ═══ */}
         <div className="hidden md:block">
           <div className="space-y-0">
             {grandparents.length > 0 && (
-              <>
-                <DesktopGenRow label="Großeltern">
-                  {grandparents.map(m => <PersonNode key={m.id} person={m} linkedId={m.linked_memorial_short_id} onClick={() => setSelected({ person: m, isDeceased: false })} />)}
-                </DesktopGenRow>
-                <VLine />
-              </>
+              <><GenRow label="Großeltern">
+                {grandparents.map(m => <PersonNode key={m.id} person={m} linkedId={m.linked_memorial_short_id} onClick={() => onSelect(m)} />)}
+              </GenRow><VLine /></>
             )}
-
             {parents.length > 0 && (
-              <>
-                <DesktopGenRow label="Eltern">
-                  {parents.map(m => <PersonNode key={m.id} person={m} linkedId={m.linked_memorial_short_id} onClick={() => setSelected({ person: m, isDeceased: false })} />)}
-                </DesktopGenRow>
-                <VLine />
-              </>
+              <><GenRow label="Eltern">
+                {parents.map(m => <PersonNode key={m.id} person={m} linkedId={m.linked_memorial_short_id} onClick={() => onSelect(m)} />)}
+              </GenRow><VLine /></>
             )}
-
             {hasSibsOrSpouse ? (
-              <DesktopGenRow>
-                {siblings.map(m => <PersonNode key={m.id} person={m} linkedId={m.linked_memorial_short_id} onClick={() => setSelected({ person: m, isDeceased: false })} />)}
+              <GenRow>
+                {siblings.map(m => <PersonNode key={m.id} person={m} linkedId={m.linked_memorial_short_id} onClick={() => onSelect(m)} />)}
                 {siblings.length > 0 && <HLine />}
-                <PersonNode person={deceased} isDeceased onClick={() => setSelected({ person: deceased, isDeceased: true })} />
+                <PersonNode person={deceased} isDeceased onClick={() => onSelect(deceased, true)} />
                 {spouses.length > 0 && <HLine />}
-                {spouses.map(m => <PersonNode key={m.id} person={m} linkedId={m.linked_memorial_short_id} onClick={() => setSelected({ person: m, isDeceased: false })} />)}
-              </DesktopGenRow>
+                {spouses.map(m => <PersonNode key={m.id} person={m} linkedId={m.linked_memorial_short_id} onClick={() => onSelect(m)} />)}
+              </GenRow>
             ) : (
-              <DesktopGenRow>
-                <PersonNode person={deceased} isDeceased onClick={() => setSelected({ person: deceased, isDeceased: true })} />
-              </DesktopGenRow>
+              <GenRow><PersonNode person={deceased} isDeceased onClick={() => onSelect(deceased, true)} /></GenRow>
             )}
-
             {children.length > 0 && (
-              <>
-                <VLine />
-                <DesktopGenRow label="Kinder">
-                  {children.map(m => <PersonNode key={m.id} person={m} linkedId={m.linked_memorial_short_id} onClick={() => setSelected({ person: m, isDeceased: false })} />)}
-                </DesktopGenRow>
-              </>
+              <><VLine /><GenRow label="Kinder">
+                {children.map(m => <PersonNode key={m.id} person={m} linkedId={m.linked_memorial_short_id} onClick={() => onSelect(m)} />)}
+              </GenRow></>
             )}
           </div>
         </div>
 
-        {/* ═══ MOBILE LISTE (<md) ═══ */}
-        <div className="md:hidden space-y-5">
-          {/* Verstorbene Person immer zuerst, hervorgehoben */}
-          <PersonCard person={deceased} isDeceased
-            onClick={() => setSelected({ person: deceased, isDeceased: true })} />
-
-          {/* Dann die Generationen */}
-          {spouses.length > 0 && (
-            <MobileGeneration label="Partner" members={spouses} onSelect={setSelected} />
-          )}
-          {parents.length > 0 && (
-            <MobileGeneration label="Eltern" members={parents} onSelect={setSelected} />
-          )}
-          {siblings.length > 0 && (
-            <MobileGeneration label="Geschwister" members={siblings} onSelect={setSelected} />
-          )}
-          {children.length > 0 && (
-            <MobileGeneration label="Kinder" members={children} onSelect={setSelected} />
-          )}
-          {grandparents.length > 0 && (
-            <MobileGeneration label="Großeltern" members={grandparents} onSelect={setSelected} />
-          )}
+        {/* ═══ MOBILE (<md): Vertikaler Baum ═══ */}
+        <div className="md:hidden pl-2">
+          {mobileGroups.map((group, gi) => {
+            const nodes = group.members;
+            return (
+              <div key={gi}>
+                {group.label && <MobileGenLabel label={group.label} />}
+                {nodes.map((m, mi) => {
+                  const currentIdx = nodeIndex++;
+                  const isLast = currentIdx === allMobileNodes.length - 1;
+                  const isDec = !!m._isDeceased;
+                  return (
+                    <MobileTreeNode
+                      key={m.id || m.name}
+                      person={m}
+                      isDeceased={isDec}
+                      linkedId={m.linked_memorial_short_id}
+                      isLast={isLast}
+                      onClick={() => onSelect(m, isDec)}
+                    />
+                  );
+                })}
+              </div>
+            );
+          })}
         </div>
 
         {/* Info-Hinweis */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
           <p className="text-xs text-stone-400 italic">
-            Auf ein Familienmitglied tippen, um mehr zu erfahren
+            Familienmitglied antippen für Details
           </p>
           {members.some(m => m.linked_memorial_short_id) && (
             <div className="flex items-center gap-1.5 text-xs" style={{ color: "#c9a96e" }}>
@@ -274,14 +277,9 @@ export default function FamilyTreeSection({ memorial }) {
         </div>
       </div>
 
-      {/* Modal */}
       {selected && (
-        <FamilyMemberModal
-          person={selected.person}
-          isDeceased={selected.isDeceased}
-          memorialId={memorial.id}
-          onClose={() => setSelected(null)}
-        />
+        <FamilyMemberModal person={selected.person} isDeceased={selected.isDeceased}
+          memorialId={memorial.id} onClose={() => setSelected(null)} />
       )}
     </section>
   );
