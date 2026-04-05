@@ -8,11 +8,24 @@ export default function HeroLanding() {
   return (
     <section className="relative min-h-screen flex items-center justify-center text-white overflow-hidden"
       style={{ background: "linear-gradient(160deg, #3D3326 0%, #2A2218 55%, #1E1A14 100%)" }}>
+      {/* Subtle forest background */}
+      <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.08, zIndex: 0, pointerEvents: "none" }} preserveAspectRatio="xMidYMid slice" viewBox="0 0 1200 1000">
+        {/* Distant trees */}
+        <defs>
+          <pattern id="forest" x="0" y="0" width="400" height="400" patternUnits="userSpaceOnUse">
+            <path d="M80,400 L70,300 L60,250 L50,200 L60,180 L40,150 L45,120" stroke="#6b5a44" strokeWidth="4" fill="none" opacity="0.6" />
+            <path d="M150,400 L140,320 L130,270 L120,210 L130,185 L110,155 L115,130" stroke="#6b5a44" strokeWidth="3" fill="none" opacity="0.5" />
+            <path d="M220,400 L210,310 L200,260 L190,200 L200,170 L180,140 L185,110" stroke="#6b5a44" strokeWidth="3" fill="none" opacity="0.5" />
+            <path d="M320,400 L310,290 L300,240 L290,180 L300,160 L280,120 L285,90" stroke="#6b5a44" strokeWidth="4" fill="none" opacity="0.6" />
+          </pattern>
+        </defs>
+        <rect width="1200" height="1000" fill="url(#forest)" />
+      </svg>
       {/* Warm amber glow */}
       <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 65% 70% at 65% 45%, rgba(216,195,165,0.16) 0%, transparent 65%)", pointerEvents: "none" }} />
       <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 45% 45% at 15% 85%, rgba(176,123,52,0.09) 0%, transparent 55%)", pointerEvents: "none" }} />
 
-      <div className="relative text-center px-6 max-w-4xl mx-auto fade-in" style={{ paddingTop: 64 }}>
+      <div className="relative text-center px-6 max-w-4xl mx-auto fade-in" style={{ paddingTop: 64, zIndex: 1 }}>
         {/* Logo */}
         <div className="flex justify-center mb-12" style={{ transform: "scale(1.4)" }}>
           <EvertraceLogo variant="dark" size="xl" />
