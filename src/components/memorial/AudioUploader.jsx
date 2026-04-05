@@ -35,8 +35,15 @@ export default function AudioUploader({ memorialId }) {
     if (!file) return;
     e.target.value = "";
 
-    // Validate
-    if (!file.type.startsWith("audio/")) return;
+    // Validate: check MIME type or extension
+    const isAudioMime = file.type.startsWith("audio/");
+    const isAudioExt = /\.(mp3|wav|ogg|m4a|aac|flac)$/i.test(file.name);
+    
+    if (!isAudioMime && !isAudioExt) {
+      alert("Bitte wählen Sie eine Audiodatei (MP3, WAV, OGG, M4A, AAC, FLAC).");
+      return;
+    }
+    
     if (file.size > 25 * 1024 * 1024) {
       alert("Die Datei ist zu groß. Maximal 25 MB.");
       return;
@@ -53,7 +60,9 @@ export default function AudioUploader({ memorialId }) {
   const handleDrop = (e) => {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
-    if (file?.type.startsWith("audio/")) {
+    const isAudioMime = file?.type.startsWith("audio/");
+    const isAudioExt = /\.(mp3|wav|ogg|m4a|aac|flac)$/i.test(file?.name || "");
+    if (file && (isAudioMime || isAudioExt)) {
       setPendingFile(file);
       setPendingUrl(URL.createObjectURL(file));
       const name = file.name.replace(/\.[^.]+$/, "").replace(/[-_]/g, " ");
@@ -131,7 +140,8 @@ export default function AudioUploader({ memorialId }) {
       setPendingUrl(null);
       setNewTitle("");
     } catch (err) {
-      alert("Beim Hochladen ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.");
+      console.error("Upload error:", err);
+      alert("Beim Hochladen ist ein Fehler aufgetreten: " + (err?.message || "Unbekannter Fehler"));
     }
     setUploading(false);
   };
