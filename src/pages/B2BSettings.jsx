@@ -132,7 +132,7 @@ export default function B2BSettings() {
                   <label className="cursor-pointer block">
                     <Upload className="w-7 h-7 mx-auto mb-2" style={{ color: "#5a554e" }} />
                     <p className="text-sm" style={{ color: "#5a554e" }}>{uploading ? "Lädt hoch…" : "Logo hochladen (PNG / SVG, max. 2 MB)"}</p>
-                    <input type="file" accept="image/png,image/svg+xml" className="hidden" onChange={uploadLogo} disabled={uploading} />
+                    <input type="file" accept="image/png,image/svg+xml" className="hidden" onChange={handleLogoUpload} disabled={uploading} />
                   </label>
                 )}
               </div>

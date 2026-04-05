@@ -199,14 +199,37 @@ function PersonDetailSheet({ person, isDeceased, memorialId, onClose, onUpdate, 
         <div className="px-6 pt-5 pb-4">
           <div className="flex items-center gap-4">
             <div className="relative flex-shrink-0">
-              <div className={`rounded-2xl overflow-hidden flex items-center justify-center font-bold shadow-md ${isDeceased ? "w-16 h-16 text-lg" : "w-14 h-14 text-base"}`}
-                style={{
-                  background: isDeceased ? "linear-gradient(135deg, #92400e, #c9a96e)" : person.photo_url ? "transparent" : "linear-gradient(135deg, #e7e2db, #d8d0c4)",
-                  color: isDeceased ? "white" : "#6b5a44",
-                }}>
-                {person.photo_url ? <img src={person.photo_url} className="w-full h-full object-cover object-face" alt={person.name} /> : initials}
-              </div>
-              {!isDeceased && isOwner && mode !== "link" && (
+              {person.photo_url ? (
+                <div className={`rounded-2xl overflow-hidden flex items-center justify-center font-bold shadow-md ${isDeceased ? "w-16 h-16 text-lg" : "w-14 h-14 text-base"}`}
+                  style={{
+                    background: isDeceased ? "linear-gradient(135deg, #92400e, #c9a96e)" : "transparent",
+                    color: isDeceased ? "white" : "#6b5a44",
+                  }}>
+                  <img src={person.photo_url} className="w-full h-full object-cover object-face" alt={person.name} />
+                </div>
+              ) : isOwner && !isDeceased ? (
+                <label className={`rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-all hover:border-amber-400 ${isDeceased ? "w-16 h-16" : "w-14 h-14"}`}
+                  style={{
+                    background: "linear-gradient(135deg, #e7e2db, #d8d0c4)",
+                    border: "2px dashed #c9a96e",
+                  }}>
+                  {uploading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" style={{ color: "#c9a96e" }} />
+                  ) : (
+                    <Camera className="w-5 h-5" style={{ color: "#c9a96e" }} />
+                  )}
+                  <input type="file" accept="image/*" className="hidden" onChange={uploadPhoto} disabled={uploading} />
+                </label>
+              ) : (
+                <div className={`rounded-2xl flex items-center justify-center font-bold ${isDeceased ? "w-16 h-16 text-lg" : "w-14 h-14 text-base"}`}
+                  style={{
+                    background: isDeceased ? "linear-gradient(135deg, #92400e, #c9a96e)" : "linear-gradient(135deg, #e7e2db, #d8d0c4)",
+                    color: isDeceased ? "white" : "#6b5a44",
+                  }}>
+                  {initials}
+                </div>
+              )}
+              {person.photo_url && !isDeceased && isOwner && mode !== "link" && (
                 <label className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center cursor-pointer shadow-sm"
                   style={{ background: "#c9a96e", border: "2px solid white" }}>
                   {uploading ? <Loader2 className="w-2.5 h-2.5 text-white animate-spin" /> : <Camera className="w-2.5 h-2.5 text-white" />}
@@ -214,13 +237,6 @@ function PersonDetailSheet({ person, isDeceased, memorialId, onClose, onUpdate, 
                 </label>
               )}
             </div>
-            <div className="min-w-0 flex-1">
-              <h3 className="text-lg font-semibold text-gray-800 leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                {person.name}
-              </h3>
-              {!isDeceased && person.relation && <span className="inline-block mt-1 text-xs px-2.5 py-0.5 rounded-full" style={{ background: "rgba(201,169,110,0.1)", color: "#a07830" }}>{REL[person.relation] || person.relation}</span>}
-              {isDeceased && <p className="text-xs italic mt-0.5" style={{ color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>In liebevoller Erinnerung</p>}
-              {(person.birth_year || person.death_year) && mode === "view" && <p className="text-xs mt-1" style={{ color: "#8a8278" }}>{person.birth_year && `geb. ${person.birth_year}`}{person.birth_year && person.death_year && " · "}{person.death_year && `gest. ${person.death_year}`}</p>}
             </div>
           </div>
         </div>

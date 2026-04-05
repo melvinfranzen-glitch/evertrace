@@ -191,6 +191,12 @@ export default function MemorialProfile() {
   };
   const needsFamilyLock = Object.values(sv).includes("family") && !familyUnlocked;
 
+  // Berechne isOwner: Creator oder Kollaborator
+  const isOwner = user && memorial && (
+    user.email === memorial.created_by || 
+    (memorial.collaborator_emails || []).includes(user.email)
+  );
+
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", background: "#FAFAF8" }}>
       <HeroSection memorial={memorial} />
@@ -263,7 +269,7 @@ export default function MemorialProfile() {
         </>
       )}
 
-      {canShow("family") && <FamilyTreeSection memorial={memorial} isOwner={user && user.id === memorial.created_by} />}
+      {canShow("family") && <FamilyTreeSection memorial={memorial} isOwner={isOwner} />}
 
       <DonationSection memorial={memorial} />
 
