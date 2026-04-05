@@ -205,7 +205,7 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
   };
 
   const generateMotifRaw = async () => {
-    const prompt = `Minimalist memorial card front cover illustration. Style: elegant, dark background, single symbolic motif for theme: "${motif}". Thin gold lines, no text, no faces. Ultra-minimal, sophisticated, print-ready.`;
+    const prompt = `Full-bleed seamless background artwork, portrait 3:4 ratio. Deep dark background (#0f0e0c) filling the entire frame edge to edge. Single elegant symbolic motif in thin gold lines (#c9a96e) for theme: "${motif}". NO text, NO letters, NO numbers, NO borders, NO frames, NO card mockup, NO card edges. No faces, no people. Subtle and elegant motif leaving space for text overlay. Ultra-minimal, sophisticated, high resolution.`;
     const { url } = await base44.integrations.Core.GenerateImage({ prompt });
     return url;
   };
@@ -214,7 +214,7 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
     setGeneratingMotif(true);
     const allPassions = [...passions, ...(customPassion ? [customPassion] : [])].join(", ");
     const profHint = profession ? `, referencing the profession: ${profession}` : "";
-    const prompt = `Minimalist memorial card front cover illustration. Style: elegant, dark background (#0f0e0c or deep navy), single symbolic motif${profHint}. Motif theme: "${motif}" (e.g. for "nature": a lone bare tree; for "maritime": an anchor; for "handwerk": craftsman tools in silhouette). Very thin gold lines (#c9a96e), no text, no faces, no people. Suitable for a premium German funeral card. Ultra-minimal, sophisticated, print-ready.`;
+    const prompt = `Full-bleed seamless background artwork, portrait 3:4 ratio. Deep dark background (#0f0e0c) filling the entire frame edge to edge. Single elegant symbolic motif in very thin gold lines (#c9a96e)${profHint}. Motif theme: "${motif}" (e.g. for "nature": a lone bare tree; for "maritime": an anchor; for "handwerk": craftsman tools in silhouette). IMPORTANT: This is ONLY a full-bleed background — absolutely NO text, NO letters, NO numbers, NO words, NO borders, NO frames, NO card mockup, NO card edges, NO rounded corners. No faces, no people. The motif should be centered and subtle, leaving generous space for text to be overlaid later. Ultra-minimal, sophisticated, high resolution.`;
     const { url } = await base44.integrations.Core.GenerateImage({ prompt });
     setGeneratedMotifUrl(url);
     setGeneratingMotif(false);

@@ -13,10 +13,10 @@ import CardPreview from "@/components/cards/CardPreview";
 import CardDesignControls, { DEFAULT_SETTINGS } from "@/components/cards/CardDesignControls";
 
 const STYLE_PROMPTS = [
-  "soft watercolor botanical art, delicate flowers and leaves, warm muted tones, beige and sage green, funeral memorial card background, no text, artistic",
-  "abstract light rays through fog in a forest, golden hour, dreamy ethereal atmosphere, memorial card background, no text, photorealistic",
-  "stylized ancient oak tree silhouette, golden leaves falling, dark sky, memorial card artwork, painterly, elegant, no text",
-  "minimalist geometric gold lines on deep charcoal background, subtle texture, luxury memorial card design, no text, elegant",
+  "Full-bleed seamless background artwork, portrait 3:4 ratio. Soft watercolor botanical art filling the entire frame edge to edge, delicate flowers and leaves, warm muted tones of beige, sage green and dusty rose. NO text, NO letters, NO borders, NO frames, NO card mockup. Pure artistic background texture, high resolution.",
+  "Full-bleed seamless background artwork, portrait 3:4 ratio. Abstract light rays filtering through dense fog in a forest, golden hour warm light, dreamy ethereal atmosphere filling the entire frame edge to edge. NO text, NO letters, NO borders, NO frames, NO card mockup. Photorealistic, high resolution.",
+  "Full-bleed seamless background artwork, portrait 3:4 ratio. Stylized ancient oak tree silhouette against a dark moody sky, golden leaves gently falling, painterly brushstrokes filling the entire frame edge to edge. NO text, NO letters, NO borders, NO frames, NO card mockup. Elegant, high resolution.",
+  "Full-bleed seamless background artwork, portrait 3:4 ratio. Minimalist geometric gold lines (#c9a96e) on deep charcoal background (#1a1715), subtle paper texture filling the entire frame edge to edge. NO text, NO letters, NO borders, NO frames, NO card mockup. Luxury aesthetic, high resolution.",
 ];
 
 export default function CardDesigner() {
@@ -59,7 +59,7 @@ export default function CardDesigner() {
     setDesigns([]);
     setSelectedDesign(null);
 
-    const contextPrompt = `Memorial card for ${memorial?.name}, ${occasion}. ${elements ? `Design elements: ${elements}.` : ""} High quality, premium, emotional, no text overlay.`;
+    const contextPrompt = `Thematic context: remembrance of ${memorial?.name}, occasion: ${occasion}. ${elements ? `Incorporate elements: ${elements}.` : ""} REMINDER: Generate ONLY a full-bleed background image — NO text, NO card mockup, NO borders, NO frames.`;
 
     // Generate 4 designs sequentially, updating UI as each completes
     const results = [];
