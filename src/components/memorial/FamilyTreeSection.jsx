@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { ExternalLink, Camera, Plus, X, Save, Loader2, Heart, Calendar, Edit3 } from "lucide-react";
+import { ExternalLink, Camera, Plus, X, Save, Loader2, Heart, Calendar, Edit3, Link2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -104,6 +104,9 @@ function PersonDetailSheet({ person, isDeceased, memorialId, onClose, onUpdate, 
   const [editing, setEditing] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [linking, setLinking] = useState(false);
+  const [myMemorials, setMyMemorials] = useState([]);
+  const [loadingMemorials, setLoadingMemorials] = useState(false);
   const [editForm, setEditForm] = useState({
     notes: person.notes || "",
     birth_year: person.birth_year || "",
@@ -137,6 +140,41 @@ function PersonDetailSheet({ person, isDeceased, memorialId, onClose, onUpdate, 
       setEditing(false);
     } catch (err) {
       console.error("Speichern fehlgeschlagen:", err);
+    }
+    setSaving(false);
+  };
+
+  const startLinking = async () => {
+    setLinking(true);
+    setLoadingMemorials(true);
+    try {
+      const all = await base44.entities.Memorial.list();
+      setMyMemorials(all.filter(m => m.id !== memorialId && m.short_id));
+    } catch {
+      setMyMemorials([]);
+    }
+    setLoadingMemorials(false);
+  };
+
+  const linkMemorial = async (shortId) => {
+    setSaving(true);
+    try {
+      await base44.entities.FamilyMember.update(person.id, { linked_memorial_short_id: shortId });
+      onUpdate({ ...person, linked_memorial_short_id: shortId });
+      setLinking(false);
+    } catch (err) {
+      console.error("Verknüpfen fehlgeschlagen:", err);
+    }
+    setSaving(false);
+  };
+
+  const unlinkMemorial = async () => {
+    setSaving(true);
+    try {
+      await base44.entities.FamilyMember.update(person.id, { linked_memorial_short_id: "" });
+      onUpdate({ ...person, linked_memorial_short_id: "" });
+    } catch (err) {
+      console.error("Entfernen fehlgeschlagen:", err);
     }
     setSaving(false);
   };
@@ -245,20 +283,74 @@ function PersonDetailSheet({ person, isDeceased, memorialId, onClose, onUpdate, 
             </div>
           )}
 
-          {!editing && (
+          {!editing && !linking && (
             <div className="space-y-2 pt-2">
-              {!isDeceased && isOwner && (
-                <button onClick={() => setEditing(true)}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all"
-                  style={{ background: hasProfile ? "#FAF8F4" : "rgba(201,169,110,0.1)", 
-                    color: hasProfile ? "#6b7280" : "#a07830", 
-                    border: `1px solid ${hasProfile ? "#e5e7eb" : "rgba(201,169,110,0.3)"}` }}>
-                  {hasProfile 
-                    ? <><Edit3 className="w-3.5 h-3.5" /> Steckbrief bearbeiten</>
-                    : <><Plus className="w-3.5 h-3.5" /> Steckbrief anlegen</>}
-                </button>
+              
+              {/* Leere Person: Prominente Aktionen */}
+              {!hasProfile && !hasLinked && !isDeceased && isOwner && (
+                <div className="rounded-xl p-4 space-y-3" style={{ background: "rgba(201,169,110,0.06)", border: "1px solid rgba(201,169,110,0.15)" }}>
+                  <p className="text-xs text-center" style={{ color: "#8a8278" }}>
+                    Noch keine Daten für {person.name.split(" ")[0]} hinterlegt
+                  </p>
+                  
+                  <button onClick={() => setEditing(true)}
+                    className="w-full flex items-center gap-3 p-3 rounded-xl text-sm font-medium transition-all active:scale-[0.98]"
+                    style={{ background: "#c9a96e", color: "#0f0e0c" }}>
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "rgba(255,255,255,0.25)" }}>
+                      <Camera className="w-4 h-4" />
+                    </div>
+                    <div className="text-left">
+                      <p className="font-medium">Foto & Steckbrief anlegen</p>
+                      <p className="text-xs opacity-70">Foto, Geburtsjahr, persönliche Erinnerung</p>
+                    </div>
+                  </button>
+
+                  <button onClick={startLinking}
+                    className="w-full flex items-center gap-3 p-3 rounded-xl text-sm font-medium transition-all active:scale-[0.98]"
+                    style={{ background: "white", color: "#2c2419", border: "1px solid #e5e7eb" }}>
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "#FAF8F4" }}>
+                      <Link2 className="w-4 h-4" style={{ color: "#c9a96e" }} />
+                    </div>
+                    <div className="text-left">
+                      <p className="font-medium">Gedenkseite verknüpfen</p>
+                      <p className="text-xs text-stone-400">Eine meiner bestehenden Gedenkseiten zuordnen</p>
+                    </div>
+                  </button>
+
+                  <button onClick={() => navigate(`/CreateMemorial?prefill_name=${encodeURIComponent(person.name)}`)}
+                    className="w-full flex items-center gap-3 p-3 rounded-xl text-sm font-medium transition-all active:scale-[0.98]"
+                    style={{ background: "white", color: "#2c2419", border: "1px solid #e5e7eb" }}>
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "#FAF8F4" }}>
+                      <Plus className="w-4 h-4" style={{ color: "#8a8278" }} />
+                    </div>
+                    <div className="text-left">
+                      <p className="font-medium">Neue Gedenkseite erstellen</p>
+                      <p className="text-xs text-stone-400">Eigene Gedenkseite für {person.name.split(" ")[0]} anlegen</p>
+                    </div>
+                  </button>
+                </div>
               )}
 
+              {/* Person mit Profil: Kompakte Buttons */}
+              {(hasProfile || hasLinked) && !isDeceased && isOwner && (
+                <>
+                  <button onClick={() => setEditing(true)}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all"
+                    style={{ background: "#FAF8F4", color: "#6b7280", border: "1px solid #e5e7eb" }}>
+                    <Edit3 className="w-3.5 h-3.5" /> Steckbrief bearbeiten
+                  </button>
+
+                  {!hasLinked && (
+                    <button onClick={startLinking}
+                      className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all"
+                      style={{ background: "white", color: "#8a8278", border: "1px solid #e5e7eb" }}>
+                      <Link2 className="w-3.5 h-3.5" /> Gedenkseite verknüpfen
+                    </button>
+                  )}
+                </>
+              )}
+
+              {/* Zur verknüpften Gedenkseite */}
               {hasLinked && (
                 <button onClick={() => navigate(`/MemorialProfile?id=${person.linked_memorial_short_id}`)}
                   className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all"
@@ -267,12 +359,69 @@ function PersonDetailSheet({ person, isDeceased, memorialId, onClose, onUpdate, 
                 </button>
               )}
 
-              {!isDeceased && !hasLinked && isOwner && (
+              {/* Verknüpfung entfernen */}
+              {hasLinked && isOwner && (
+                <button onClick={unlinkMemorial} disabled={saving}
+                  className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs transition-all"
+                  style={{ color: "#a09080" }}>
+                  Verknüpfung entfernen
+                </button>
+              )}
+
+              {/* Neue Gedenkseite erstellen (nur wenn schon Profil hat aber keine Verknüpfung) */}
+              {hasProfile && !hasLinked && isOwner && (
                 <button onClick={() => navigate(`/CreateMemorial?prefill_name=${encodeURIComponent(person.name)}`)}
                   className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all"
-                  style={{ background: "#FAF8F4", color: "#8a8278", border: "1px solid #e5e7eb" }}>
-                  <Plus className="w-3.5 h-3.5" /> Gedenkseite für {person.name.split(" ")[0]} erstellen
+                  style={{ background: "white", color: "#8a8278", border: "1px solid #e5e7eb" }}>
+                  <Plus className="w-3.5 h-3.5" /> Neue Gedenkseite erstellen
                 </button>
+              )}
+            </div>
+          )}
+
+          {/* Gedenkseite verknüpfen Ansicht */}
+          {linking && (
+            <div className="space-y-3 pt-2">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-gray-700">Gedenkseite verknüpfen</p>
+                <button onClick={() => setLinking(false)} className="text-xs" style={{ color: "#8a8278" }}>Abbrechen</button>
+              </div>
+
+              {loadingMemorials ? (
+                <div className="flex items-center justify-center py-8 text-stone-400">
+                  <Loader2 className="w-5 h-5 animate-spin mr-2" /> Gedenkseiten werden geladen…
+                </div>
+              ) : myMemorials.length === 0 ? (
+                <div className="text-center py-6">
+                  <p className="text-sm text-stone-400 mb-3">Sie haben noch keine weiteren Gedenkseiten.</p>
+                  <button onClick={() => navigate(`/CreateMemorial?prefill_name=${encodeURIComponent(person.name)}`)}
+                    className="px-4 py-2 rounded-xl text-sm font-medium"
+                    style={{ background: "#c9a96e", color: "#0f0e0c" }}>
+                    <Plus className="w-3.5 h-3.5 inline mr-1.5" /> Jetzt erstellen
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-2 max-h-64 overflow-y-auto">
+                  {myMemorials.map(m => (
+                    <button key={m.id} onClick={() => linkMemorial(m.short_id)} disabled={saving}
+                      className="w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all active:scale-[0.98] disabled:opacity-50"
+                      style={{ background: "white", border: "1px solid #e5e7eb" }}>
+                      <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center flex-shrink-0"
+                        style={{ background: m.hero_image_url ? "transparent" : "#e7e2db" }}>
+                        {m.hero_image_url
+                          ? <img src={m.hero_image_url} className="w-full h-full object-cover object-face" alt="" />
+                          : <span className="text-xs font-semibold" style={{ color: "#6b5a44" }}>{m.name?.[0]}</span>}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium text-gray-800 truncate">{m.name}</p>
+                        <p className="text-xs text-stone-400 truncate">
+                          {m.birth_date?.slice(0, 4) || "?"} – {m.death_date?.slice(0, 4) || "?"}
+                        </p>
+                      </div>
+                      <Link2 className="w-4 h-4 flex-shrink-0" style={{ color: "#c9a96e" }} />
+                    </button>
+                  ))}
+                </div>
               )}
             </div>
           )}
