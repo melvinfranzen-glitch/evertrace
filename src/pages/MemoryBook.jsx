@@ -17,6 +17,11 @@ export default function MemoryBook() {
   const navigate = useNavigate();
   const [memorial, setMemorial] = useState(null);
   const [condolences, setCondolences] = useState([]);
+  const [timeline, setTimeline] = useState([]);
+  const [legacyEntries, setLegacyEntries] = useState([]);
+  const [memoryWallEntries, setMemoryWallEntries] = useState([]);
+  const [blogPosts, setBlogPosts] = useState([]);
+  const [candles, setCandles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("preview");
   const [selectedImages, setSelectedImages] = useState([]);
@@ -28,13 +33,23 @@ export default function MemoryBook() {
     Promise.all([
       base44.entities.Memorial.filter({ id }),
       base44.entities.CondolenceEntry.filter({ memorial_id: id, status: "approved" }, "-created_date"),
-    ]).then(([memorials, condos]) => {
+      base44.entities.TimelineEvent.filter({ memorial_id: id }, "sort_order"),
+      base44.entities.LegacyEntry.filter({ memorial_id: id }, "sort_order"),
+      base44.entities.MemoryWallEntry.filter({ memorial_id: id, status: "approved" }, "-created_date"),
+      base44.entities.MemorialBlogPost.filter({ memorial_id: id, is_published: true }, "-created_date"),
+      base44.entities.Candle.filter({ memorial_id: id }, "-created_date"),
+    ]).then(([memorials, condos, tl, legacy, wall, posts, candleList]) => {
       if (memorials.length) {
         const m = memorials[0];
         setMemorial(m);
         setSelectedImages(m.gallery_images || []);
       }
       setCondolences(condos);
+      setTimeline(tl);
+      setLegacyEntries(legacy);
+      setMemoryWallEntries(wall);
+      setBlogPosts(posts);
+      setCandles(candleList);
       setLoading(false);
     });
   }, []);
@@ -79,7 +94,8 @@ export default function MemoryBook() {
             <BookOpen className="w-4 h-4 text-amber-700" />
             <span className="text-xs text-gray-600">
               <strong className="text-gray-800">{condolences.length}</strong> Kondolenzen ·{" "}
-              <strong className="text-gray-800">{selectedImages.length}</strong> Fotos
+              <strong className="text-gray-800">{selectedImages.length}</strong> Fotos ·{" "}
+              <strong className="text-gray-800">{timeline.length}</strong> Stationen
             </span>
           </div>
         </div>
@@ -141,7 +157,16 @@ export default function MemoryBook() {
                 <ShoppingCart className="w-4 h-4 mr-1.5" /> Jetzt bestellen
               </Button>
             </div>
-            <BookPreview memorial={memorial} condolences={condolences} selectedImages={selectedImages} />
+            <BookPreview
+              memorial={memorial}
+              condolences={condolences}
+              selectedImages={selectedImages}
+              timeline={timeline}
+              legacyEntries={legacyEntries}
+              memoryWallEntries={memoryWallEntries}
+              blogPosts={blogPosts}
+              candles={candles}
+            />
           </div>
         )}
 
@@ -229,6 +254,11 @@ export default function MemoryBook() {
               memorial={memorial}
               condolenceCount={condolences.length}
               photoCount={selectedImages.length}
+              timelineCount={timeline.length}
+              legacyCount={legacyEntries.length}
+              memoryWallCount={memoryWallEntries.length}
+              blogCount={blogPosts.length}
+              candleCount={candles.length}
             />
           </div>
         )}

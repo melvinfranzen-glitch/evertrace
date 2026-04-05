@@ -29,7 +29,7 @@ const FORMATS = [
   },
 ];
 
-export default function PodOrderForm({ memorial, condolenceCount, photoCount }) {
+export default function PodOrderForm({ memorial, condolenceCount, photoCount, timelineCount = 0, legacyCount = 0, memoryWallCount = 0, blogCount = 0, candleCount = 0 }) {
   const [format, setFormat] = useState("hardcover_a4");
   const [qty, setQty] = useState(1);
   const [form, setForm] = useState({ name: "", email: "", street: "", city: "", zip: "", country: "Deutschland" });
@@ -85,7 +85,16 @@ export default function PodOrderForm({ memorial, condolenceCount, photoCount }) 
       {/* Book stats */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { icon: BookOpen, label: "Seiten", value: `ca. ${Math.max(20, condolenceCount * 2 + photoCount + 10)}` },
+          { icon: BookOpen, label: "Seiten", value: `ca. ${Math.max(20,
+            2 + Math.ceil((memorial.biography?.length || 0) / 520)
+            + Math.ceil(timelineCount / 4)
+            + (legacyCount > 0 ? 1 : 0)
+            + Math.ceil(photoCount / 4)
+            + Math.ceil(memoryWallCount / 3)
+            + Math.min(blogCount, 4)
+            + Math.ceil(condolenceCount / 3)
+            + (candleCount > 0 ? 1 : 0) + 1
+          )}` },
           { icon: Package, label: "Kondolenzen", value: condolenceCount },
           { icon: Package, label: "Fotos", value: photoCount },
         ].map(({ icon: Icon, label, value }) => (
