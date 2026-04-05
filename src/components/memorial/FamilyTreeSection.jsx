@@ -99,12 +99,14 @@ function PersonCard({ person, isDeceased, onClick, linkedId }) {
           )}
         </p>
       </div>
-      {hasLinked && <ExternalLink className="w-4 h-4 flex-shrink-0" style={{ color: "#c9a96e" }} />}
+      {hasLinked && (
+        <ExternalLink className="w-4 h-4 flex-shrink-0" style={{ color: "#c9a96e" }} />
+      )}
     </button>
   );
 }
 
-// ─── Verbindungslinien (Desktop only) ─────────────────────
+// ─── Verbindungslinien (Desktop) ──────────────────────────
 
 function VLine() {
   return <div className="hidden md:flex justify-center my-1"><div className="w-px h-6 bg-stone-300" /></div>;
@@ -169,7 +171,6 @@ export default function FamilyTreeSection({ memorial }) {
   const deceased = {
     name: memorial.name,
     photo_url: memorial.hero_image_url,
-    hero_image_position: memorial.hero_image_position,
     birth_year: memorial.birth_date?.slice(0, 4),
     death_year: memorial.death_date?.slice(0, 4),
     _isDeceased: true,
@@ -235,17 +236,33 @@ export default function FamilyTreeSection({ memorial }) {
 
         {/* ═══ MOBILE LISTE (<md) ═══ */}
         <div className="md:hidden space-y-5">
+          {/* Verstorbene Person immer zuerst, hervorgehoben */}
           <PersonCard person={deceased} isDeceased
             onClick={() => setSelected({ person: deceased, isDeceased: true })} />
-          <MobileGeneration label="Partner" members={spouses} onSelect={setSelected} />
-          <MobileGeneration label="Eltern" members={parents} onSelect={setSelected} />
-          <MobileGeneration label="Geschwister" members={siblings} onSelect={setSelected} />
-          <MobileGeneration label="Kinder" members={children} onSelect={setSelected} />
-          <MobileGeneration label="Großeltern" members={grandparents} onSelect={setSelected} />
+
+          {/* Dann die Generationen */}
+          {spouses.length > 0 && (
+            <MobileGeneration label="Partner" members={spouses} onSelect={setSelected} />
+          )}
+          {parents.length > 0 && (
+            <MobileGeneration label="Eltern" members={parents} onSelect={setSelected} />
+          )}
+          {siblings.length > 0 && (
+            <MobileGeneration label="Geschwister" members={siblings} onSelect={setSelected} />
+          )}
+          {children.length > 0 && (
+            <MobileGeneration label="Kinder" members={children} onSelect={setSelected} />
+          )}
+          {grandparents.length > 0 && (
+            <MobileGeneration label="Großeltern" members={grandparents} onSelect={setSelected} />
+          )}
         </div>
 
+        {/* Info-Hinweis */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
-          <p className="text-xs text-stone-400 italic">Auf ein Familienmitglied tippen, um mehr zu erfahren</p>
+          <p className="text-xs text-stone-400 italic">
+            Auf ein Familienmitglied tippen, um mehr zu erfahren
+          </p>
           {members.some(m => m.linked_memorial_short_id) && (
             <div className="flex items-center gap-1.5 text-xs" style={{ color: "#c9a96e" }}>
               <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ background: "#c9a96e" }}>
@@ -257,6 +274,7 @@ export default function FamilyTreeSection({ memorial }) {
         </div>
       </div>
 
+      {/* Modal */}
       {selected && (
         <FamilyMemberModal
           person={selected.person}
