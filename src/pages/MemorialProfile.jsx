@@ -83,14 +83,21 @@ export default function MemorialProfile() {
     }
   };
 
-  const handleUnlock = () => {
-    // Fix 4: Timing-safe comparison with trimming
-    if (pwInput.trim() === (memorial.access_password || "").trim()) {
-      setUnlocked(true);
-      loadContent(memorial.id);
-    } else {
-      const newAttempts = attempts + 1;
-      setAttempts(newAttempts);
+  const handleUnlock = async () => {
+    try {
+      const res = await base44.functions.invoke('verifyMemorialPassword', {
+        short_id: new URLSearchParams(window.location.search).get('id'),
+        password: pwInput,
+      });
+      if (res.data?.valid) {
+        setUnlocked(true);
+        loadContent(memorial.id);
+      } else {
+        setAttempts((a) => a + 1);
+        setPwError(true);
+      }
+    } catch {
+      setAttempts((a) => a + 1);
       setPwError(true);
     }
   };
@@ -162,7 +169,7 @@ export default function MemorialProfile() {
           >
             Eintreten
           </Button>
-          {/* TODO: migrate password verification to server-side endpoint before public launch */}
+          {/* Password verification is server-side via verifyMemorialPassword function */}
         </div>
       </div>
     );
@@ -188,9 +195,9 @@ export default function MemorialProfile() {
           <div className="flex items-center gap-3 rounded-xl border px-5 py-3" style={{ background: "white", border: "1px solid #e8dfd0" }}>
             <span className="text-sm text-gray-600">Familienbereich:</span>
             <input type="password" value={familyPwInput} onChange={e => { setFamilyPwInput(e.target.value); setFamilyPwError(false); }}
-              onKeyDown={e => { if (e.key === "Enter") { if (familyPwInput === (memorial.family_password || "")) { setFamilyUnlocked(true); } else { setFamilyPwError(true); } } }}
+              onKeyDown={async e => { if (e.key === "Enter") { const r = await base44.functions.invoke('verifyFamilyPassword', { memorial_id: memorial.id, password: familyPwInput }); if (r.data?.valid) { setFamilyUnlocked(true); } else { setFamilyPwError(true); } } }}
               placeholder="Familienpasswort" className="border rounded-lg px-3 py-1.5 text-sm outline-none" style={{ borderColor: familyPwError ? "#ef4444" : "#e5e7eb" }} />
-            <button onClick={() => { if (familyPwInput === (memorial.family_password || "")) { setFamilyUnlocked(true); } else { setFamilyPwError(true); } }}
+            <button onClick={async () => { const r = await base44.functions.invoke('verifyFamilyPassword', { memorial_id: memorial.id, password: familyPwInput }); if (r.data?.valid) { setFamilyUnlocked(true); } else { setFamilyPwError(true); } }}
               className="px-3 py-1.5 rounded-lg text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
               Entsperren
             </button>

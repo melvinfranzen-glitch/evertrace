@@ -2,16 +2,7 @@ import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 
-// Fix 2: Prompt Injection Sanitization
-function sanitizePromptInput(str, maxLength = 500) {
-  if (!str || typeof str !== "string") return "";
-  return str
-    .replace(/[<>\"\'`]/g, "")
-    .replace(/\b(ignore|system|assistant|instructions|prompt|override|jailbreak|disregard)\b/gi, "")
-    .replace(/\s{3,}/g, " ")
-    .trim()
-    .slice(0, maxLength);
-}
+import { sanitizePromptInput } from "@/utils/sanitize";
 import { Plus, Loader2, BookOpen, X, Check, ChevronLeft, Minus, QrCode, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MemorialCard from "@/components/memorial/MemorialCard";

@@ -9,11 +9,18 @@ function CandleSVG({ name, message }) {
   return (
     <div className="flex flex-col items-center cursor-default" title={message || name}>
       <svg width="28" height="52" viewBox="0 0 32 56" className="candle-flame">
+        <defs>
+          <linearGradient id="candleBody" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#d4c5aa" />
+            <stop offset="40%" stopColor="#f0e8d8" />
+            <stop offset="100%" stopColor="#c4b49a" />
+          </linearGradient>
+        </defs>
         <ellipse cx="16" cy="8" rx="5" ry="7" fill="#f59e0b" opacity="0.9" />
         <ellipse cx="16" cy="10" rx="3" ry="5" fill="#fcd34d" opacity="0.8" />
         <ellipse cx="16" cy="6" rx="2" ry="4" fill="#fef3c7" opacity="0.7" />
         <line x1="16" y1="14" x2="16" y2="18" stroke="#374151" strokeWidth="1.5" />
-        <rect x="11" y="18" width="10" height="34" rx="2" style={{ fill: "url(#candleBody)" }} />
+        <rect x="11" y="18" width="10" height="34" rx="2" fill="url(#candleBody)" />
         <rect x="11" y="18" width="10" height="4" rx="2" fill="#e7e0d4" />
         <ellipse cx="16" cy="18" rx="12" ry="5" fill="#fbbf24" opacity="0.12" />
       </svg>
