@@ -123,14 +123,18 @@ export default function CreateMemorial() {
     const file = e.target.files[0];
     if (!file) return;
     setUploading(true);
+    let position = 33;
+    try {
+      const localUrl = URL.createObjectURL(file);
+      position = await detectFacePosition(localUrl);
+      URL.revokeObjectURL(localUrl);
+    } catch {
+      position = 33;
+    }
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
     set("hero_image_url", file_url);
-    try {
-      const position = await detectFacePosition(file_url);
-      set("hero_image_position", position);
-    } catch {
-      set("hero_image_position", 33);
-    }
+    set("hero_image_position", position);
+    e.target.value = "";
     setUploading(false);
   };
 
@@ -395,7 +399,7 @@ export default function CreateMemorial() {
                     <div>
                       <img src={form.hero_image_url} className="w-28 h-28 object-cover rounded-full mx-auto" alt="Portrait" />
                       <p className="mt-2 text-sm font-medium" style={{ color: "#16a34a" }}>✓ Foto hochgeladen</p>
-                      <button className="mt-1 text-xs text-gray-400 hover:text-gray-600" onClick={() => set("hero_image_url", "")}>Entfernen</button>
+                      <button className="mt-1 text-xs text-gray-400 hover:text-gray-600" onClick={() => { set("hero_image_url", ""); set("hero_image_position", 50); }}>Entfernen</button>
                     </div>
                   ) : (
                     <label className="cursor-pointer block">
