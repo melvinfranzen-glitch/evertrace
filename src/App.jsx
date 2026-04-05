@@ -74,20 +74,18 @@ const AuthenticatedApp = () => {
         />
       ))}
       <Route path="/B2BRegister" element={<B2BRegister />} />
-      <Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}>
-      <Route path="/B2BDashboard" element={<B2BDashboard />} />
-      <Route path="/B2BCases" element={<B2BCases />} />
-      <Route path="/B2BCaseDetail" element={<B2BCaseDetail />} />
-      <Route path="/B2BCardWizard" element={<B2BCardWizard />} />
-      <Route path="/B2BCards" element={<B2BCards />} />
-      <Route path="/B2BMemorial" element={<B2BMemorial />} />
-      <Route path="/B2BOrders" element={<B2BOrders />} />
-      <Route path="/B2BAnalytics" element={<B2BAnalytics />} />
-      <Route path="/B2BSettings" element={<B2BSettings />} />
-      <Route path="/B2BPublicMemorial" element={<B2BPublicMemorial />} />
+      <Route path="/B2BDashboard" element={<Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}><B2BDashboard /></Suspense>} />
+      <Route path="/B2BCases" element={<Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}><B2BCases /></Suspense>} />
+      <Route path="/B2BCaseDetail" element={<Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}><B2BCaseDetail /></Suspense>} />
+      <Route path="/B2BCardWizard" element={<Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}><B2BCardWizard /></Suspense>} />
+      <Route path="/B2BCards" element={<Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}><B2BCards /></Suspense>} />
+      <Route path="/B2BMemorial" element={<Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}><B2BMemorial /></Suspense>} />
+      <Route path="/B2BOrders" element={<Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}><B2BOrders /></Suspense>} />
+      <Route path="/B2BAnalytics" element={<Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}><B2BAnalytics /></Suspense>} />
+      <Route path="/B2BSettings" element={<Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}><B2BSettings /></Suspense>} />
+      <Route path="/B2BPublicMemorial" element={<Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}><B2BPublicMemorial /></Suspense>} />
       <Route path="/Legal" element={<LayoutWrapper currentPageName="Legal"><Legal /></LayoutWrapper>} />
-      <Route path="/DesignSystem" element={<DesignSystem />} />
-      </Suspense>
+      <Route path="/DesignSystem" element={<Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}><DesignSystem /></Suspense>} />
       <Route path="/MemorialCollabInvite" element={<MemorialCollabInvite />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
