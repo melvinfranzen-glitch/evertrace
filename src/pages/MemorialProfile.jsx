@@ -334,7 +334,6 @@ export default function MemorialProfile() {
       {/* Background music player */}
       <audio
         id="bg-music"
-        autoPlay
         loop
         controls
         style={{ position: "fixed", bottom: 10, right: 10, opacity: 0.6, zIndex: 1000, height: 30 }}
