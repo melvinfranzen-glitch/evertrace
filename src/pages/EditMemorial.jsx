@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { parseSpotifyUrl } from "@/utils/spotify";
 
 import { sanitizePromptInput } from "@/utils/sanitize";
+import { detectFacePosition } from "@/utils/faceDetection";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -69,6 +70,7 @@ export default function EditMemorial() {
   }, []);
 
   const [isDirty, setIsDirty] = useState(false);
+  const [justUploaded, setJustUploaded] = useState(false);
   const [showGuidance, setShowGuidance] = useState(true);
 
   const set = (k, v) => { setMemorial((p) => ({ ...p, [k]: v })); setIsDirty(true); };
@@ -80,12 +82,34 @@ export default function EditMemorial() {
     setIsDirty(false);
   };
 
+  const positionSaveTimer = useRef(null);
+  const handlePositionChange = (value) => {
+    set("hero_image_position", parseInt(value));
+    if (positionSaveTimer.current) clearTimeout(positionSaveTimer.current);
+    positionSaveTimer.current = setTimeout(async () => {
+      await base44.entities.Memorial.update(memorial.id, { hero_image_position: parseInt(value) });
+      setIsDirty(false);
+    }, 800);
+  };
+
+  useEffect(() => {
+    return () => { if (positionSaveTimer.current) clearTimeout(positionSaveTimer.current); };
+  }, []);
+
   const uploadHero = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
     setUploading(true);
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
     set("hero_image_url", file_url);
+    try {
+      const position = await detectFacePosition(file_url);
+      set("hero_image_position", position);
+      setJustUploaded(true);
+      setTimeout(() => setJustUploaded(false), 4000);
+    } catch {
+      set("hero_image_position", 33);
+    }
     setUploading(false);
   };
 
@@ -308,10 +332,15 @@ export default function EditMemorial() {
                         style={{ objectPosition: `center ${memorial.hero_image_position ?? 50}%` }} />
                       <button className="mt-2 text-xs text-gray-400 hover:text-red-500" onClick={() => set("hero_image_url", "")}>Entfernen</button>
                       <div className="mt-3">
-                        <p className="text-xs text-gray-500 mb-1">Bildausschnitt anpassen</p>
+                        <p className="text-xs text-gray-500 mb-1">Bildausschnitt anpassen — Sie können die Position jederzeit manuell korrigieren.</p>
                         <input type="range" min={0} max={100} value={memorial.hero_image_position ?? 50}
-                          onChange={e => set("hero_image_position", parseInt(e.target.value))}
+                          onChange={e => handlePositionChange(e.target.value)}
                           className="w-full" />
+                        {justUploaded ? (
+                          <p className="text-xs mt-1" style={{ color: "#c9a96e" }}>✦ Bildposition wurde automatisch erkannt</p>
+                        ) : (
+                          <p className="text-xs mt-1" style={{ color: "#16a34a" }}>✓ Wird automatisch gespeichert</p>
+                        )}
                       </div>
                     </div>
                   ) : (

@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 
 import { sanitizePromptInput } from "@/utils/sanitize";
+import { detectFacePosition } from "@/utils/faceDetection";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -122,6 +123,12 @@ export default function CreateMemorial() {
     setUploading(true);
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
     set("hero_image_url", file_url);
+    try {
+      const position = await detectFacePosition(file_url);
+      set("hero_image_position", position);
+    } catch {
+      set("hero_image_position", 33);
+    }
     setUploading(false);
   };
 
