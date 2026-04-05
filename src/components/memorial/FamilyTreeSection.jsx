@@ -101,10 +101,9 @@ function GenerationRow({ label, children }) {
 
 function PersonDetailSheet({ person, isDeceased, memorialId, onClose, onUpdate, isOwner }) {
   const navigate = useNavigate();
-  const [editing, setEditing] = useState(false);
+  const [mode, setMode] = useState("view"); // "view" | "edit" | "link"
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [linking, setLinking] = useState(false);
   const [myMemorials, setMyMemorials] = useState([]);
   const [loadingMemorials, setLoadingMemorials] = useState(false);
   const [editForm, setEditForm] = useState({
@@ -116,6 +115,11 @@ function PersonDetailSheet({ person, isDeceased, memorialId, onClose, onUpdate, 
   const initials = person.name?.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase() || "?";
   const hasProfile = person.notes || person.photo_url || person.birth_year;
   const hasLinked = !!person.linked_memorial_short_id;
+  const isEmpty = !hasProfile && !hasLinked && !isDeceased;
+
+  useEffect(() => {
+    if (isEmpty && isOwner) setMode("edit");
+  }, []);
 
   const uploadPhoto = async (e) => {
     const file = e.target.files?.[0];
@@ -137,7 +141,7 @@ function PersonDetailSheet({ person, isDeceased, memorialId, onClose, onUpdate, 
     try {
       await base44.entities.FamilyMember.update(person.id, editForm);
       onUpdate({ ...person, ...editForm });
-      setEditing(false);
+      setMode("view");
     } catch (err) {
       console.error("Speichern fehlgeschlagen:", err);
     }
@@ -145,7 +149,7 @@ function PersonDetailSheet({ person, isDeceased, memorialId, onClose, onUpdate, 
   };
 
   const startLinking = async () => {
-    setLinking(true);
+    setMode("link");
     setLoadingMemorials(true);
     try {
       const all = await base44.entities.Memorial.list();
@@ -161,10 +165,8 @@ function PersonDetailSheet({ person, isDeceased, memorialId, onClose, onUpdate, 
     try {
       await base44.entities.FamilyMember.update(person.id, { linked_memorial_short_id: shortId });
       onUpdate({ ...person, linked_memorial_short_id: shortId });
-      setLinking(false);
-    } catch (err) {
-      console.error("Verknüpfen fehlgeschlagen:", err);
-    }
+      setMode("view");
+    } catch (err) {}
     setSaving(false);
   };
 
@@ -173,9 +175,7 @@ function PersonDetailSheet({ person, isDeceased, memorialId, onClose, onUpdate, 
     try {
       await base44.entities.FamilyMember.update(person.id, { linked_memorial_short_id: "" });
       onUpdate({ ...person, linked_memorial_short_id: "" });
-    } catch (err) {
-      console.error("Entfernen fehlgeschlagen:", err);
-    }
+    } catch (err) {}
     setSaving(false);
   };
 
@@ -190,239 +190,78 @@ function PersonDetailSheet({ person, isDeceased, memorialId, onClose, onUpdate, 
           <div className="w-10 h-1 rounded-full bg-stone-300" />
         </div>
 
-        <button onClick={onClose} className="absolute top-4 right-4 w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center z-10">
+        <button onClick={onClose} className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center z-10"
+          style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(4px)" }}>
           <X className="w-4 h-4 text-stone-500" />
         </button>
 
-        <div className="flex flex-col items-center px-6 pt-6 pb-4">
-          <div className="relative">
-            <div className="w-24 h-24 rounded-full overflow-hidden flex items-center justify-center font-bold text-2xl shadow-lg"
-              style={{
-                background: isDeceased ? "linear-gradient(135deg,#92400e,#c9a96e)" : person.photo_url ? "transparent" : "#e7e2db",
-                color: isDeceased ? "white" : "#6b5a44",
-                boxShadow: isDeceased ? "0 4px 24px rgba(201,169,110,0.4)" : "0 4px 16px rgba(0,0,0,0.1)",
-              }}>
-              {person.photo_url
-                ? <img src={person.photo_url} className="w-full h-full object-cover object-face" alt={person.name} />
-                : initials}
+        {/* HEADER */}
+        <div className="px-6 pt-5 pb-4">
+          <div className="flex items-center gap-4">
+            <div className="relative flex-shrink-0">
+              <div className={`rounded-2xl overflow-hidden flex items-center justify-center font-bold shadow-md ${isDeceased ? "w-16 h-16 text-lg" : "w-14 h-14 text-base"}`}
+                style={{
+                  background: isDeceased ? "linear-gradient(135deg, #92400e, #c9a96e)" : person.photo_url ? "transparent" : "linear-gradient(135deg, #e7e2db, #d8d0c4)",
+                  color: isDeceased ? "white" : "#6b5a44",
+                }}>
+                {person.photo_url ? <img src={person.photo_url} className="w-full h-full object-cover object-face" alt={person.name} /> : initials}
+              </div>
+              {!isDeceased && isOwner && mode !== "link" && (
+                <label className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center cursor-pointer shadow-sm"
+                  style={{ background: "#c9a96e", border: "2px solid white" }}>
+                  {uploading ? <Loader2 className="w-2.5 h-2.5 text-white animate-spin" /> : <Camera className="w-2.5 h-2.5 text-white" />}
+                  <input type="file" accept="image/*" className="hidden" onChange={uploadPhoto} disabled={uploading} />
+                </label>
+              )}
             </div>
-            {!isDeceased && isOwner && (
-              <label className="absolute bottom-0 right-0 w-8 h-8 rounded-full flex items-center justify-center shadow-md cursor-pointer"
-                style={{ background: "#c9a96e", border: "2px solid white" }}>
-                {uploading ? <Loader2 className="w-3.5 h-3.5 text-white animate-spin" /> : <Camera className="w-3.5 h-3.5 text-white" />}
-                <input type="file" accept="image/*" className="hidden" onChange={uploadPhoto} disabled={uploading} />
-              </label>
-            )}
+            <div className="min-w-0 flex-1">
+              <h3 className="text-lg font-semibold text-gray-800 leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                {person.name}
+              </h3>
+              {!isDeceased && person.relation && <span className="inline-block mt-1 text-xs px-2.5 py-0.5 rounded-full" style={{ background: "rgba(201,169,110,0.1)", color: "#a07830" }}>{REL[person.relation] || person.relation}</span>}
+              {isDeceased && <p className="text-xs italic mt-0.5" style={{ color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>In liebevoller Erinnerung</p>}
+              {(person.birth_year || person.death_year) && mode === "view" && <p className="text-xs mt-1" style={{ color: "#8a8278" }}>{person.birth_year && `geb. ${person.birth_year}`}{person.birth_year && person.death_year && " · "}{person.death_year && `gest. ${person.death_year}`}</p>}
+            </div>
           </div>
-
-          <h3 className="mt-4 text-xl font-semibold text-gray-800" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            {person.name}
-          </h3>
-
-          {!isDeceased && person.relation && (
-            <span className="mt-1 text-xs px-3 py-1 rounded-full font-medium"
-              style={{ background: "rgba(201,169,110,0.12)", color: "#a07830" }}>
-              {REL[person.relation] || person.relation}
-            </span>
-          )}
-          {isDeceased && (
-            <p className="mt-1 text-sm italic" style={{ color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>
-              In liebevoller Erinnerung
-            </p>
-          )}
         </div>
 
-        <div className="px-6 pb-6 space-y-3">
-          {(person.birth_year || person.death_year) && !editing && (
-            <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "#FAF8F4" }}>
-              <Calendar className="w-4 h-4 flex-shrink-0" style={{ color: "#c9a96e" }} />
-              <span className="text-sm text-gray-600">
-                {person.birth_year && <>geb. {person.birth_year}</>}
-                {person.birth_year && person.death_year && " · "}
-                {person.death_year && <>gest. {person.death_year}</>}
-              </span>
-            </div>
-          )}
+        <div className="mx-6 h-px" style={{ background: "linear-gradient(90deg, transparent, #e8dfd0, transparent)" }} />
 
-          {person.notes && !editing && (
-            <div className="flex items-start gap-3 p-3 rounded-xl" style={{ background: "#FAF8F4" }}>
-              <Heart className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "#c9a96e" }} />
-              <p className="text-sm text-gray-600 leading-relaxed">{person.notes}</p>
-            </div>
+        {/* CONTENT */}
+        <div className="px-6 py-4 space-y-3">
+          {mode === "view" && (
+            <>
+              {person.notes && <div className="p-3 rounded-xl" style={{ background: "#FAF8F4" }}><p className="text-sm text-gray-600 leading-relaxed italic" style={{ fontFamily: "'Cormorant Garamond', serif" }}>„{person.notes}"</p></div>}
+              {isEmpty && isOwner && <p className="text-xs text-center py-2" style={{ color: "#a09080" }}>Noch keine Informationen hinterlegt</p>}
+              {isEmpty && !isOwner && <p className="text-xs text-center py-4" style={{ color: "#a09080" }}>{person.name.split(" ")[0]} — {REL[person.relation] || "Familienmitglied"}</p>}
+              {isOwner && !isDeceased && (
+                <div className="space-y-2 pt-1">
+                  <button onClick={() => setMode("edit")} className="w-full flex items-center gap-3 p-3 rounded-xl text-sm transition-all active:scale-[0.98]" style={{ background: !hasProfile ? "#c9a96e" : "#FAF8F4", color: !hasProfile ? "#0f0e0c" : "#6b7280", border: hasProfile ? "1px solid #e5e7eb" : "none" }}>
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: !hasProfile ? "rgba(255,255,255,0.2)" : "#e7e2db" }}>{hasProfile ? <Edit3 className="w-3 h-3" /> : <Plus className="w-3 h-3" />}</div>
+                    <span className="font-medium">{hasProfile ? "Steckbrief bearbeiten" : "Steckbrief & Foto anlegen"}</span>
+                  </button>
+                  {!hasLinked && <button onClick={startLinking} className="w-full flex items-center gap-3 p-3 rounded-xl text-sm transition-all active:scale-[0.98]" style={{ background: "white", color: "#2c2419", border: "1px solid #e5e7eb" }}><div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#FAF8F4" }}><Link2 className="w-3 h-3" style={{ color: "#c9a96e" }} /></div><span className="font-medium">Gedenkseite verknüpfen</span></button>}
+                  {!hasLinked && <button onClick={() => navigate(`/CreateMemorial?prefill_name=${encodeURIComponent(person.name)}`)} className="w-full flex items-center gap-3 p-3 rounded-xl text-sm transition-all active:scale-[0.98]" style={{ background: "white", color: "#8a8278", border: "1px solid #e5e7eb" }}><div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#FAF8F4" }}><ExternalLink className="w-3 h-3" style={{ color: "#8a8278" }} /></div><span className="font-medium">Neue Gedenkseite erstellen</span></button>}
+                </div>
+              )}
+              {hasLinked && <div className="space-y-2 pt-1"><button onClick={() => navigate(`/MemorialProfile?id=${person.linked_memorial_short_id}`)} className="w-full py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2" style={{ background: "rgba(201,169,110,0.1)", color: "#a07830", border: "1px solid rgba(201,169,110,0.3)" }}><ExternalLink className="w-3.5 h-3.5" /> Zur Gedenkseite</button>{isOwner && <button onClick={unlinkMemorial} disabled={saving} className="w-full py-1.5 text-xs text-center" style={{ color: "#a09080" }}>Verknüpfung entfernen</button>}</div>}
+            </>
           )}
-
-          {editing && (
-            <div className="space-y-3 p-4 rounded-xl" style={{ background: "#FAF8F4", border: "1px solid #e8dfd0" }}>
+          {mode === "edit" && (
+            <div className="space-y-3">
+              {!person.photo_url && !isDeceased && <label className="block w-full p-4 rounded-xl text-center cursor-pointer transition-all hover:border-amber-400" style={{ border: "2px dashed #e8dfd0", background: "#FDFCFA" }}>{uploading ? <Loader2 className="w-6 h-6 mx-auto animate-spin" style={{ color: "#c9a96e" }} /> : <><Camera className="w-6 h-6 mx-auto mb-1" style={{ color: "#c9a96e" }} /><p className="text-xs font-medium" style={{ color: "#6b7280" }}>Foto hochladen</p><p className="text-xs" style={{ color: "#a09080" }}>Tippen zum Auswählen</p></> }<input type="file" accept="image/*" className="hidden" onChange={uploadPhoto} disabled={uploading} /></label>}
               <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="text-xs block mb-1" style={{ color: "#8a8278" }}>Geburtsjahr</label>
-                  <Input value={editForm.birth_year} onChange={e => setEditForm(f => ({ ...f, birth_year: e.target.value }))} placeholder="z.B. 1945" className="text-sm" />
-                </div>
-                <div>
-                  <label className="text-xs block mb-1" style={{ color: "#8a8278" }}>Todesjahr</label>
-                  <Input value={editForm.death_year} onChange={e => setEditForm(f => ({ ...f, death_year: e.target.value }))} placeholder="z.B. 2010" className="text-sm" />
-                </div>
+                <div><label className="text-xs block mb-1" style={{ color: "#8a8278" }}>Geburtsjahr</label><Input value={editForm.birth_year} onChange={e => setEditForm(f => ({ ...f, birth_year: e.target.value }))} placeholder="1945" className="text-sm" /></div>
+                <div><label className="text-xs block mb-1" style={{ color: "#8a8278" }}>Todesjahr</label><Input value={editForm.death_year} onChange={e => setEditForm(f => ({ ...f, death_year: e.target.value }))} placeholder="2010" className="text-sm" /></div>
               </div>
-              <div>
-                <label className="text-xs block mb-1" style={{ color: "#8a8278" }}>Persönliche Erinnerung / Kurztext</label>
-                <Textarea value={editForm.notes} onChange={e => setEditForm(f => ({ ...f, notes: e.target.value }))}
-                  placeholder="z.B. War immer für uns da…"
-                  className="text-sm resize-none h-20" />
-              </div>
-              <div className="flex gap-2">
-                <button onClick={() => setEditing(false)} className="flex-1 py-2 rounded-xl text-sm border" style={{ borderColor: "#e5e7eb", color: "#6b7280" }}>
-                  Abbrechen
-                </button>
-                <button onClick={saveProfile} disabled={saving}
-                  className="flex-1 py-2 rounded-xl text-sm font-medium flex items-center justify-center gap-1.5"
-                  style={{ background: "#c9a96e", color: "#0f0e0c" }}>
-                  {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-                  Speichern
-                </button>
-              </div>
+              <div><label className="text-xs block mb-1" style={{ color: "#8a8278" }}>Persönliche Erinnerung</label><Textarea value={editForm.notes} onChange={e => setEditForm(f => ({ ...f, notes: e.target.value }))} placeholder="z.B. Liebte ihren Garten und hat die besten Kuchen gebacken…" className="text-sm resize-none h-20" /></div>
+              <div className="flex gap-2 pt-1"><button onClick={() => setMode("view")} className="flex-1 py-2.5 rounded-xl text-sm" style={{ background: "#FAF8F4", color: "#6b7280" }}>Abbrechen</button><button onClick={saveProfile} disabled={saving} className="flex-1 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-1.5" style={{ background: "#c9a96e", color: "#0f0e0c" }}>{saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}Speichern</button></div>
             </div>
           )}
-
-          {!editing && !linking && (
-            <div className="space-y-2 pt-2">
-              
-              {/* Leere Person: Prominente Aktionen */}
-              {!hasProfile && !hasLinked && !isDeceased && isOwner && (
-                <div className="rounded-xl p-4 space-y-3" style={{ background: "rgba(201,169,110,0.06)", border: "1px solid rgba(201,169,110,0.15)" }}>
-                  <p className="text-xs text-center" style={{ color: "#8a8278" }}>
-                    Noch keine Daten für {person.name.split(" ")[0]} hinterlegt
-                  </p>
-                  
-                  <button onClick={() => setEditing(true)}
-                    className="w-full flex items-center gap-3 p-3 rounded-xl text-sm font-medium transition-all active:scale-[0.98]"
-                    style={{ background: "#c9a96e", color: "#0f0e0c" }}>
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "rgba(255,255,255,0.25)" }}>
-                      <Camera className="w-4 h-4" />
-                    </div>
-                    <div className="text-left">
-                      <p className="font-medium">Foto & Steckbrief anlegen</p>
-                      <p className="text-xs opacity-70">Foto, Geburtsjahr, persönliche Erinnerung</p>
-                    </div>
-                  </button>
-
-                  <button onClick={startLinking}
-                    className="w-full flex items-center gap-3 p-3 rounded-xl text-sm font-medium transition-all active:scale-[0.98]"
-                    style={{ background: "white", color: "#2c2419", border: "1px solid #e5e7eb" }}>
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "#FAF8F4" }}>
-                      <Link2 className="w-4 h-4" style={{ color: "#c9a96e" }} />
-                    </div>
-                    <div className="text-left">
-                      <p className="font-medium">Gedenkseite verknüpfen</p>
-                      <p className="text-xs text-stone-400">Eine meiner bestehenden Gedenkseiten zuordnen</p>
-                    </div>
-                  </button>
-
-                  <button onClick={() => navigate(`/CreateMemorial?prefill_name=${encodeURIComponent(person.name)}`)}
-                    className="w-full flex items-center gap-3 p-3 rounded-xl text-sm font-medium transition-all active:scale-[0.98]"
-                    style={{ background: "white", color: "#2c2419", border: "1px solid #e5e7eb" }}>
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "#FAF8F4" }}>
-                      <Plus className="w-4 h-4" style={{ color: "#8a8278" }} />
-                    </div>
-                    <div className="text-left">
-                      <p className="font-medium">Neue Gedenkseite erstellen</p>
-                      <p className="text-xs text-stone-400">Eigene Gedenkseite für {person.name.split(" ")[0]} anlegen</p>
-                    </div>
-                  </button>
-                </div>
-              )}
-
-              {/* Person mit Profil: Kompakte Buttons */}
-              {(hasProfile || hasLinked) && !isDeceased && isOwner && (
-                <>
-                  <button onClick={() => setEditing(true)}
-                    className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all"
-                    style={{ background: "#FAF8F4", color: "#6b7280", border: "1px solid #e5e7eb" }}>
-                    <Edit3 className="w-3.5 h-3.5" /> Steckbrief bearbeiten
-                  </button>
-
-                  {!hasLinked && (
-                    <button onClick={startLinking}
-                      className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all"
-                      style={{ background: "white", color: "#8a8278", border: "1px solid #e5e7eb" }}>
-                      <Link2 className="w-3.5 h-3.5" /> Gedenkseite verknüpfen
-                    </button>
-                  )}
-                </>
-              )}
-
-              {/* Zur verknüpften Gedenkseite */}
-              {hasLinked && (
-                <button onClick={() => navigate(`/MemorialProfile?id=${person.linked_memorial_short_id}`)}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all"
-                  style={{ background: "rgba(201,169,110,0.1)", color: "#a07830", border: "1px solid rgba(201,169,110,0.3)" }}>
-                  <ExternalLink className="w-3.5 h-3.5" /> Zur Gedenkseite von {person.name.split(" ")[0]}
-                </button>
-              )}
-
-              {/* Verknüpfung entfernen */}
-              {hasLinked && isOwner && (
-                <button onClick={unlinkMemorial} disabled={saving}
-                  className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs transition-all"
-                  style={{ color: "#a09080" }}>
-                  Verknüpfung entfernen
-                </button>
-              )}
-
-              {/* Neue Gedenkseite erstellen (nur wenn schon Profil hat aber keine Verknüpfung) */}
-              {hasProfile && !hasLinked && isOwner && (
-                <button onClick={() => navigate(`/CreateMemorial?prefill_name=${encodeURIComponent(person.name)}`)}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all"
-                  style={{ background: "white", color: "#8a8278", border: "1px solid #e5e7eb" }}>
-                  <Plus className="w-3.5 h-3.5" /> Neue Gedenkseite erstellen
-                </button>
-              )}
-            </div>
-          )}
-
-          {/* Gedenkseite verknüpfen Ansicht */}
-          {linking && (
-            <div className="space-y-3 pt-2">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-gray-700">Gedenkseite verknüpfen</p>
-                <button onClick={() => setLinking(false)} className="text-xs" style={{ color: "#8a8278" }}>Abbrechen</button>
-              </div>
-
-              {loadingMemorials ? (
-                <div className="flex items-center justify-center py-8 text-stone-400">
-                  <Loader2 className="w-5 h-5 animate-spin mr-2" /> Gedenkseiten werden geladen…
-                </div>
-              ) : myMemorials.length === 0 ? (
-                <div className="text-center py-6">
-                  <p className="text-sm text-stone-400 mb-3">Sie haben noch keine weiteren Gedenkseiten.</p>
-                  <button onClick={() => navigate(`/CreateMemorial?prefill_name=${encodeURIComponent(person.name)}`)}
-                    className="px-4 py-2 rounded-xl text-sm font-medium"
-                    style={{ background: "#c9a96e", color: "#0f0e0c" }}>
-                    <Plus className="w-3.5 h-3.5 inline mr-1.5" /> Jetzt erstellen
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-2 max-h-64 overflow-y-auto">
-                  {myMemorials.map(m => (
-                    <button key={m.id} onClick={() => linkMemorial(m.short_id)} disabled={saving}
-                      className="w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all active:scale-[0.98] disabled:opacity-50"
-                      style={{ background: "white", border: "1px solid #e5e7eb" }}>
-                      <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center flex-shrink-0"
-                        style={{ background: m.hero_image_url ? "transparent" : "#e7e2db" }}>
-                        {m.hero_image_url
-                          ? <img src={m.hero_image_url} className="w-full h-full object-cover object-face" alt="" />
-                          : <span className="text-xs font-semibold" style={{ color: "#6b5a44" }}>{m.name?.[0]}</span>}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium text-gray-800 truncate">{m.name}</p>
-                        <p className="text-xs text-stone-400 truncate">
-                          {m.birth_date?.slice(0, 4) || "?"} – {m.death_date?.slice(0, 4) || "?"}
-                        </p>
-                      </div>
-                      <Link2 className="w-4 h-4 flex-shrink-0" style={{ color: "#c9a96e" }} />
-                    </button>
-                  ))}
-                </div>
-              )}
+          {mode === "link" && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between"><p className="text-sm font-medium text-gray-700">Gedenkseite verknüpfen</p><button onClick={() => setMode("view")} className="text-xs" style={{ color: "#c9a96e" }}>Abbrechen</button></div>
+              {loadingMemorials ? <div className="flex items-center justify-center py-8 text-stone-400"><Loader2 className="w-5 h-5 animate-spin mr-2" /> Laden…</div> : myMemorials.length === 0 ? <div className="text-center py-6"><p className="text-sm text-stone-400 mb-3">Keine weiteren Gedenkseiten vorhanden.</p><button onClick={() => navigate(`/CreateMemorial?prefill_name=${encodeURIComponent(person.name)}`)} className="px-4 py-2 rounded-xl text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>Jetzt erstellen</button></div> : <div className="space-y-2 max-h-56 overflow-y-auto">{myMemorials.map(m => <button key={m.id} onClick={() => linkMemorial(m.short_id)} disabled={saving} className="w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all active:scale-[0.98] disabled:opacity-50" style={{ background: "white", border: "1px solid #e5e7eb" }}><div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center flex-shrink-0" style={{ background: m.hero_image_url ? "transparent" : "#e7e2db" }}>{m.hero_image_url ? <img src={m.hero_image_url} className="w-full h-full object-cover object-face" alt="" /> : <span className="text-xs font-semibold" style={{ color: "#6b5a44" }}>{m.name?.[0]}</span>}</div><div className="min-w-0 flex-1"><p className="text-sm font-medium text-gray-800 truncate">{m.name}</p><p className="text-xs text-stone-400">{m.birth_date?.slice(0, 4) || "?"} – {m.death_date?.slice(0, 4) || "?"}</p></div><Link2 className="w-4 h-4 flex-shrink-0" style={{ color: "#c9a96e" }} /></button>)}</div>}
             </div>
           )}
         </div>
