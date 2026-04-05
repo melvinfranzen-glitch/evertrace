@@ -103,17 +103,30 @@ export default function EditMemorial() {
     const file = e.target.files[0];
     if (!file) return;
     setUploading(true);
-    let position = 33;
+    let position = 30;
     try {
       const localUrl = URL.createObjectURL(file);
       position = await detectFacePosition(localUrl);
       URL.revokeObjectURL(localUrl);
     } catch {
-      position = 33;
+      position = 30;
     }
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
     set("hero_image_url", file_url);
     set("hero_image_position", position);
+
+    // AUTO-SAVE: Speichere Bild + Position sofort in DB
+    try {
+      await base44.entities.Memorial.update(memorial.id, {
+        hero_image_url: file_url,
+        hero_image_position: position,
+      });
+      setIsDirty(false);
+    } catch (err) {
+      console.error("Auto-Save fehlgeschlagen:", err);
+      setIsDirty(true);
+    }
+
     setJustUploaded(true);
     setTimeout(() => setJustUploaded(false), 4000);
     e.target.value = "";
@@ -343,11 +356,11 @@ export default function EditMemorial() {
                   {memorial.hero_image_url ? (
                     <div>
                       <img src={memorial.hero_image_url} className="w-24 h-24 object-cover rounded-full mx-auto" alt="Portrait"
-                        style={{ objectPosition: `center ${memorial.hero_image_position ?? 50}%` }} />
-                      <button className="mt-2 text-xs text-gray-400 hover:text-red-500" onClick={() => { set("hero_image_url", ""); set("hero_image_position", 50); }}>Entfernen</button>
+                        style={{ objectPosition: `center ${memorial.hero_image_position ?? 30}%` }} />
+                      <button className="mt-2 text-xs text-gray-400 hover:text-red-500" onClick={() => { set("hero_image_url", ""); set("hero_image_position", 30); }}>Entfernen</button>
                       <div className="mt-3">
                         <p className="text-xs text-gray-500 mb-1">Bildausschnitt anpassen — Sie können die Position jederzeit manuell korrigieren.</p>
-                        <input type="range" min={0} max={100} value={memorial.hero_image_position ?? 50}
+                        <input type="range" min={0} max={100} value={memorial.hero_image_position ?? 30}
                           onChange={e => handlePositionChange(e.target.value)}
                           className="w-full" />
                         {justUploaded ? (

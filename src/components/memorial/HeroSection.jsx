@@ -19,7 +19,7 @@ export default function HeroSection({ memorial }) {
           ? `url(${memorial.hero_image_url})`
           : "linear-gradient(160deg, #3A2F22 0%, #2A2218 55%, #1E1A14 100%)",
         backgroundSize: "cover",
-        backgroundPosition: `center ${memorial.hero_image_position ?? 50}%`,
+        backgroundPosition: `center ${memorial.hero_image_position ?? 30}%`,
       }}
     >
       {/* Overlay */}
@@ -36,7 +36,7 @@ export default function HeroSection({ memorial }) {
         <div className="mb-8">
           {memorial.hero_image_url ? (
             <div style={{ width: 96, height: 96, borderRadius: "50%", overflow: "hidden", border: "3px solid rgba(216,195,165,0.28)", boxShadow: "0 0 0 6px rgba(176,123,52,0.08)", margin: "0 auto" }}>
-              <img src={memorial.hero_image_url} alt={memorial.name} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: `center ${memorial.hero_image_position ?? 50}%` }} />
+              <img src={memorial.hero_image_url} alt={memorial.name} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: `center ${memorial.hero_image_position ?? 30}%` }} />
             </div>
           ) : (
             <div style={{ width: 96, height: 96, borderRadius: "50%", background: "linear-gradient(135deg, #D8C3A5, #A89A8A)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto", border: "3px solid rgba(216,195,165,0.28)", boxShadow: "0 0 0 6px rgba(176,123,52,0.08)" }}>

@@ -68,6 +68,7 @@ export default function CreateMemorial() {
     death_place: "",
     subtitle: "",
     hero_image_url: "",
+    hero_image_position: 30,
     biography_style: "chronologisch",
     biography_raw_input: "",
     biography: "",
@@ -399,7 +400,7 @@ export default function CreateMemorial() {
                     <div>
                       <img src={form.hero_image_url} className="w-28 h-28 object-cover rounded-full mx-auto" alt="Portrait" style={{ objectPosition: `center ${form.hero_image_position ?? 30}%` }} />
                       <p className="mt-2 text-sm font-medium" style={{ color: "#16a34a" }}>✓ Foto hochgeladen</p>
-                      <button className="mt-1 text-xs text-gray-400 hover:text-gray-600" onClick={() => { set("hero_image_url", ""); set("hero_image_position", 50); }}>Entfernen</button>
+                      <button className="mt-1 text-xs text-gray-400 hover:text-gray-600" onClick={() => { set("hero_image_url", ""); set("hero_image_position", 30); }}>Entfernen</button>
                     </div>
                   ) : (
                     <label className="cursor-pointer block">
