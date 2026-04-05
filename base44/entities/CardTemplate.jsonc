@@ -1,0 +1,61 @@
+{
+  "name": "CardTemplate",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name der Vorlage"
+    },
+    "format": {
+      "type": "string",
+      "enum": [
+        "DIN_A6_landscape",
+        "DIN_lang_portrait",
+        "DIN_A5_folded",
+        "Leporello"
+      ],
+      "description": "Kartenformat"
+    },
+    "motif_theme": {
+      "type": "string",
+      "enum": [
+        "floral_classic",
+        "minimalist",
+        "religious",
+        "nature",
+        "maritime",
+        "forest",
+        "handwerk"
+      ],
+      "description": "Motivthema"
+    },
+    "motif_image_url": {
+      "type": "string",
+      "description": "KI-generiertes Motivbild"
+    },
+    "text_template": {
+      "type": "string",
+      "description": "Vorlagen-Text f\u00fcr die Karte"
+    },
+    "questionnaire_answers": {
+      "type": "string",
+      "description": "JSON-String mit Fragebogen-Antworten"
+    },
+    "addon_invitation": {
+      "type": "boolean",
+      "default": false
+    },
+    "addon_thankyou": {
+      "type": "boolean",
+      "default": false
+    },
+    "addon_qr": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "name",
+    "format"
+  ]
+}

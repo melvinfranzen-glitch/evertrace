@@ -4,7 +4,7 @@ import B2BLayout from "@/components/b2b/B2BLayout";
 
 
 import CardPrintPreview from "@/components/b2b/CardPrintPreview";
-import { Check, ChevronRight, RefreshCw, Loader2, QrCode, Mail, BookOpen, Building2, User } from "lucide-react";
+import { Check, ChevronRight, RefreshCw, Loader2, QrCode, Mail, BookOpen, Building2, User, Copy } from "lucide-react";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
@@ -80,6 +80,13 @@ export default function B2BCardWizard() {
   const [addonThankyou, setAddonThankyou] = useState(false);
   const [addonQr, setAddonQr] = useState(false);
 
+  // Templates
+  const [templates, setTemplates] = useState([]);
+  const [loadingTemplates, setLoadingTemplates] = useState(true);
+  const [showTemplateNameInput, setShowTemplateNameInput] = useState(false);
+  const [templateName, setTemplateName] = useState("");
+  const [templateSaved, setTemplateSaved] = useState(false);
+
   // Print config
   const [quantity, setQuantity] = useState(DEFAULT_CARD_QUANTITY);
   const [printTier, setPrintTier] = useState("standard");
@@ -98,10 +105,11 @@ export default function B2BCardWizard() {
 
   useEffect(() => {
     const draftId = params.get("draft_id");
+    const isDuplicate = params.get("duplicate") === "true";
     if (draftId) {
       base44.entities.MourningCard.filter({ id: draftId }).then(([draft]) => {
         if (!draft) return;
-        setSelectedCaseId(draft.case_id || "");
+        if (!isDuplicate) setSelectedCaseId(draft.case_id || "");
         setCardFormat(draft.format || "DIN_A6_landscape");
         setEditedText(draft.generated_text || "");
         setGeneratedText(draft.generated_text || "");
@@ -113,7 +121,7 @@ export default function B2BCardWizard() {
         if (draft.questionnaire_answers) {
           try { const qa = JSON.parse(draft.questionnaire_answers); setCharacter(qa.character || ""); setPassions(qa.passions || []); setQuote(qa.quote || ""); setReligion(qa.religion || "Weltlich"); setTone(qa.tone || "Warm & persönlich"); setProfession(qa.profession || ""); } catch {}
         }
-        setStep(2);
+        setStep(isDuplicate ? 0 : 2);
       });
     }
     const user = base44.auth.me().then(u => {
@@ -121,6 +129,7 @@ export default function B2BCardWizard() {
       base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1).then(([h]) => {
         if (h) setFuneralHome(h);
       });
+      base44.entities.CardTemplate.filter({ created_by: u.email }, "-created_date", 20).then(setTemplates).finally(() => setLoadingTemplates(false));
     });
   }, []);
 
@@ -150,6 +159,48 @@ export default function B2BCardWizard() {
 
   const togglePassion = (p) => {
     setPassions(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]);
+  };
+
+  const loadTemplate = (template) => {
+    setCardFormat(template.format || "DIN_A6_landscape");
+    setMotif(template.motif_theme || "nature");
+    setGeneratedMotifUrl(template.motif_image_url || "");
+    setEditedText(template.text_template || "");
+    setGeneratedText(template.text_template || "");
+    setAddonInvitation(template.addon_invitation || false);
+    setAddonThankyou(template.addon_thankyou || false);
+    setAddonQr(template.addon_qr || false);
+    if (template.questionnaire_answers) {
+      try {
+        const qa = JSON.parse(template.questionnaire_answers);
+        setCharacter(qa.character || "");
+        setPassions(qa.passions || []);
+        setQuote(qa.quote || "");
+        setReligion(qa.religion || "Weltlich");
+        setTone(qa.tone || "Warm & persönlich");
+        setProfession(qa.profession || "");
+      } catch {}
+    }
+  };
+
+  const saveAsTemplate = async () => {
+    if (!templateName.trim()) return;
+    const created = await base44.entities.CardTemplate.create({
+      name: templateName.trim(),
+      format: cardFormat,
+      motif_theme: motif,
+      motif_image_url: generatedMotifUrl,
+      text_template: editedText,
+      questionnaire_answers: JSON.stringify({ character, passions, quote, religion, tone, profession }),
+      addon_invitation: addonInvitation,
+      addon_thankyou: addonThankyou,
+      addon_qr: addonQr,
+    });
+    setTemplates(prev => [created, ...prev]);
+    setTemplateSaved(true);
+    setShowTemplateNameInput(false);
+    setTemplateName("");
+    setTimeout(() => setTemplateSaved(false), 3000);
   };
 
   const generateText = async () => {
@@ -319,8 +370,55 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
         <div className="lg:col-span-3 order-2 lg:order-1">
 
           {/* Step 0 */}
-          {step === 0 && (
+           {step === 0 && (
             <div className="space-y-5">
+              {templates.length > 0 && !loadingTemplates && (
+                <div className="rounded-2xl p-5 md:p-6 mb-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>
+                      Von Vorlage starten
+                    </h3>
+                    <span className="text-xs" style={{ color: "#5a554e" }}>{templates.length} gespeichert</span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                    {templates.map(t => (
+                      <div key={t.id} className="group relative">
+                        <button onClick={() => loadTemplate(t)}
+                          className="w-full rounded-xl overflow-hidden text-left transition-all hover:ring-2 hover:ring-amber-500"
+                          style={{ background: "#201e1a", border: "1px solid #302d28" }}>
+                          <div className="aspect-[3/4] overflow-hidden relative">
+                            {t.motif_image_url
+                              ? <img src={t.motif_image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                              : <div className="w-full h-full flex items-center justify-center" style={{ background: "#181714" }}>
+                                  <span className="text-xs" style={{ color: "#302d28" }}>Kein Motiv</span>
+                                </div>}
+                          </div>
+                          <div className="p-2.5">
+                            <p className="text-xs font-medium truncate" style={{ color: "#f0ede8" }}>{t.name}</p>
+                            <p className="text-xs truncate mt-0.5" style={{ color: "#5a554e" }}>
+                              {MOTIFS.find(m => m.id === t.motif_theme)?.label || t.motif_theme}
+                            </p>
+                          </div>
+                        </button>
+                        <button onClick={() => {
+                          if (window.confirm(`Vorlage "${t.name}" löschen?`)) {
+                            base44.entities.CardTemplate.delete(t.id);
+                            setTemplates(prev => prev.filter(x => x.id !== t.id));
+                          }
+                        }}
+                          className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                          style={{ background: "rgba(0,0,0,0.6)" }}>
+                          <span className="text-white text-xs">✕</span>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-xs mt-3 text-center" style={{ color: "#5a554e" }}>
+                    Vorlage wählen, dann Fall und Daten anpassen
+                  </p>
+                </div>
+              )}
+
               <div className="rounded-2xl p-5 md:p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
                 <h3 className="text-lg font-semibold mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Fall auswählen</h3>
                 {cases.length === 0 ? (
@@ -752,13 +850,36 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
               </button>
             )}
             {step === 2 && (
-              <button onClick={async () => {
-                await base44.entities.MourningCard.create({ case_id: selectedCaseId, format: cardFormat, generated_text: editedText, motif_image_url: generatedMotifUrl, motif_theme: motif, questionnaire_answers: JSON.stringify({ character, passions, quote, religion, tone, profession }), addon_invitation: addonInvitation, addon_thankyou: addonThankyou, addon_qr: addonQr, status: "entwurf" });
-                setDraftSaved(true);
-                setTimeout(() => setDraftSaved(false), 2000);
-              }} className="px-4 py-3 rounded-xl text-sm border flex-shrink-0" style={{ borderColor: "#c9a96e", color: "#c9a96e" }}>
-                {draftSaved ? "Entwurf gespeichert ✓" : "Entwurf speichern"}
-              </button>
+              <>
+                <button onClick={async () => {
+                  await base44.entities.MourningCard.create({ case_id: selectedCaseId, format: cardFormat, generated_text: editedText, motif_image_url: generatedMotifUrl, motif_theme: motif, questionnaire_answers: JSON.stringify({ character, passions, quote, religion, tone, profession }), addon_invitation: addonInvitation, addon_thankyou: addonThankyou, addon_qr: addonQr, status: "entwurf" });
+                  setDraftSaved(true);
+                  setTimeout(() => setDraftSaved(false), 2000);
+                }} className="px-4 py-3 rounded-xl text-sm border flex-shrink-0" style={{ borderColor: "#c9a96e", color: "#c9a96e" }}>
+                  {draftSaved ? "Entwurf gespeichert ✓" : "Entwurf speichern"}
+                </button>
+
+                {showTemplateNameInput ? (
+                  <div className="flex gap-2 flex-shrink-0">
+                    <input value={templateName} onChange={e => setTemplateName(e.target.value)}
+                      placeholder="Vorlagenname…" autoFocus
+                      onKeyDown={e => e.key === "Enter" && saveAsTemplate()}
+                      className="px-3 py-2 rounded-xl text-sm outline-none w-36"
+                      style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }} />
+                    <button onClick={saveAsTemplate} disabled={!templateName.trim()}
+                      className="px-3 py-2 rounded-xl text-sm font-medium disabled:opacity-40"
+                      style={{ background: "#c9a96e", color: "#0f0e0c" }}>✓</button>
+                    <button onClick={() => { setShowTemplateNameInput(false); setTemplateName(""); }}
+                      className="px-2 text-sm" style={{ color: "#5a554e" }}>✕</button>
+                  </div>
+                ) : (
+                  <button onClick={() => setShowTemplateNameInput(true)}
+                    className="px-4 py-3 rounded-xl text-sm border flex-shrink-0"
+                    style={{ borderColor: "#302d28", color: templateSaved ? "#4ade80" : "#8a8278" }}>
+                    {templateSaved ? "✓ Vorlage gespeichert" : "Als Vorlage"}
+                  </button>
+                )}
+              </>
             )}
             {step < 4 ? (
               <button onClick={() => setStep(s => s + 1)} disabled={step === 0 && !selectedCaseId}

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
-import { Plus, CreditCard } from "lucide-react";
+import { Plus, CreditCard, Copy } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 
@@ -77,6 +77,12 @@ export default function B2BCards() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
+                  <button onClick={() => navigate(`/B2BCardWizard?draft_id=${card.id}&duplicate=true`)}
+                    className="text-xs px-2.5 py-1 rounded-full font-medium transition-all hover:bg-stone-800"
+                    style={{ color: "#8a8278", border: "1px solid #302d28" }}
+                    title="Karte duplizieren und anpassen">
+                    <Copy className="w-3 h-3 inline mr-1" /> Duplizieren
+                  </button>
                   {card.status === "entwurf" ? (
                     <Link to={`/B2BCardWizard?draft_id=${card.id}`} className="text-xs px-2.5 py-1 rounded-full font-medium" style={{ background: "rgba(251,191,36,0.15)", color: "#f59e0b", border: "1px solid rgba(251,191,36,0.3)" }}>
                       Entwurf — fortsetzen →
