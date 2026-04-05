@@ -49,12 +49,18 @@ export default function AudioUploader({ memorialId }) {
       return;
     }
 
-    setPendingFile(file);
-    setPendingUrl(URL.createObjectURL(file));
-    // Suggest title from filename
-    const name = file.name.replace(/\.[^.]+$/, "").replace(/[-_]/g, " ");
-    setNewTitle(name);
-    setNewType("sprachnachricht");
+    // Check duration
+    checkDuration(file).then((duration) => {
+      if (duration > 300) {
+        alert("Die Audiodatei darf maximal 5 Minuten lang sein. Für längere Musik empfehlen wir die Spotify-Integration.");
+        return;
+      }
+      setPendingFile(file);
+      setPendingUrl(URL.createObjectURL(file));
+      const name = file.name.replace(/\.[^.]+$/, "").replace(/[-_]/g, " ");
+      setNewTitle(name);
+      setNewType("sprachnachricht");
+    });
   };
 
   const handleDrop = (e) => {
@@ -119,6 +125,10 @@ export default function AudioUploader({ memorialId }) {
 
   const saveTrack = async () => {
     if (!pendingFile || !newTitle.trim()) return;
+    if (tracks.length >= 10) {
+      alert("Sie können maximal 10 Aufnahmen pro Gedenkseite hochladen.");
+      return;
+    }
     setUploading(true);
 
     try {
@@ -181,6 +191,19 @@ export default function AudioUploader({ memorialId }) {
   };
 
   const fmtTime = (s) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, "0")}`;
+
+  // Check audio duration
+  const checkDuration = (file) => {
+    return new Promise((resolve) => {
+      const audio = new Audio();
+      audio.onloadedmetadata = () => {
+        URL.revokeObjectURL(audio.src);
+        resolve(audio.duration);
+      };
+      audio.onerror = () => resolve(0);
+      audio.src = URL.createObjectURL(file);
+    });
+  };
 
   // ─── Render ─────────────────────────────────────────────
 

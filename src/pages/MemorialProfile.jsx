@@ -19,6 +19,7 @@ import LegacySection from "@/components/memorial/LegacySection";
 import ServiceEventSection from "@/components/memorial/ServiceEventSection";
 import SectionDivider from "@/components/memorial/SectionDivider";
 import FloatingMusicPlayer from "@/components/memorial/FloatingMusicPlayer";
+import ReportContentModal from "@/components/memorial/ReportContentModal";
 
 export default function MemorialProfile() {
   const [memorial, setMemorial] = useState(null);
@@ -38,6 +39,7 @@ export default function MemorialProfile() {
   const [memoryWall, setMemoryWall] = useState([]);
   const [legacyEntries, setLegacyEntries] = useState([]);
   const [serviceEvents, setServiceEvents] = useState([]);
+  const [showReportModal, setShowReportModal] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -309,7 +311,18 @@ export default function MemorialProfile() {
         />
       )}
 
-
+      {/* Report Content Button */}
+      <div className="py-8 text-center">
+        <button
+          onClick={() => setShowReportModal(true)}
+          className="text-xs transition-colors"
+          style={{ color: "#a09070", fontFamily: "'DM Sans', sans-serif" }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#c9a96e")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "#a09070")}
+        >
+          Inhalt melden · Urheberrechtsverstoß anzeigen
+        </button>
+      </div>
 
       {/* Footer */}
       <div className="py-12 text-center border-t border-stone-100" style={{ background: "#1a1410" }}>
@@ -330,6 +343,15 @@ export default function MemorialProfile() {
           <a href="https://www.fiftysounds.com" target="_blank" rel="noopener noreferrer" style={{ color: "#5a4a38" }}>Music by fiftysounds.com</a>
         </p>
       </div>
+
+      {/* Report Modal */}
+      {showReportModal && (
+        <ReportContentModal
+          memorialId={memorial.id}
+          memorialName={memorial.name}
+          onClose={() => setShowReportModal(false)}
+        />
+      )}
 
       {/* Background music player */}
       <audio

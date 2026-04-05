@@ -21,9 +21,10 @@ const SECTIONS = {
           <p>E-Mail: hallo@evertrace.de<br />Telefon: +49 89 123 456 789</p>
         </div>
         <div>
-          <p className="font-semibold mb-1" style={{ color: "#1c1917" }}>Handelsregister</p>
-          {/* ⚠️ TODO VOR GO-LIVE: Handelsregister-Angaben mit echten Daten ersetzen */}
-          <p style={{ color: "#e57373", fontSize: 11 }}>⚠ Noch nicht eingetragen</p>
+          <p className="font-semibold mb-1" style={{ color: "#1c1917" }}>Meldung von Rechtsverletzungen</p>
+          <p>Wenn Sie der Meinung sind, dass auf unserer Plattform Inhalte veröffentlicht werden, die Ihre Urheberrechte oder sonstigen Rechte verletzen, kontaktieren Sie uns bitte unter:</p>
+          <p className="font-medium mt-1">rechtliches@evertrace.de</p>
+          <p className="mt-1">Wir nehmen Urheberrechte ernst und reagieren auf berechtigte Meldungen innerhalb von 24 Stunden.</p>
         </div>
         <div>
           <p className="font-semibold mb-1" style={{ color: "#1c1917" }}>Verantwortlich für den Inhalt (§ 55 Abs. 2 RStV)</p>
@@ -97,15 +98,29 @@ const SECTIONS = {
         </div>
         <div>
           <p className="font-semibold mb-1" style={{ color: "#1c1917" }}>§ 5 Pflichten der Nutzer</p>
-          <p>Nutzer sind verpflichtet, ausschließlich Inhalte einzustellen, zu denen sie die erforderlichen Rechte besitzen. Die Veröffentlichung von Inhalten, die Rechte Dritter verletzen oder gesetzwidrig sind, ist untersagt.</p>
+          <p className="mb-2">Nutzer sind verpflichtet, ausschließlich Inhalte (Texte, Fotos, Audiodateien) einzustellen, zu denen sie die erforderlichen Rechte besitzen. Dies umfasst insbesondere:</p>
+          <p className="mb-1">a) Eigene Fotos und Aufnahmen, selbst verfasste Texte</p>
+          <p className="mb-1">b) Inhalte, für die eine ausdrückliche Genehmigung des Rechteinhabers vorliegt</p>
+          <p className="mb-2">c) Inhalte, die gemeinfrei oder unter einer freien Lizenz (z.B. Creative Commons) veröffentlicht sind</p>
+          <p className="mb-2">Die Veröffentlichung von urheberrechtlich geschützter Musik, Fotos professioneller Fotografen oder anderen geschützten Werken ohne Genehmigung ist ausdrücklich untersagt. Für lizenzpflichtige Musik empfehlen wir die Spotify-Integration, die auf der Plattform verfügbar ist.</p>
+          <p>Der Nutzer stellt Evertrace von allen Ansprüchen Dritter frei, die aufgrund einer Verletzung dieser Pflicht entstehen, einschließlich angemessener Rechtsverteidigungskosten.</p>
+        </div>
+        <div>
+          <p className="font-semibold mb-1" style={{ color: "#1c1917" }}>§ 5a Meldung von Rechtsverletzungen (Notice &amp; Takedown)</p>
+          <p className="mb-2">Sollten Sie der Ansicht sein, dass auf Evertrace veröffentlichte Inhalte Ihre Urheberrechte oder sonstigen Rechte verletzen, bitten wir Sie um eine Mitteilung an:</p>
+          <p className="mb-1 font-medium">rechtliches@evertrace.de</p>
+          <p className="mb-2">Bitte geben Sie dabei an: (1) eine Beschreibung des geschützten Werks, (2) den Standort des beanstandeten Inhalts auf unserer Plattform, (3) Ihre Kontaktdaten, (4) eine Erklärung, dass Sie der Rechteinhaber sind oder in dessen Auftrag handeln.</p>
+          <p>Wir werden berechtigte Beschwerden innerhalb von 24 Stunden prüfen und rechtsverletzende Inhalte unverzüglich entfernen. Entfernte Inhalte werden dauerhaft gesperrt (Stay-Down).</p>
         </div>
         <div>
           <p className="font-semibold mb-1" style={{ color: "#1c1917" }}>§ 6 Haftung</p>
-          <p>Evertrace haftet nicht für Schäden aus der Unterbrechung des Betriebs, dem Verlust von Daten oder aus der Nutzung der Plattform durch Dritte. Die Haftung für grobe Fahrlässigkeit und Vorsatz bleibt unberührt.</p>
+          <p className="mb-2">Evertrace übernimmt keine Haftung für von Nutzern eingestellte Inhalte. Die Verantwortung für die Rechtmäßigkeit hochgeladener Inhalte liegt beim jeweiligen Nutzer.</p>
+          <p className="mb-2">Evertrace setzt technische und organisatorische Maßnahmen ein, um die Veröffentlichung rechtswidriger Inhalte zu verhindern, darunter: Hinweise beim Upload, Dateigrößen- und Längenbeschränkungen, Moderationssysteme für nutzergenerierte Beiträge sowie ein Meldesystem für Rechteinhaber.</p>
+          <p>Die Haftung für grobe Fahrlässigkeit und Vorsatz bleibt unberührt.</p>
         </div>
         <div>
           <p className="font-semibold mb-1" style={{ color: "#1c1917" }}>§ 7 Anwendbares Recht</p>
-          <p>Es gilt deutsches Recht. Gerichtsstand ist München.</p>
+          <p>Es gilt deutsches Recht. Gerichtsstand ist Duisburg.</p>
         </div>
       </div>
     ),
