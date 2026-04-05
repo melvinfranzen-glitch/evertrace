@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Music, ChevronDown, ChevronUp, X, Play, Pause } from "lucide-react";
+import { parseSpotifyUrl } from "@/utils/spotify";
 
 export default function FloatingMusicPlayer({ spotifyUrl, name, curatedTracks = [] }) {
   const [expanded, setExpanded] = useState(false);
@@ -9,12 +10,8 @@ export default function FloatingMusicPlayer({ spotifyUrl, name, curatedTracks = 
 
   const hasCuratedTracks = curatedTracks && curatedTracks.length > 0;
   const firstCuratedTrack = hasCuratedTracks ? curatedTracks[0] : null;
-  const useCurated = !spotifyUrl && hasCuratedTracks;
-
-  const spotifyMatch = spotifyUrl ? spotifyUrl.match(/spotify\.com\/(playlist|album|track)\/([a-zA-Z0-9]+)/) : null;
-  const type = spotifyMatch ? spotifyMatch[1] : null;
-  const spotifyId = spotifyMatch ? spotifyMatch[2] : null;
-  const embedHeight = type === "track" ? 152 : 352;
+  const spotify = parseSpotifyUrl(spotifyUrl);
+  const useCurated = !spotify && hasCuratedTracks;
 
   const handlePlayPause = () => {
     if (!audioRef.current) return;
@@ -105,11 +102,11 @@ export default function FloatingMusicPlayer({ spotifyUrl, name, curatedTracks = 
       )}
 
       {/* Spotify embed */}
-      {expanded && !useCurated && spotifyUrl && (
+      {expanded && !useCurated && spotify && (
         <iframe
-          src={`https://open.spotify.com/embed/${type}/${spotifyId}?utm_source=generator&theme=0`}
+          src={`${spotify.embedUrl}?utm_source=generator&theme=0`}
           width="320"
-          height={embedHeight}
+          height={spotify.type === "track" ? 152 : 352}
           frameBorder="0"
           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
           loading="lazy"

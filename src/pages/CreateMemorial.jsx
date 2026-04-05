@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Loader2, Upload, Sparkles, ChevronRight, ChevronLeft, Check, ArrowLeft, Copy } from "lucide-react";
+import { parseSpotifyUrl } from "@/utils/spotify";
 import DateInput from "@/components/ui/DateInput";
 
 const STYLES = [
@@ -620,11 +621,14 @@ export default function CreateMemorial() {
                   Falls die verstorbene Person eine Lieblingsplaylist auf Spotify hatte, können Sie hier den Link einfügen. Die Musik wird dann auf der Gedenkseite abgespielt.
                 </p>
                 <Input
-                  value={form.spotify_url || ""}
-                  onChange={(e) => set("spotify_url", e.target.value)}
-                  placeholder="https://open.spotify.com/playlist/..."
-                  className="mt-1"
+                value={form.spotify_url || ""}
+                onChange={(e) => set("spotify_url", e.target.value)}
+                placeholder="https://open.spotify.com/playlist/..."
+                className="mt-1"
                 />
+                {form.spotify_url && !parseSpotifyUrl(form.spotify_url) && (
+                <p className="text-xs mt-1" style={{ color: "#ef4444" }}>Bitte geben Sie eine gültige Spotify-URL ein (z.B. https://open.spotify.com/playlist/...)</p>
+                )}
               </div>
 
               <div

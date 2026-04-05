@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Loader2, Lock } from "lucide-react";
+import { parseSpotifyUrl } from "@/utils/spotify";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -268,28 +269,30 @@ export default function MemorialProfile() {
         </>
       )}
 
-      {memorial.spotify_url && (
-        <section className="py-16 px-6" style={{ background: "#F5F0E8" }}>
-          <div className="max-w-3xl mx-auto text-center">
-            <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>Lieblingsmelodien</p>
-            <h2 className="text-3xl font-semibold text-gray-800 mb-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              Musik, die verbindet
-            </h2>
-            <p className="text-gray-400 text-sm mb-8 font-light" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              Songs, die {memorial.name} liebte — und die uns an ihn / sie erinnern.
-            </p>
-            <iframe
-              src={`https://open.spotify.com/embed/playlist/${memorial.spotify_url.split("/").pop().split("?")[0]}`}
-              width="100%"
-              height="380"
-              frameBorder="0"
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              className="rounded-2xl shadow-md"
-              title="Spotify Playlist"
-            />
-          </div>
-        </section>
-      )}
+      {(() => {
+        const spotify = parseSpotifyUrl(memorial.spotify_url);
+        if (!spotify) return null;
+        const embedHeight = spotify.type === 'track' ? 152 : 380;
+        return (
+          <section className="py-16 px-6" style={{ background: "#F5F0E8" }}>
+            <div className="max-w-3xl mx-auto text-center">
+              <p className="text-xs uppercase tracking-[0.3em] mb-2" style={{ color: "#c9a96e" }}>Lieblingsmelodien</p>
+              <h2 className="text-3xl font-semibold text-gray-800 mb-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                Musik, die verbindet
+              </h2>
+              <p className="text-gray-400 text-sm mb-8 font-light" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                Songs, die {memorial.name} liebte — und die uns an ihn / sie erinnern.
+              </p>
+              <iframe
+                src={`${spotify.embedUrl}?utm_source=generator&theme=0`}
+                width="100%" height={embedHeight} frameBorder="0"
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                className="rounded-2xl shadow-md" title="Spotify Player"
+              />
+            </div>
+          </section>
+        );
+      })()}
 
       <VirtualCandleSection
         memorialId={memorial.id}

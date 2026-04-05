@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
+import { parseSpotifyUrl } from "@/utils/spotify";
 
 import { sanitizePromptInput } from "@/utils/sanitize";
 import { Button } from "@/components/ui/button";
@@ -368,22 +369,19 @@ export default function EditMemorial() {
                       Fügen Sie den Link zu einer öffentlichen Spotify-Playlist ein. Die Musik wird direkt auf der Gedenkseite eingebettet. Hörer benötigen keinen Spotify-Account für 30-Sekunden-Vorschauen.
                     </p>
                     <Input value={memorial.spotify_url || ""} onChange={(e) => set("spotify_url", e.target.value)} placeholder="https://open.spotify.com/playlist/..." className="mt-2" />
-                    {memorial.spotify_url && (
-                      <div className="mt-4 rounded-xl overflow-hidden" style={{ border: "1px solid #e5e7eb" }}>
-                        <iframe
-                          src={(() => {
-                            const match = memorial.spotify_url.match(/spotify\.com\/(playlist|track)\/([a-zA-Z0-9]+)/);
-                            if (!match) return "";
-                            const [, type, id] = match;
-                            return `https://open.spotify.com/embed/${type}/${id}`;
-                          })()}
-                          width="100%"
-                          height={152}
-                          frameBorder="0"
-                          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                          style={{ borderRadius: 12, border: "none" }}
-                        />
-                      </div>
+                    {(() => {
+                      const sp = parseSpotifyUrl(memorial.spotify_url);
+                      if (!sp) return null;
+                      return (
+                        <div className="mt-4 rounded-xl overflow-hidden" style={{ border: "1px solid #e5e7eb" }}>
+                          <iframe src={sp.embedUrl} width="100%" height={152} frameBorder="0"
+                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                            style={{ borderRadius: 12, border: "none" }} />
+                        </div>
+                      );
+                    })()}
+                    {memorial.spotify_url && !parseSpotifyUrl(memorial.spotify_url) && (
+                      <p className="text-xs mt-1" style={{ color: "#ef4444" }}>Bitte geben Sie eine gültige Spotify-URL ein (z.B. https://open.spotify.com/playlist/...)</p>
                     )}
                   </div>
                 )}
