@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Loader2, Check, Lock } from "lucide-react";
 
@@ -8,6 +9,7 @@ import { Loader2, Check, Lock } from "lucide-react";
  * token = base64(email:memorial_id) — verified client-side for simplicity
  */
 export default function MemorialCollabInvite() {
+  const navigate = useNavigate();
   const params = new URLSearchParams(window.location.search);
   const memorialId = params.get("memorial_id");
   const token = params.get("token");
@@ -51,7 +53,7 @@ export default function MemorialCollabInvite() {
   }, []);
 
   const goToEdit = () => {
-    window.location.href = `/EditMemorial?id=${memorialId}`;
+    navigate(`/EditMemorial?id=${memorialId}`);
   };
 
   return (

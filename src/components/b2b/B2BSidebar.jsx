@@ -69,7 +69,6 @@ export default function B2BSidebar() {
       onClick={async () => {
         setLoggingOut(true);
         await base44.auth.logout();
-        window.location.href = "/";
       }}
       disabled={loggingOut}
       className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-sm transition-all"

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
 import { Upload, Loader2, Check, Save, Users, Building2, Palette, Eye } from "lucide-react";
@@ -29,6 +30,7 @@ const PLAN_META = {
 };
 
 export default function B2BSettings() {
+  const navigate = useNavigate();
   const [tab, setTab] = useState("whitelabel");
   const [home, setHome] = useState(null);
   const [form, setForm] = useState({});
@@ -40,7 +42,7 @@ export default function B2BSettings() {
   useEffect(() => {
     base44.auth.me().then(u => {
       base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1).then(([h]) => {
-        if (!h) { window.location.href = "/B2BRegister"; return; }
+        if (!h) { navigate("/B2BRegister"); return; }
         setHome(h); setForm(h);
       });
     });

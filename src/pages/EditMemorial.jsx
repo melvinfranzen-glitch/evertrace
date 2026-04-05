@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 
@@ -21,6 +22,7 @@ import MemoryWallModerator from "@/components/memorial/MemoryWallModerator";
 import { CURATED_TRACKS } from "@/components/memorial/curatedTracksData";
 
 export default function EditMemorial() {
+  const navigate = useNavigate();
   const [memorial, setMemorial] = useState(null);
   const [timeline, setTimeline] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,7 +39,7 @@ export default function EditMemorial() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
-    if (!id) { window.location.href = createPageUrl("Dashboard"); return; }
+    if (!id) { navigate(createPageUrl("Dashboard")); return; }
     base44.auth.me().then(async (user) => {
       const [memorials, events, pendCond, pendWall] = await Promise.all([
         base44.entities.Memorial.filter({ id }),
@@ -50,7 +52,7 @@ export default function EditMemorial() {
         // Allow access to owner OR collaborators
         const collabs = m.collaborator_emails || [];
         if (m.created_by !== user.email && !collabs.includes(user.email)) {
-          window.location.href = createPageUrl("Dashboard");
+          navigate(createPageUrl("Dashboard"));
           return;
         }
         setMemorial(m);
@@ -166,14 +168,14 @@ export default function EditMemorial() {
           <div className="flex gap-2 flex-wrap">
             <Button
               variant="outline" size="sm" className="rounded-xl text-xs"
-              onClick={() => window.location.href = createPageUrl("CardDesigner") + `?id=${memorial.id}`}
+              onClick={() => navigate(createPageUrl("CardDesigner") + `?id=${memorial.id}`)}
               style={{ borderColor: "rgba(201,169,110,0.4)", color: "#c9a96e" }}
             >
               <CreditCard className="w-3.5 h-3.5 mr-1" /> Trauerkarte gestalten
             </Button>
             <Button
               variant="outline" size="sm" className="rounded-xl text-xs"
-              onClick={() => window.location.href = createPageUrl("MemoryBook") + `?id=${memorial.id}`}
+              onClick={() => navigate(createPageUrl("MemoryBook") + `?id=${memorial.id}`)}
               style={{ borderColor: "#1e3a5f", color: "#1e3a5f" }}
             >
               <BookOpen className="w-3.5 h-3.5 mr-1" /> Erinnerungsbuch
@@ -580,7 +582,7 @@ export default function EditMemorial() {
           </div>
         </div>
         <button
-          onClick={() => window.location.href = `/Shop?memorial_id=${memorial.short_id}`}
+          onClick={() => navigate(`/Shop?memorial_id=${memorial.short_id}`)}
           className="whitespace-nowrap px-4 py-2 font-medium flex-shrink-0"
           style={{ background: "#c9a96e", color: "#0f0e0c", borderRadius: 8, fontSize: 13 }}
         >

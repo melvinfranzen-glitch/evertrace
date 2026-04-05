@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
 import { Plus, CreditCard } from "lucide-react";
@@ -17,6 +17,7 @@ const MOTIF_LABELS = { floral_classic: "Florales Klassik", minimalist: "Minimali
 const FORMAT_LABELS = { DIN_A6_landscape: "DIN A6 quer", DIN_lang_portrait: "DIN lang", DIN_A5_folded: "DIN A5 gefaltet", Leporello: "Leporello" };
 
 export default function B2BCards() {
+  const navigate = useNavigate();
   const [cards, setCards] = useState([]);
   const [cases, setCases] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,7 +25,7 @@ export default function B2BCards() {
   useEffect(() => {
     base44.auth.me().then(u => {
       base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1).then(fh => {
-        if (fh.length === 0) { window.location.href = "/B2BRegister"; return; }
+        if (fh.length === 0) { navigate("/B2BRegister"); return; }
         Promise.all([
           base44.entities.MourningCard.filter({ created_by: u.email }, "-created_date", 50),
           base44.entities.Case.filter({ created_by: u.email }, "-created_date", 100),

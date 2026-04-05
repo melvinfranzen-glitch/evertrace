@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
 import StatCard from "@/components/b2b/StatCard";
@@ -20,6 +21,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function B2BAnalytics() {
+  const navigate = useNavigate();
   const [cases, setCases] = useState([]);
   const [cards, setCards] = useState([]);
   const [pages, setPages] = useState([]);
@@ -29,7 +31,7 @@ export default function B2BAnalytics() {
   useEffect(() => {
     base44.auth.me().then(u => {
       base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1).then(fh => {
-        if (fh.length === 0) { window.location.href = "/B2BRegister"; return; }
+        if (fh.length === 0) { navigate("/B2BRegister"); return; }
         Promise.all([
           base44.entities.Case.filter({ created_by: u.email }, "-created_date", 200),
           base44.entities.MourningCard.filter({ created_by: u.email }, "-created_date", 200),

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
 import { ArrowLeft, CreditCard, Globe, Package, Clock, CheckCircle2, Pencil, X, Check, Users } from "lucide-react";
@@ -41,6 +41,7 @@ function InfoRow({ label, value }) {
 }
 
 export default function B2BCaseDetail() {
+  const navigate = useNavigate();
   const [caseData, setCaseData] = useState(null);
   const [cards, setCards] = useState([]);
   const [memorial, setMemorial] = useState(null);
@@ -64,7 +65,7 @@ export default function B2BCaseDetail() {
         base44.entities.PrintOrder.filter({ case_id: id }),
       ]).then(([cases, k, mem, o]) => {
         if (cases.length && cases[0].created_by !== user.email) {
-          window.location.href = "/B2BCases";
+          navigate("/B2BCases");
           return;
         }
         if (cases.length) setCaseData(cases[0]);

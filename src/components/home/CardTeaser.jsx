@@ -1,7 +1,9 @@
 import { Sparkles, CreditCard } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 export default function CardTeaser() {
+  const navigate = useNavigate();
   return (
     <section className="py-20 px-6" style={{ background: "#F7F3ED" }}>
       <div className="max-w-6xl mx-auto">
@@ -31,7 +33,7 @@ export default function CardTeaser() {
               ))}
             </div>
             <button
-              onClick={() => window.location.href = createPageUrl("Dashboard")}
+              onClick={() => navigate(createPageUrl("Dashboard"))}
               className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm self-start transition-all duration-200"
               style={{ background: "#B07B34", color: "#F7F3ED", fontFamily: "'Lato', sans-serif", fontWeight: 400 }}
               onMouseEnter={e => { e.currentTarget.style.background = "#7A5520"; e.currentTarget.style.transform = "translateY(-1px)"; }}

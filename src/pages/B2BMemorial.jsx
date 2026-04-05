@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
 import { Plus, Globe, Eye, Lock, Link2, Sparkles, Loader2, X, ExternalLink } from "lucide-react";
@@ -23,6 +24,7 @@ function slugify(str) {
 }
 
 export default function B2BMemorial() {
+  const navigate = useNavigate();
   const [pages, setPages] = useState([]);
   const [cases, setCases] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -41,7 +43,7 @@ export default function B2BMemorial() {
   useEffect(() => {
     base44.auth.me().then(u => {
       base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1).then(fh => {
-        if (fh.length === 0) { window.location.href = "/B2BRegister"; return; }
+        if (fh.length === 0) { navigate("/B2BRegister"); return; }
         Promise.all([
           base44.entities.B2BMemorialPage.filter({ created_by: u.email }, "-created_date", 50),
           base44.entities.Case.filter({ created_by: u.email }, "-created_date", 100),

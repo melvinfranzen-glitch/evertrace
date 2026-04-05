@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
 import { Plus, Search, ChevronDown, CreditCard, Globe, Package, Trash2, X } from "lucide-react";
@@ -26,6 +26,7 @@ const EMPTY_FORM = {
 };
 
 export default function B2BCases() {
+  const navigate = useNavigate();
   const [cases, setCases] = useState([]);
   const [funeralHomeId, setFuneralHomeId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -41,7 +42,7 @@ export default function B2BCases() {
   useEffect(() => {
     base44.auth.me().then(u => {
       base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1).then(fh => {
-        if (fh.length === 0) { window.location.href = "/B2BRegister"; return; }
+        if (fh.length === 0) { navigate("/B2BRegister"); return; }
         setFuneralHomeId(fh[0].id);
         base44.entities.Case.filter({ funeral_home_id: fh[0].id }, "-created_date", 100).then(d => { setCases(d); setLoading(false); });
       });

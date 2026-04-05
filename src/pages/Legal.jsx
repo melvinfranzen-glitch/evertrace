@@ -22,7 +22,8 @@ const SECTIONS = {
         </div>
         <div>
           <p className="font-semibold mb-1" style={{ color: "#1c1917" }}>Handelsregister</p>
-          <p>Amtsgericht München · HRB 123456<br />USt-IdNr.: DE 123 456 789</p>
+          {/* ⚠️ TODO VOR GO-LIVE: Handelsregister-Angaben mit echten Daten ersetzen */}
+          <p style={{ color: "#e57373", fontSize: 11 }}>⚠ Noch nicht eingetragen</p>
         </div>
         <div>
           <p className="font-semibold mb-1" style={{ color: "#1c1917" }}>Verantwortlich für den Inhalt (§ 55 Abs. 2 RStV)</p>
@@ -45,7 +46,7 @@ const SECTIONS = {
         </div>
         <div>
           <p className="font-semibold mb-1" style={{ color: "#1c1917" }}>Verantwortliche Stelle</p>
-          <p>Evertrace GmbH, Musterstraße 12, 80331 München<br />E-Mail: datenschutz@evertrace.de</p>
+          <p>Melvin Franzen &amp; Kai Krawanja, Schulz-Knaudt-Str. 31, 47259 Duisburg<br />E-Mail: datenschutz@evertrace.de</p>
         </div>
         <div>
           <p className="font-semibold mb-1" style={{ color: "#1c1917" }}>Erhebung und Nutzung personenbezogener Daten</p>

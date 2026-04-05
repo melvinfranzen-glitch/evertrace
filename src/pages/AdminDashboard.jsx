@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { Check, X, Eye, Loader2, Shield, Package, BookOpen, Users } from "lucide-react";
@@ -26,6 +27,7 @@ const orderStatusLabels = {
 };
 
 export default function AdminDashboard() {
+  const navigate = useNavigate();
   const [tab, setTab] = useState("condolences");
   const [condolences, setCondolences] = useState([]);
   const [memorials, setMemorials] = useState([]);
@@ -36,7 +38,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const init = async () => {
       const u = await base44.auth.me().catch(() => null);
-      if (!u || u.role !== "admin") { window.location.href = createPageUrl("Home"); return; }
+      if (!u || u.role !== "admin") { navigate(createPageUrl("Home")); return; }
       setUser(u);
       const [c, m, o] = await Promise.all([
         base44.entities.CondolenceEntry.list("-created_date", 100),

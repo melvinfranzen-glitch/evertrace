@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
 import StatCard from "@/components/b2b/StatCard";
@@ -21,6 +21,7 @@ function fmtDate(d) {
 const STATUS_COLORS = { aktiv: "#B07B34", abgeschlossen: "#6A9A6A", archiviert: "#6B6257" };
 
 export default function B2BDashboard() {
+  const navigate = useNavigate();
   const [cases, setCases] = useState([]);
   const [cards, setCards] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -44,7 +45,7 @@ export default function B2BDashboard() {
       ]).then(([c, k, o, fh]) => {
         // Fix 1: B2B Route Protection — redirect unregistered users
         if (fh.length === 0) {
-          window.location.href = "/B2BRegister";
+          navigate("/B2BRegister");
           return;
         }
         setCases(c); setCards(k); setOrders(o); setFuneralHome(fh[0]); setLoading(false);

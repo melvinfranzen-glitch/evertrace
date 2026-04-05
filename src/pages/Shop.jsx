@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
@@ -7,20 +8,17 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Check, Package, BookOpen, Loader2, ArrowLeft } from "lucide-react";
 import PlaqueConfigurator from "@/components/shop/PlaqueConfigurator";
+import { PLAQUES } from "@/components/pricing/pricingData";
 
-const PRICES = { plaque_brass: 149, plaque_slate: 129, plaque_steel: 219, print_book: 59 };
-
-const PRODUCTS = [
-  { id: "plaque_brass", icon: Package, label: "Messing-Plakette", desc: "Klassische Gravur, QR-Code, wetterfest — 20 × 11 cm", price: 149 },
-  { id: "plaque_slate", icon: Package, label: "Schiefer-Plakette", desc: "Natürlicher Stein, Lasergravur, zeitlos — 20 × 11 cm", price: 129 },
-  { id: "plaque_steel", icon: Package, label: "Edelstahl-Plakette Premium", desc: "Gebürsteter Stahl, UV-Beschichtung, Montageset — 20 × 11 cm", price: 219 },
-  { id: "print_book", icon: BookOpen, label: "Kondolenzbuch (Hardcover)", desc: "Alle Beiträge der Gedenkseite, professionell gestaltet, Soft-Touch-Einband — A4", price: 59 },
-];
+const BOOK_PRODUCT = { id: "print_book", icon: BookOpen, label: "Kondolenzbuch (Hardcover)", desc: "Alle Beiträge der Gedenkseite, professionell gestaltet, Soft-Touch-Einband — A4", price: 59 };
+const PRODUCTS = [...PLAQUES.map(p => ({ ...p, icon: Package, label: p.name })), BOOK_PRODUCT];
+const PRICES = Object.fromEntries([...PLAQUES.map(p => [p.id, p.price]), ["print_book", 59]]);
 
 export default function Shop() {
+  const navigate = useNavigate();
   const [memorials, setMemorials] = useState([]);
   const [user, setUser] = useState(null);
-  const [productType, setProductType] = useState("plaque_brass");
+  const [productType, setProductType] = useState(PLAQUES[0].id);
   const [selectedMemorial, setSelectedMemorial] = useState(null);
   const [b2bSlug, setB2bSlug] = useState(null);
   const [form, setForm] = useState({ customer_name: "", customer_email: "", shipping_street: "", shipping_city: "", shipping_zip: "", notes: "" });
@@ -80,7 +78,7 @@ export default function Shop() {
           </div>
           <h2 className="text-2xl font-semibold text-gray-800 mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Bestellung aufgenommen!</h2>
           <p className="text-gray-500 mb-6">Wir fertigen Ihre Plakette innerhalb von 5–7 Werktagen mit dem personalisierten QR-Code und versenden sie an die angegebene Adresse. Der QR-Code ist dauerhaft aktiv solange die Gedenkseite besteht.</p>
-          <Button onClick={() => window.location.href = createPageUrl("Dashboard")} className="text-white rounded-xl px-8" style={{ background: "#c9a96e" }}>
+          <Button onClick={() => navigate(createPageUrl("Dashboard"))} className="text-white rounded-xl px-8" style={{ background: "#c9a96e" }}>
             Zum Dashboard
           </Button>
         </div>
