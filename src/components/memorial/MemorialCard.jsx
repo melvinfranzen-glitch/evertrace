@@ -1,4 +1,5 @@
 import { Eye, Edit, QrCode, Calendar, Trash2, X, Copy, Check, BookOpen } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ const statusLabels = { draft: "Entwurf", active: "Aktiv", expired: "Abgelaufen" 
 const planLabels = { free: "Free", classic: "Classic", premium: "Premium" };
 
 export default function MemorialCard({ memorial, onDelete, onOpenPlaque }) {
+  const navigate = useNavigate();
   const [confirming, setConfirming] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
@@ -83,12 +85,12 @@ export default function MemorialCard({ memorial, onDelete, onOpenPlaque }) {
                 <Eye className="w-3.5 h-3.5 mr-1" /> Ansehen
               </Button>
               <Button size="sm" variant="outline" className="text-xs rounded-lg h-8"
-                onClick={() => window.location.href = createPageUrl(`EditMemorial`) + `?id=${memorial.id}`}>
+                onClick={() => navigate(createPageUrl("EditMemorial") + `?id=${memorial.id}`)}>
                 <Edit className="w-3.5 h-3.5 mr-1" /> Bearbeiten
               </Button>
               <Button size="sm" variant="outline" className="text-xs rounded-lg h-8"
                 style={{ borderColor: "rgba(176,123,52,0.4)", color: "#B07B34" }}
-                onClick={() => window.location.href = createPageUrl("Dashboard") + `?tab=book`}>
+                onClick={() => navigate(createPageUrl("Dashboard") + "?tab=book")}>
                 <BookOpen className="w-3.5 h-3.5 mr-1" /> Lebensbuch
               </Button>
               {!confirming ? (
@@ -130,7 +132,7 @@ export default function MemorialCard({ memorial, onDelete, onOpenPlaque }) {
               <BookOpen style={{ width: 14, height: 14, color: "#B07B34", flexShrink: 0 }} />
               <span style={{ fontFamily: "'Lato', sans-serif", fontWeight: 300, fontSize: 12, color: "#A89A8A" }}>Lebensgeschichten-Buch bestellen</span>
             </div>
-            <button onClick={() => window.location.href = `/Dashboard?tab=book`}
+            <button onClick={() => navigate("/Dashboard?tab=book")}
               style={{ background: "transparent", border: "1px solid rgba(176,123,52,0.35)", color: "#B07B34", borderRadius: 6, padding: "4px 10px", fontSize: 11, fontFamily: "'Lato', sans-serif", cursor: "pointer", whiteSpace: "nowrap", fontWeight: 400 }}>
               Ab € 39,–
             </button>

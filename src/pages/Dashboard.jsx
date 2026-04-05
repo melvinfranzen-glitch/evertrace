@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 
@@ -609,6 +609,7 @@ function CardTab({ memorials }) {
 function getUnitPrice(qty) { return qty >= 5 ? 39 : qty >= 2 ? 49 : 59; }
 
 function BookTab({ memorials }) {
+  const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [selected, setSelected] = useState(null);
   const [qty, setQty] = useState(1);
@@ -708,13 +709,13 @@ function BookTab({ memorials }) {
                 </button>
               )}
               {missBio && (
-                <button onClick={() => window.location.href = createPageUrl("EditMemorial") + `?id=${selected.id}&tab=bio`}
+                <button onClick={() => navigate(createPageUrl("EditMemorial") + `?id=${selected.id}&tab=bio`)}
                   className="px-5 py-2.5 rounded-xl text-sm border" style={{ borderColor: "#c9a96e", color: "#c9a96e" }}>
                   Biografie hinzufügen →
                 </button>
               )}
               {missPhotos && (
-                <button onClick={() => window.location.href = createPageUrl("EditMemorial") + `?id=${selected.id}&tab=media`}
+                <button onClick={() => navigate(createPageUrl("EditMemorial") + `?id=${selected.id}&tab=media`)}
                   className="px-5 py-2.5 rounded-xl text-sm border" style={{ borderColor: "#c9a96e", color: "#c9a96e" }}>
                   Fotos hinzufügen →
                 </button>
@@ -810,6 +811,7 @@ export default function Dashboard() {
   const [plaqueMemorial, setPlaqueMemorial] = useState(null);
 
   const location = useLocation();
+  const navigate = useNavigate();
   const urlParams = new URLSearchParams(location.search);
   const urlTab = urlParams.get("tab");
   const urlMemorialId = urlParams.get("memorial_id");
@@ -873,7 +875,7 @@ export default function Dashboard() {
 
           </div>
           <button
-            onClick={() => window.location.href = createPageUrl("CreateMemorial")}
+            onClick={() => navigate(createPageUrl("CreateMemorial"))}
             style={{ background: "#c9a96e", color: "#0f0e0c", borderRadius: 10, padding: "10px 20px", fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 500, border: "none", cursor: "pointer", whiteSpace: "nowrap" }}
           >
             ＋ Neue Gedenkseite erstellen
@@ -901,7 +903,7 @@ export default function Dashboard() {
                     Hier entstehen digitale Gedenkseiten für Menschen, die uns verlassen haben — mit ihrer Geschichte, ihren Fotos und den Worten derer, die sie liebten.
                   </p>
                   <button
-                    onClick={() => window.location.href = createPageUrl("CreateMemorial")}
+                    onClick={() => navigate(createPageUrl("CreateMemorial"))}
                     style={{ background: "#c9a96e", color: "#0f0e0c", borderRadius: 12, padding: "14px 32px", fontSize: 16, fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, border: "none", cursor: "pointer" }}
                   >
                     Jetzt Gedenkseite erstellen

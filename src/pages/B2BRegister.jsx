@@ -32,7 +32,7 @@ export default function B2BRegister() {
      if (!form.contact_email.trim() || !form.contact_email.includes("@")) e.contact_email = "Gültige E-Mail-Adresse erforderlich.";
      if (!form.contact_phone.trim()) e.contact_phone = "Telefonnummer ist erforderlich.";
    }
-   if (step === 2) {}
+
     setErrors(e);
     return Object.keys(e).length === 0;
   };
