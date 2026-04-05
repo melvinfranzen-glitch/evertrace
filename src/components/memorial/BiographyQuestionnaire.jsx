@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { sanitizePromptInput } from "@/utils/sanitize";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,32 @@ export default function BiographyQuestionnaire({ memorial, onComplete }) {
   const [loading, setLoading] = useState(true);
   const [timelineEvents, setTimelineEvents] = useState([]);
   const [generatedQuestions, setGeneratedQuestions] = useState([]);
+
+  const generateBiography = useCallback(async () => {
+    setGenerating(true);
+    try {
+      const timelineContext = timelineEvents
+        .map(e => `${e.year}: ${e.title}${e.description ? " - " + e.description : ""}`)
+        .join("\n");
+
+      const prompt = `Erstelle eine würdevolle, persönliche Biografie auf Deutsch für ${memorial.name} (geboren: ${memorial.birth_date || "unbekannt"}, gestorben: ${memorial.death_date || "unbekannt"}). 
+      
+Lebenstrahl - Wichtige Ereignisse:
+${timelineContext}
+
+Zusätzliche Informationen:
+- Fragen & Antworten aus dem Fragebogen:
+${generatedQuestions.map((q, i) => `${q.title}: ${sanitizePromptInput(answers[i] || "")}`).join("\n")}
+
+Integriere den Lebenstrahl chronologisch und ergänze mit den zusätzlichen Informationen. Schreibe 3–4 Absätze, die die Person lebendig werden lassen. Beginne direkt mit der Geschichte.`;
+
+      const result = await base44.integrations.Core.InvokeLLM({ prompt });
+      onComplete(result, answers);
+    } catch (err) {
+      console.error("Fehler beim Generieren:", err);
+    }
+    setGenerating(false);
+  }, [memorial, timelineEvents, generatedQuestions, answers, onComplete]);
 
   useEffect(() => {
     const init = async () => {
@@ -32,7 +58,7 @@ export default function BiographyQuestionnaire({ memorial, onComplete }) {
     init();
   }, [memorial.id]);
 
-  const generateQuestionsFromTimeline = async (events) => {
+  const generateQuestionsFromTimeline = useCallback(async (events) => {
     const timelineText = events
       .map(e => `${e.year}: ${e.title}${e.description ? " - " + e.description : ""}`)
       .join("\n");
@@ -67,7 +93,7 @@ Rückgabe AUSSCHLIESSLICH gültiges JSON-Array ohne zusätzlichen Text.`;
       console.error("Fehler beim Generieren von Fragen:", err);
       return [];
     }
-  };
+  }, []);
 
   if (loading) {
     return (
@@ -130,37 +156,7 @@ Rückgabe AUSSCHLIESSLICH gültiges JSON-Array ohne zusätzlichen Text.`;
   };
 
   const handleAnswerChange = (value) => {
-    setAnswers(prev => ({ ...prev, [currentQuestion.id]: value }));
-  };
-
-  const generateBiography = async () => {
-    setGenerating(true);
-    try {
-      const timelineContext = timelineEvents
-        .map(e => `${e.year}: ${e.title}${e.description ? " - " + e.description : ""}`)
-        .join("\n");
-
-      const prompt = `Erstelle eine würdevolle, persönliche Biografie auf Deutsch für ${memorial.name} (geboren: ${memorial.birth_date || "unbekannt"}, gestorben: ${memorial.death_date || "unbekannt"}). 
-      
-Lebenstrahl - Wichtige Ereignisse:
-${timelineContext}
-
-Zusätzliche Informationen:
-- Kindheit & Familie: ${sanitizePromptInput(answers.childhood || "")}
-- Beruf & Karriere: ${sanitizePromptInput(answers.career || "")}
-- Familie & Beziehungen: ${sanitizePromptInput(answers.family_life || "")}
-- Leidenschaften: ${sanitizePromptInput(answers.passions || "")}
-- Werte: ${sanitizePromptInput(answers.values || "")}
-- Lebensmotto: ${sanitizePromptInput(answers.quote || "")}
-
-Integriere den Lebenstrahl chronologisch und ergänze mit den zusätzlichen Informationen. Schreibe 3–4 Absätze, die die Person lebendig werden lassen. Beginne direkt mit der Geschichte.`;
-
-      const result = await base44.integrations.Core.InvokeLLM({ prompt });
-      onComplete(result, answers);
-    } catch (err) {
-      console.error("Fehler beim Generieren:", err);
-    }
-    setGenerating(false);
+    setAnswers(prev => ({ ...prev, [step]: value }));
   };
 
   const currentAnswer = answers[currentQuestion.id] || "";
