@@ -5,44 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 
-const QUESTIONS = [
-  {
-    id: "childhood",
-    title: "Kindheit & Familie",
-    description: "Wo und wann wurde die Person geboren? Wie war die Familie?",
-    placeholder: "z.B. Geboren 1945 in München, aufgewachsen mit zwei Geschwistern...",
-  },
-  {
-    id: "career",
-    title: "Beruf & Karriere",
-    description: "Was hat die Person beruflich gemacht? Worauf war sie stolz?",
-    placeholder: "z.B. Seit 1970 Lehrer an der Grundschule, liebte es, Kindern zu helfen...",
-  },
-  {
-    id: "family_life",
-    title: "Familie & Beziehungen",
-    description: "War die Person verheiratet? Hat sie Kinder/Enkel?",
-    placeholder: "z.B. Verheiratet seit 1968, drei Kinder, acht Enkel...",
-  },
-  {
-    id: "passions",
-    title: "Leidenschaften & Hobbys",
-    description: "Was hat die Person gerne in der Freizeit gemacht?",
-    placeholder: "z.B. Leidenschaftlicher Gärtner, liebte Reisen, aktiv im Kirchenchor...",
-  },
-  {
-    id: "values",
-    title: "Werte & Vermächtnis",
-    description: "Wofür stand die Person? Was wird man an ihr vermissen?",
-    placeholder: "z.B. Immer hilfsbereit, großes Herz, liebte ihre Familie über alles...",
-  },
-  {
-    id: "quote",
-    title: "Lieblingszitat oder Lebensmotto",
-    description: "Hatte die Person einen Lieblingssatz oder ein Zitat?",
-    placeholder: "z.B. »Das Leben ist zu kurz, um es nicht zu genießen.«",
-  },
-];
+// Hardcodierte Fragen werden dynamisch ersetzt
 
 export default function BiographyQuestionnaire({ memorial, onComplete }) {
   const [step, setStep] = useState(0);
@@ -50,42 +13,60 @@ export default function BiographyQuestionnaire({ memorial, onComplete }) {
   const [generating, setGenerating] = useState(false);
   const [loading, setLoading] = useState(true);
   const [timelineEvents, setTimelineEvents] = useState([]);
-  const [visibleQuestions, setVisibleQuestions] = useState([]);
+  const [generatedQuestions, setGeneratedQuestions] = useState([]);
 
   useEffect(() => {
-    const loadTimeline = async () => {
+    const init = async () => {
       try {
         const events = await base44.entities.TimelineEvent.filter({ memorial_id: memorial.id }, "sort_order");
         setTimelineEvents(events);
         
-        // Vorausfüllen mit Timeline-Daten
-        const extracted = extractFromTimeline(events);
-        setAnswers(extracted);
-        
-        // Nur Fragen mit leeren Antworten zeigen
-        const visible = QUESTIONS.filter(q => !extracted[q.id] || !extracted[q.id].trim());
-        setVisibleQuestions(visible);
+        // KI generiert relevante Fragen basierend auf Timeline-Lücken
+        const questions = await generateQuestionsFromTimeline(events);
+        setGeneratedQuestions(questions);
       } catch (err) {
-        console.error("Timeline laden fehlgeschlagen:", err);
+        console.error("Fehler beim Laden:", err);
       }
       setLoading(false);
     };
-    loadTimeline();
+    init();
   }, [memorial.id]);
 
-  const extractFromTimeline = (events) => {
+  const generateQuestionsFromTimeline = async (events) => {
     const timelineText = events
       .map(e => `${e.year}: ${e.title}${e.description ? " - " + e.description : ""}`)
       .join("\n");
-    
-    return {
-      childhood: "",
-      career: "",
-      family_life: "",
-      passions: "",
-      values: "",
-      quote: "",
-    };
+
+    const prompt = `Analysiere den Lebenstrahl und generiere 3-6 zielgerichtete Fragen auf Deutsch, um die Biografie zu ergänzen.
+
+Lebenstrahl:
+${timelineText || "(leer)"}
+
+Generiere Fragen, die Lücken füllen (z.B. frühe Jahre, Familie, Karriere, Leidenschaften, Vermächtnis). 
+
+Format: JSON-Array mit Objekten {"title": "Frage als Überschrift", "description": "Erklärende Frage", "placeholder": "Beispiel-Text"}.
+Rückgabe AUSSCHLIESSLICH gültiges JSON-Array ohne zusätzlichen Text.`;
+
+    try {
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              title: { type: "string" },
+              description: { type: "string" },
+              placeholder: { type: "string" },
+            },
+          },
+        },
+      });
+      return (Array.isArray(result) ? result : result.items || []).slice(0, 6);
+    } catch (err) {
+      console.error("Fehler beim Generieren von Fragen:", err);
+      return [];
+    }
   };
 
   if (loading) {
@@ -96,7 +77,7 @@ export default function BiographyQuestionnaire({ memorial, onComplete }) {
     );
   }
 
-  if (visibleQuestions.length === 0) {
+  if (generatedQuestions.length === 0) {
     return (
       <div className="space-y-6">
         <div className="rounded-2xl p-6 text-center" style={{ background: "rgba(201,169,110,0.06)", border: "1px solid rgba(201,169,110,0.2)" }}>
@@ -133,11 +114,11 @@ export default function BiographyQuestionnaire({ memorial, onComplete }) {
     );
   }
 
-  const currentQuestion = visibleQuestions[step];
-  const progress = ((step + 1) / visibleQuestions.length) * 100;
+  const currentQuestion = generatedQuestions[step];
+  const progress = ((step + 1) / generatedQuestions.length) * 100;
 
   const handleNext = () => {
-    if (step < visibleQuestions.length - 1) {
+    if (step < generatedQuestions.length - 1) {
       setStep(step + 1);
     }
   };
@@ -190,7 +171,7 @@ Integriere den Lebenstrahl chronologisch und ergänze mit den zusätzlichen Info
       <div>
         <div className="flex justify-between items-center mb-2">
           <p className="text-sm font-medium text-gray-700">
-            Offene Frage {step + 1} von {visibleQuestions.length}
+            Frage {step + 1} von {generatedQuestions.length}
           </p>
           <p className="text-xs text-gray-400">{Math.round(progress)}%</p>
         </div>
@@ -227,7 +208,7 @@ Integriere den Lebenstrahl chronologisch und ergänze mit den zusätzlichen Info
           <ChevronLeft className="w-4 h-4" /> Zurück
         </button>
 
-        {step < visibleQuestions.length - 1 ? (
+        {step < generatedQuestions.length - 1 ? (
           <button
             onClick={handleNext}
             className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium text-white transition-all"
