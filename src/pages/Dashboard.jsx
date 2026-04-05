@@ -10,6 +10,7 @@ import MemorialCard from "@/components/memorial/MemorialCard";
 import AnniversaryReminders from "@/components/dashboard/AnniversaryReminders";
 import LifeBookTab from "@/components/dashboard/LifeBookTab";
 import PlaqueOrderTab from "@/components/dashboard/PlaqueOrderTab";
+import CardDesignControls, { DEFAULT_SETTINGS } from "@/components/cards/CardDesignControls";
 
 // ─── Shared helpers ──────────────────────────────────────────────────────────
 
@@ -115,10 +116,7 @@ function CardTab({ memorials }) {
   const [addonThanks, setAddonThanks] = useState(false);
   const [addonQr, setAddonQr] = useState(false);
   const [cardFace, setCardFace] = useState("front");
-  // Design customizer
-  const [showPortrait, setShowPortrait] = useState(true);
-  const [textPosition, setTextPosition] = useState("bottom"); // top | center | bottom
-  const [textAlign, setTextAlign] = useState("center"); // left | center | right
+  const [designSettings, setDesignSettings] = useState(DEFAULT_SETTINGS);
   const [qty, setQty] = useState(50);
   const [tier, setTier] = useState(PRINT_TIERS[0]);
   const [addr, setAddr] = useState({});
@@ -327,14 +325,14 @@ function CardTab({ memorials }) {
                   <div className="flex-1 flex flex-col" style={{ minHeight: 260 }}>
                     {/* Motif always fills background area */}
                     {motifUrl ? (
-                      <img src={motifUrl} alt="Motiv" className="w-full object-cover" style={{ height: 160 }} />
+                      <img src={motifUrl} alt="Motiv" className="w-full object-cover" style={{ height: 160, opacity: designSettings.motifOpacity / 100 }} />
                     ) : generating ? (
                       <div style={{ height: 160 }}><SkeletonPulse h={160} rounded={0} /></div>
                     ) : (
                       <div style={{ height: 160, background: "#181410" }} />
                     )}
                     {/* Portrait if enabled */}
-                    {showPortrait && (() => {
+                    {designSettings.showPortrait && (() => {
                       const m = memorials.find(x => x.id === prefillId);
                       return m?.hero_image_url ? (
                         <div className="absolute" style={{ top: 120, left: "50%", transform: "translateX(-50%)", zIndex: 2 }}>
@@ -343,9 +341,9 @@ function CardTab({ memorials }) {
                       ) : null;
                     })()}
                     {/* Name block — positioned by textPosition */}
-                    <div className="flex-1 flex items-end px-5 pb-4 pt-2" style={{ justifyContent: textAlign === "left" ? "flex-start" : textAlign === "right" ? "flex-end" : "center", alignItems: textPosition === "top" ? "flex-start" : textPosition === "center" ? "center" : "flex-end", paddingTop: showPortrait && memorials.find(x => x.id === prefillId)?.hero_image_url ? 36 : 8 }}>
-                      <div style={{ textAlign }}>
-                        <p style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8", fontSize: 17, fontWeight: 600 }}>{form.firstName} {form.lastName}</p>
+                    <div className="flex-1 flex items-end px-5 pb-4 pt-2" style={{ justifyContent: designSettings.textAlign === "left" ? "flex-start" : designSettings.textAlign === "right" ? "flex-end" : "center", alignItems: designSettings.textPosition === "top" ? "flex-start" : designSettings.textPosition === "center" ? "center" : "flex-end", paddingTop: designSettings.showPortrait && memorials.find(x => x.id === prefillId)?.hero_image_url ? 36 : 8 }}>
+                      <div style={{ textAlign: designSettings.textAlign }}>
+                        <p style={{ fontFamily: `'${designSettings.fontFamily}', serif`, color: "#f0ede8", fontSize: 17, fontWeight: 600 }}>{form.firstName} {form.lastName}</p>
                         <p style={{ fontFamily: "'DM Sans', sans-serif", color: "#c9a96e", fontSize: 11 }}>{form.birthDate || ""}{form.birthDate && form.deathDate ? " · " : ""}{form.deathDate || ""}</p>
                       </div>
                     </div>
@@ -355,52 +353,20 @@ function CardTab({ memorials }) {
                     {generating ? (
                       <div className="space-y-2"><SkeletonPulse h={14} /><SkeletonPulse h={14} w="90%" /><SkeletonPulse h={14} w="80%" /><SkeletonPulse h={14} w="95%" /></div>
                     ) : (
-                      <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 14, lineHeight: 1.9, color: "#2c2419", fontStyle: "italic", textAlign }}>{generatedText}</p>
+                      <p style={{ fontFamily: `'${designSettings.fontFamily}', serif`, fontSize: 14, lineHeight: 1.9, color: "#2c2419", fontStyle: "italic", textAlign: designSettings.textAlign }}>{generatedText}</p>
                     )}
                   </div>
                 )}
               </div>
 
               {/* Design controls */}
-              <div className="mt-4 rounded-xl p-4 space-y-4" style={{ background: "white", border: "1px solid #e8dfd0" }}>
-                <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "#8a8278" }}>Gestaltung</p>
-
-                {/* Portrait toggle */}
-                <div className="flex items-center justify-between">
-                  <span className="text-sm" style={{ color: "#2c2419", fontFamily: "'DM Sans', sans-serif" }}>Foto der Person</span>
-                  <button onClick={() => setShowPortrait(v => !v)}
-                    className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors"
-                    style={{ background: showPortrait ? "#c9a96e" : "#e5e7eb" }}>
-                    <span className="inline-block h-4 w-4 rounded-full bg-white shadow transition-transform"
-                      style={{ transform: showPortrait ? "translateX(22px)" : "translateX(2px)" }} />
-                  </button>
-                </div>
-
-                {/* Text position */}
-                <div>
-                  <p className="text-xs mb-2" style={{ color: "#8a8278" }}>Textposition</p>
-                  <div className="flex gap-1.5">
-                    {[{ val: "top", label: "Oben" }, { val: "center", label: "Mitte" }, { val: "bottom", label: "Unten" }].map(o => (
-                      <button key={o.val} onClick={() => setTextPosition(o.val)} className="flex-1 py-1.5 rounded-lg text-xs transition-all"
-                        style={{ background: textPosition === o.val ? "rgba(201,169,110,0.15)" : "#f7f3ed", color: textPosition === o.val ? "#c9a96e" : "#6b7280", border: `1px solid ${textPosition === o.val ? "#c9a96e" : "#e5e7eb"}` }}>
-                        {o.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Text alignment */}
-                <div>
-                  <p className="text-xs mb-2" style={{ color: "#8a8278" }}>Textausrichtung</p>
-                  <div className="flex gap-1.5">
-                    {[{ val: "left", label: "Links" }, { val: "center", label: "Mitte" }, { val: "right", label: "Rechts" }].map(o => (
-                      <button key={o.val} onClick={() => setTextAlign(o.val)} className="flex-1 py-1.5 rounded-lg text-xs transition-all"
-                        style={{ background: textAlign === o.val ? "rgba(201,169,110,0.15)" : "#f7f3ed", color: textAlign === o.val ? "#c9a96e" : "#6b7280", border: `1px solid ${textAlign === o.val ? "#c9a96e" : "#e5e7eb"}` }}>
-                        {o.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+              <div className="mt-4">
+                <CardDesignControls
+                  settings={designSettings}
+                  onChange={setDesignSettings}
+                  hasPortrait={!!memorials.find(x => x.id === prefillId)?.hero_image_url}
+                  variant="compact"
+                />
               </div>
 
               {/* Addons */}

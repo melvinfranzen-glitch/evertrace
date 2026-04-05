@@ -10,6 +10,7 @@ import CardContextForm from "@/components/cards/CardContextForm";
 import DesignGrid from "@/components/cards/DesignGrid";
 import CardTextEditor from "@/components/cards/CardTextEditor";
 import CardPreview from "@/components/cards/CardPreview";
+import CardDesignControls, { DEFAULT_SETTINGS } from "@/components/cards/CardDesignControls";
 
 const STYLE_PROMPTS = [
   "soft watercolor botanical art, delicate flowers and leaves, warm muted tones, beige and sage green, funeral memorial card background, no text, artistic",
@@ -27,6 +28,7 @@ export default function CardDesigner() {
   const [selectedDesign, setSelectedDesign] = useState(null);
   const [previewSide, setPreviewSide] = useState("front");
   const [showQr, setShowQr] = useState(true);
+  const [designSettings, setDesignSettings] = useState(DEFAULT_SETTINGS);
   const [texts, setTexts] = useState({
     name: "", birth: "", death: "", quote: "", body: "", font: "Cormorant Garamond",
   });
@@ -158,6 +160,14 @@ export default function CardDesigner() {
               showQr={showQr}
               onToggleQr={() => setShowQr((p) => !p)}
             />
+            <div className="mt-4">
+              <CardDesignControls
+                settings={designSettings}
+                onChange={setDesignSettings}
+                hasPortrait={!!memorial?.hero_image_url}
+                variant="compact"
+              />
+            </div>
 
             {/* Paper / Print info */}
             {selectedDesign !== null && (
@@ -223,6 +233,7 @@ export default function CardDesigner() {
                     showQr={showQr}
                     side={previewSide}
                     memorial={memorial}
+                    designSettings={designSettings}
                   />
                 </div>
               )}
