@@ -7,9 +7,17 @@ export default function HeroLanding() {
   const navigate = useNavigate();
   return (
     <section className="relative min-h-screen flex items-center justify-center text-white overflow-hidden"
-      style={{ background: "linear-gradient(160deg, #3D3326 0%, #2A2218 55%, #1E1A14 100%)" }}>
-      {/* Subtle forest background */}
-      <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.25, zIndex: 0, pointerEvents: "none" }} preserveAspectRatio="xMidYMid slice" viewBox="0 0 1200 1000">
+      style={{
+        background: "linear-gradient(160deg, rgba(61,51,38,0.85) 0%, rgba(42,34,24,0.85) 55%, rgba(30,26,20,0.85) 100%)",
+        backgroundImage: "url('https://media.base44.com/images/public/69af32617caa2f70a2b45d05/66c32e864_generated_image.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed"
+      }}>
+      {/* Gradient overlay */}
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(160deg, rgba(61,51,38,0.88) 0%, rgba(42,34,24,0.88) 55%, rgba(30,26,20,0.88) 100%)", zIndex: 0, pointerEvents: "none" }} />
+      {/* Subtle forest SVG overlay removed */}
+      <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0, zIndex: 0, pointerEvents: "none" }} preserveAspectRatio="xMidYMid slice" viewBox="0 0 1200 1000">
         {/* Distant trees */}
         <defs>
           <pattern id="forest" x="0" y="0" width="400" height="400" patternUnits="userSpaceOnUse">
