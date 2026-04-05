@@ -36,8 +36,8 @@ function CoverPage({ memorial }) {
       <div className="flex flex-col h-full">
         {memorial.hero_image_url ? (
           <div className="flex-1 overflow-hidden">
-            <img src={memorial.hero_image_url} alt="" className="w-full h-full object-cover"
-              style={{ filter: "brightness(0.85) sepia(0.1)", objectPosition: `center ${memorial.hero_image_position ?? 30}%` }} />
+            <img src={memorial.hero_image_url} alt="" className="w-full h-full object-cover object-face"
+              style={{ filter: "brightness(0.85) sepia(0.1)" }} />
           </div>
         ) : (
           <div className="flex-1" style={{ background: "linear-gradient(160deg, #2d1f0a, #1a1410)" }} />
@@ -184,7 +184,7 @@ function GalleryPages({ images }) {
         <div className="grid grid-cols-2 gap-1 flex-1">
           {imgs.map((url, i) => (
             <div key={i} className="rounded overflow-hidden bg-stone-100">
-              <img src={url} alt="" className="w-full h-full object-cover" style={{ filter: "sepia(0.06)" }} />
+              <img src={url} alt="" className="w-full h-full object-cover object-face" style={{ filter: "sepia(0.06)" }} />
             </div>
           ))}
         </div>

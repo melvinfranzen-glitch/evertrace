@@ -71,7 +71,7 @@ export default function MemoryWallModerator({ memorialId }) {
                     </span>
                   </div>
                   <p className="text-sm text-gray-600 leading-relaxed">{entry.message}</p>
-                  {entry.photo_url && <img src={entry.photo_url} className="mt-2 h-20 rounded-lg object-cover" alt="" />}
+                  {entry.photo_url && <img src={entry.photo_url} className="mt-2 h-20 rounded-lg object-cover object-face" alt="" />}
                 </div>
                 {entry.status === "pending" && (
                   <div className="flex gap-1 flex-shrink-0">

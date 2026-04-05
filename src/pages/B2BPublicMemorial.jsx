@@ -125,7 +125,7 @@ export default function B2BPublicMemorial() {
       <div className="flex items-center justify-center gap-3 px-6" style={{ height: 40, background: "rgba(15,14,12,0.95)", borderBottom: "1px solid rgba(201,169,110,0.15)" }}>
         {funeralHome?.whitelabel_enabled ? (
           <>
-            {funeralHome.logo_url && <img src={funeralHome.logo_url} alt={funeralHome.name} className="object-contain" style={{ maxHeight: 22 }} />}
+            {funeralHome.logo_url && <img src={funeralHome.logo_url} alt={funeralHome.name} className="object-contain object-face" style={{ maxHeight: 22 }} />}
             <span className="text-sm font-medium" style={{ color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>{funeralHome.name}</span>
           </>
         ) : (
@@ -242,7 +242,7 @@ export default function B2BPublicMemorial() {
                   <p className="text-sm leading-7 italic" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#4a3f35" }}>
                     „{c.message}"
                   </p>
-                  {c.photo_url && <img src={c.photo_url} alt="" className="mt-4 w-full max-h-48 object-cover rounded-xl" />}
+                  {c.photo_url && <img src={c.photo_url} alt="" className="mt-4 w-full max-h-48 object-cover object-face rounded-xl" />}
                 </div>
               ))}
             </div>
@@ -376,7 +376,7 @@ export default function B2BPublicMemorial() {
       <div className="py-8 text-center" style={{ background: "#1a1410" }}>
         {funeralHome?.whitelabel_enabled && funeralHome?.logo_url ? (
           <div className="flex flex-col items-center gap-2">
-            {funeralHome.logo_url && <img src={funeralHome.logo_url} alt={funeralHome.name} className="object-contain" style={{ maxHeight: 32 }} />}
+            {funeralHome.logo_url && <img src={funeralHome.logo_url} alt={funeralHome.name} className="object-contain object-face" style={{ maxHeight: 32 }} />}
             {funeralHome.name && <p className="text-sm font-medium" style={{ color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>{funeralHome.name}</p>}
           </div>
         ) : (

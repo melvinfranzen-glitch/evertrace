@@ -140,7 +140,7 @@ export default function B2BMemorial() {
               <div key={page.id} className="rounded-2xl overflow-hidden" style={{ background: "#181714", border: "1px solid #302d28" }}>
                 {page.main_photo_url ? (
                   <div className="h-32 overflow-hidden">
-                    <img src={page.main_photo_url} alt="" className="w-full h-full object-cover" />
+                    <img src={page.main_photo_url} alt="" className="w-full h-full object-cover object-face" />
                   </div>
                 ) : (
                   <div className="h-32 flex items-center justify-center" style={{ background: "linear-gradient(135deg,#1e1c19,#141210)" }}>
@@ -274,7 +274,7 @@ export default function B2BMemorial() {
                 <label className="text-xs mb-1.5 block" style={{ color: "#8a8278" }}>Foto (optional)</label>
                 {form.main_photo_url ? (
                   <div className="relative">
-                    <img src={form.main_photo_url} alt="" className="w-full h-32 object-cover rounded-xl" />
+                    <img src={form.main_photo_url} alt="" className="w-full h-32 object-cover object-face rounded-xl" />
                     <button onClick={() => set("main_photo_url", "")} className="absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center" style={{ background: "rgba(0,0,0,0.6)" }}>
                       <X className="w-3.5 h-3.5 text-white" />
                     </button>

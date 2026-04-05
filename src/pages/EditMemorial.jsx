@@ -189,7 +189,7 @@ export default function EditMemorial() {
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
-            <button onClick={() => window.location.href = createPageUrl("Dashboard")} className="text-gray-500 hover:text-gray-700">
+            <button onClick={() => navigate(createPageUrl("Dashboard"))} className="text-gray-500 hover:text-gray-700">
               <ArrowLeft className="w-5 h-5" />
             </button>
             <div>
