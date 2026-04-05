@@ -325,7 +325,22 @@ export default function MemorialProfile() {
           In liebevoller Erinnerung bewahrt mit{" "}
           <a href="https://evertrace.de" target="_blank" rel="noopener noreferrer" className="font-semibold" style={{ color: "#c9a96e" }}>Evertrace</a>
         </p>
+        <p className="text-xs mt-3" style={{ color: "#3a2f25", fontFamily: "'Lato', sans-serif" }}>
+          Music: "Before You Go" –{" "}
+          <a href="https://www.fiftysounds.com" target="_blank" rel="noopener noreferrer" style={{ color: "#5a4a38" }}>Music by fiftysounds.com</a>
+        </p>
       </div>
+
+      {/* Background music player */}
+      <audio
+        id="bg-music"
+        autoPlay
+        loop
+        controls
+        style={{ position: "fixed", bottom: 10, right: 10, opacity: 0.6, zIndex: 1000, height: 30 }}
+      >
+        <source src="https://fiftysounds.com/music/before-you-go.mp3" type="audio/mpeg" />
+      </audio>
     </div>
   );
 }
