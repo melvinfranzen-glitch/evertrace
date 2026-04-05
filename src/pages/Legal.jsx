@@ -10,11 +10,11 @@ const SECTIONS = {
       <div className="space-y-5 text-sm leading-relaxed" style={{ color: "#4a3f35" }}>
         <div>
           <p className="font-semibold text-base mb-1" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1c1917" }}>Angaben gemäß § 5 TMG</p>
-          <p>Evertrace GmbH<br />Musterstraße 12<br />80331 München<br />Deutschland</p>
+          <p>Melvin Franzen &amp; Kai Krawanja<br />Schulz-Knaudt-Str. 31<br />47259 Duisburg<br />Deutschland</p>
         </div>
         <div>
           <p className="font-semibold mb-1" style={{ color: "#1c1917" }}>Vertreten durch</p>
-          <p>Max Mustermann (Geschäftsführer)</p>
+          <p>Melvin Franzen, Kai Krawanja</p>
         </div>
         <div>
           <p className="font-semibold mb-1" style={{ color: "#1c1917" }}>Kontakt</p>
@@ -26,7 +26,7 @@ const SECTIONS = {
         </div>
         <div>
           <p className="font-semibold mb-1" style={{ color: "#1c1917" }}>Verantwortlich für den Inhalt (§ 55 Abs. 2 RStV)</p>
-          <p>Max Mustermann, Musterstraße 12, 80331 München</p>
+          <p>Melvin Franzen &amp; Kai Krawanja, Schulz-Knaudt-Str. 31, 47259 Duisburg</p>
         </div>
         <div>
           <p className="font-semibold mb-1" style={{ color: "#1c1917" }}>Haftungsausschluss</p>
