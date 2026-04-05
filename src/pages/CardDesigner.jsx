@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { ArrowLeft, Download, ShoppingCart, Loader2, Eye } from "lucide-react";
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import { Button } from "@/components/ui/button";
 import CardContextForm from "@/components/cards/CardContextForm";
 import DesignGrid from "@/components/cards/DesignGrid";
@@ -16,6 +19,7 @@ const STYLE_PROMPTS = [
 ];
 
 export default function CardDesigner() {
+  const navigate = useNavigate();
   const [memorial, setMemorial] = useState(null);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
@@ -30,7 +34,7 @@ export default function CardDesigner() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
-    if (!id) { window.location.href = createPageUrl("Dashboard"); return; }
+    if (!id) { navigate(createPageUrl("Dashboard")); return; }
     base44.entities.Memorial.filter({ id }).then((results) => {
       if (results.length) {
         const m = results[0];
@@ -79,6 +83,16 @@ export default function CardDesigner() {
 
   const currentBg = selectedDesign !== null ? designs[selectedDesign] : null;
 
+  const handleExportPDF = async () => {
+    const el = document.getElementById('card-preview-container');
+    if (!el) return;
+    const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: null });
+    const imgData = canvas.toDataURL('image/jpeg', 0.95);
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [105, 148] });
+    pdf.addImage(imgData, 'JPEG', 0, 0, 105, 148);
+    pdf.save(`Trauerkarte_${texts.name || 'Evertrace'}.pdf`);
+  };
+
   return (
     <div className="min-h-screen pt-24 pb-16 px-4" style={{ background: "#FAFAF8" }}>
       <div className="max-w-7xl mx-auto">
@@ -104,7 +118,7 @@ export default function CardDesigner() {
                 variant="outline"
                 size="sm"
                 className="rounded-xl text-xs"
-                onClick={() => window.location.href = createPageUrl("Shop")}
+                onClick={() => navigate(createPageUrl("Shop"))}
               >
                 <ShoppingCart className="w-4 h-4 mr-1" /> Drucken lassen
               </Button>
@@ -112,6 +126,7 @@ export default function CardDesigner() {
                 size="sm"
                 className="rounded-xl text-xs text-white"
                 style={{ background: "linear-gradient(135deg, #c9a84c, #a07830)", color: "#1c1917" }}
+                onClick={handleExportPDF}
               >
                 <Download className="w-4 h-4 mr-1" /> PDF exportieren
               </Button>
@@ -201,13 +216,15 @@ export default function CardDesigner() {
                   </div>
                 </div>
               ) : (
-                <CardPreview
-                  bgImage={currentBg}
-                  texts={texts}
-                  showQr={showQr}
-                  side={previewSide}
-                  memorial={memorial}
-                />
+                <div id="card-preview-container">
+                  <CardPreview
+                    bgImage={currentBg}
+                    texts={texts}
+                    showQr={showQr}
+                    side={previewSide}
+                    memorial={memorial}
+                  />
+                </div>
               )}
 
               {/* Info */}

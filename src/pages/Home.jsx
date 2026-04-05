@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import HomeNav from "@/components/home/HomeNav";
 import HeroLanding from "@/components/home/HeroLanding";
 import FeaturesSection from "@/components/home/FeaturesSection";
@@ -8,6 +9,7 @@ import { Heart } from "lucide-react";
 import { createPageUrl } from "@/utils";
 
 export default function Home() {
+  const navigate = useNavigate();
   return (
     <div>
       <HomeNav />
@@ -32,7 +34,7 @@ export default function Home() {
             Schaffen Sie einen Ort, an dem die Erinnerung weiterlebt.
           </p>
           <button
-            onClick={() => window.location.href = createPageUrl("Dashboard")}
+            onClick={() => navigate(createPageUrl("Dashboard"))}
             className="px-12 py-4 rounded-full font-medium text-base transition-all duration-300"
             style={{
               background: "linear-gradient(135deg, #c9a96e, #a07830)",

@@ -39,7 +39,7 @@ import { PRINT_TIERS as TIER_DATA, ADDON_PRICES, DEFAULT_CARD_QUANTITY, fmtEur }
 
 const PRINT_TIERS = TIER_DATA;
 
-const WIZARD_STEPS = ["Fall & Format", "Fragebogen", "KI-Vorschau", "Druckkonfiguration", "Bestellung"];
+const WIZARD_STEPS = ["Fall & Format", "Fragebogen", "Vorschau", "Druckkonfiguration", "Bestellung"];
 
 export default function B2BCardWizard() {
   const params = new URLSearchParams(window.location.search);
@@ -169,7 +169,7 @@ export default function B2BCardWizard() {
   Ausrichtung: ${religion || "nicht religiös"}
   Ton: ${tone}`}
 
-Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Erstens ein eröffnender Satz, der den Charakter der Person in einer einzigen, präzisen Formulierung einfängt. Zweitens eine mittlere Passage von zwei bis drei Zeilen, die ihre Leidenschaften und ihren Beruf organisch verwebt. Drittens eine abschließende Zeile, die das angegebene Zitat oder einen würdigen Ersatz integriert, falls kein Zitat angegeben wurde. Gesamtlänge: 80 bis 110 Wörter. Der Text soll sich lesen, als wäre er von einem Menschen geschrieben worden, der die Person kannte — nicht wie ein KI-generierter Standardtext.`;
+Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Erstens ein eröffnender Satz, der den Charakter der Person in einer einzigen, präzisen Formulierung einfängt. Zweitens eine mittlere Passage von zwei bis drei Zeilen, die ihre Leidenschaften und ihren Beruf organisch verwebt. Drittens eine abschließende Zeile, die das angegebene Zitat oder einen würdigen Ersatz integriert, falls kein Zitat angegeben wurde. Gesamtlänge: 80 bis 110 Wörter. Der Text soll sich lesen, als wäre er von einem Menschen geschrieben worden, der die Person kannte — nicht wie ein automatisch erstellter Standardtext.`;
 
     const result = await base44.integrations.Core.InvokeLLM({ prompt });
     if (typeof result === "string") {
@@ -284,7 +284,7 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
           </div>
           <h2 className="text-3xl font-semibold mb-3" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Bestellung bestätigt</h2>
           <p className="mb-8" style={{ color: "#8a8278" }}>Ihre Bestellung über {quantity} Trauerkarten ({tier?.label}) wurde erfolgreich aufgegeben.</p>
-          <button onClick={() => window.location.href = "/B2BOrders"} className="px-6 py-3 rounded-xl text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
+          <button onClick={() => { window.location.replace("/B2BOrders"); }} className="px-6 py-3 rounded-xl text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
             Zu den Bestellungen
           </button>
           <Link to="/B2BCases" className="block text-center mt-3 text-sm" style={{ color: "#8a8278", fontFamily: "'DM Sans', sans-serif" }}>Zurück zur Fallübersicht →</Link>
@@ -518,7 +518,7 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
 
               <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>KI-generierter Text</h3>
+                  <h3 className="text-lg font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Ihr Textentwurf</h3>
                   <button onClick={generateText} disabled={generating} className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs transition-all" style={{ background: "rgba(201,169,110,0.1)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}>
                     {generating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
                     Neu
@@ -527,7 +527,7 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
                 {generating ? (
                   <div className="space-y-2 py-4">
                     {[...Array(4)].map((_, i) => <div key={i} className="h-3 rounded-full animate-pulse" style={{ background: "#302d28", width: `${60 + i * 10}%` }} />)}
-                    <p className="text-xs text-center pt-2" style={{ color: "#5a554e" }}>KI verfasst Ihren Text…</p>
+                    <p className="text-xs text-center pt-2" style={{ color: "#5a554e" }}>Text wird für Sie formuliert…</p>
                   </div>
                 ) : (
                   <textarea value={editedText} onChange={e => setEditedText(e.target.value)} rows={6}
@@ -538,7 +538,7 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
 
               <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm font-medium" style={{ color: "#8a8278" }}>KI-generiertes Motiv (Außenseite)</h3>
+                  <h3 className="text-sm font-medium" style={{ color: "#8a8278" }}>Motiv (Außenseite)</h3>
                   <button onClick={generateMotif} disabled={generatingMotif} className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs transition-all" style={{ background: "rgba(201,169,110,0.1)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}>
                     {generatingMotif ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
                     Neu generieren
@@ -647,7 +647,7 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
                   <span className="font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Gesamtbetrag</span>
                   <span className="text-2xl font-bold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#c9a96e" }}>€ {totalPrice}</span>
                 </div>
-                <p className="text-xs mt-2" style={{ color: "#5a554e" }}>Alle Preise zzgl. MwSt. Die KI-Gestaltung und Personalisierung ist im Kartenpreis enthalten.</p>
+                <p className="text-xs mt-2" style={{ color: "#5a554e" }}>Alle Preise zzgl. MwSt. Gestaltung und Personalisierung sind im Kartenpreis enthalten.</p>
               </div>
             </div>
           )}
@@ -738,7 +738,7 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
                   </div>
                 ))}
                 <p className="text-xs mt-3 pt-3 border-t" style={{ color: "#5a554e", borderColor: "#302d28" }}>
-                  Alle Preise zzgl. MwSt. Die KI-Gestaltung und Personalisierung ist im Kartenpreis enthalten.
+                  Alle Preise zzgl. MwSt. Gestaltung und Personalisierung sind im Kartenpreis enthalten.
                 </p>
               </div>
             </div>

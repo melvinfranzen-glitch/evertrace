@@ -1,8 +1,10 @@
 import { createPageUrl } from "@/utils";
+import { useNavigate } from "react-router-dom";
 import { Heart, ArrowDown, Sparkles, ShieldCheck } from "lucide-react";
 import EvertraceLogo from "@/components/EvertraceLogo";
 
 export default function HeroLanding() {
+  const navigate = useNavigate();
   return (
     <section className="relative min-h-screen flex items-center justify-center text-white overflow-hidden"
       style={{ background: "linear-gradient(160deg, #3D3326 0%, #2A2218 55%, #1E1A14 100%)" }}>
@@ -40,7 +42,7 @@ export default function HeroLanding() {
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
-            onClick={() => window.location.href = createPageUrl("Dashboard")}
+            onClick={() => navigate(createPageUrl("Dashboard"))}
             className="flex items-center gap-2.5 px-10 py-4 rounded-full text-sm font-normal transition-all duration-300"
             style={{ background: "#B07B34", color: "#F7F3ED", fontFamily: "'Lato', sans-serif", fontWeight: 400, boxShadow: "0 4px 24px rgba(176,123,52,0.35)" }}
             onMouseEnter={e => { e.currentTarget.style.background = "#7A5520"; e.currentTarget.style.transform = "translateY(-1px)"; }}
