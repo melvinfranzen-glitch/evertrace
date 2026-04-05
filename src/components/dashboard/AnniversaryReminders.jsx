@@ -180,14 +180,14 @@ export default function AnniversaryReminders({ memorials }) {
                 <label className="text-xs mb-1 flex items-center gap-1.5" style={{ color: "#A89A8A", fontFamily: "'Lato', sans-serif", fontWeight: 300 }}>
                   Inhalt
                   {generating && <Loader2 className="w-3 h-3 animate-spin" style={{ color: "#B07B34" }} />}
-                  {generating && <span style={{ color: "#B07B34" }}>KI schreibt…</span>}
+                  {generating && <span style={{ color: "#B07B34" }}>Text wird formuliert…</span>}
                 </label>
                 <Textarea
                   value={blogContent}
                   onChange={(e) => setBlogContent(e.target.value)}
                   rows={10}
                   className="rounded-xl text-sm leading-relaxed"
-                  placeholder="KI-generierter Inhalt erscheint hier…"
+                  placeholder="Ihr Textentwurf erscheint hier…"
                   disabled={generating}
                 />
               </div>

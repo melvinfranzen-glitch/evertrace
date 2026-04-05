@@ -364,7 +364,7 @@ function CardTab({ memorials }) {
 
   return (
     <div>
-      <StepDots steps={["Angaben", "KI-Text & Motiv", "Drucken"]} current={step} />
+      <StepDots steps={["Angaben", "Text & Motiv", "Drucken"]} current={step} />
 
       {/* Step 0 */}
       {step === 0 && (
@@ -452,7 +452,7 @@ function CardTab({ memorials }) {
             <button onClick={goToStep1} disabled={!canAdvance0}
               className="px-7 py-3 rounded-xl text-sm font-medium disabled:opacity-40"
               style={{ background: "#c9a96e", color: "#0f0e0c", fontFamily: "'DM Sans', sans-serif" }}>
-              Weiter → KI-Text generieren
+              Weiter → Text erstellen
             </button>
           </div>
         </div>
@@ -518,7 +518,7 @@ function CardTab({ memorials }) {
                 <button onClick={generate} disabled={generating}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs border disabled:opacity-50"
                   style={{ borderColor: "rgba(201,169,110,0.4)", color: "#c9a96e", background: "white" }}>
-                  <RefreshCw className="w-3 h-3" /> Neu generieren
+                  <RefreshCw className="w-3 h-3" /> Neu formulieren
                 </button>
               </div>
               {generating ? (
@@ -745,7 +745,7 @@ function BookTab({ memorials }) {
                 </div>
               </div>
               <ul className="mt-5 space-y-1.5">
-                {["KI-aufbereitete Lebensgeschichte aus Ihren Einträgen", "Alle Fotos in würdevollem Layout", "Hardcover Soft-Touch · A4 · Gedruckt in Deutschland"].map((f, i) => (
+                {["Aus Ihren Einträgen entsteht eine persönliche Lebensgeschichte", "Alle Fotos in würdevollem Layout", "Hardcover Soft-Touch · A4 · Gedruckt in Deutschland"].map((f, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
                     <span className="mt-0.5 flex-shrink-0 font-bold" style={{ color: "#c9a96e" }}>·</span>{f}
                   </li>
@@ -861,7 +861,7 @@ export default function Dashboard() {
             <p className="mt-1" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#6b7280" }}>
               {greeting}
             </p>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#8a8278" }}>Ihre Gedenkseiten:</p>
+
           </div>
           <button
             onClick={() => window.location.href = createPageUrl("CreateMemorial")}
@@ -898,7 +898,7 @@ export default function Dashboard() {
                     Jetzt Gedenkseite erstellen
                   </button>
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mt-7">
-                    {["Kostenlos starten", "Keine technischen Kenntnisse nötig", "In 10 Minuten fertig"].map(t => (
+                    {["Kostenlos", "Einfach zu bedienen", "In wenigen Minuten fertig"].map(t => (
                       <div key={t} className="flex items-center gap-1.5">
                         <span style={{ color: "#c9a96e", fontSize: 10 }}>●</span>
                         <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#8a8278" }}>{t}</span>

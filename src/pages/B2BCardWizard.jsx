@@ -2,16 +2,7 @@ import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
 
-// Fix 2: Prompt Injection Sanitization
-function sanitizePromptInput(str, maxLength = 500) {
-  if (!str || typeof str !== "string") return "";
-  return str
-    .replace(/[<>\"\'`]/g, "")
-    .replace(/\b(ignore|system|assistant|instructions|prompt|override|jailbreak|disregard)\b/gi, "")
-    .replace(/\s{3,}/g, " ")
-    .trim()
-    .slice(0, maxLength);
-}
+
 import CardPrintPreview from "@/components/b2b/CardPrintPreview";
 import { Check, ChevronRight, RefreshCw, Loader2, QrCode, Mail, BookOpen, Building2, User } from "lucide-react";
 import { Link } from "react-router-dom";

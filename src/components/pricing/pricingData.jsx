@@ -15,7 +15,7 @@ export const B2B_PLANS = [
     limits: { cases: 3, cards: 3, memorials: 1 },
     features: [
       { text: "3 aktive Fälle / Monat", included: true },
-      { text: "3 KI-Trauerkarten / Monat", included: true },
+      { text: "3 Trauerkarten / Monat", included: true },
       { text: "1 Gedenkseite", included: true },
       { text: "Evertrace-Branding", included: true },
       { text: "White-Label (eigenes Logo)", included: false },
@@ -40,7 +40,7 @@ export const B2B_PLANS = [
     limits: { cases: 15, cards: 20, memorials: Infinity },
     features: [
       { text: "15 aktive Fälle / Monat", included: true },
-      { text: "20 KI-Trauerkarten / Monat", included: true },
+      { text: "20 Trauerkarten / Monat", included: true },
       { text: "Unbegrenzte Gedenkseiten", included: true },
       { text: "Evertrace-Branding", included: true },
       { text: "White-Label (eigenes Logo)", included: true },
@@ -66,7 +66,7 @@ export const B2B_PLANS = [
     limits: { cases: 50, cards: 75, memorials: Infinity },
     features: [
       { text: "50 aktive Fälle / Monat", included: true },
-      { text: "75 KI-Trauerkarten / Monat", included: true },
+      { text: "75 Trauerkarten / Monat", included: true },
       { text: "Unbegrenzte Gedenkseiten", included: true },
       { text: "White-Label (eigenes Logo)", included: true },
       { text: "Print-on-Demand", included: true },

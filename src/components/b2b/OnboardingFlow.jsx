@@ -189,7 +189,7 @@ export default function OnboardingFlow({ funeralHome, onComplete }) {
                       className="p-4 rounded-2xl text-left transition-all"
                       style={{ background: "rgba(201,169,110,0.08)", border: "1px solid rgba(201,169,110,0.3)", color: "#c9a96e" }}>
                       <div className="text-lg font-semibold mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Trauerkarte erstellen</div>
-                      <p className="text-xs" style={{ color: "#8a8278" }}>KI-gestützter Assistent</p>
+                      <p className="text-xs" style={{ color: "#8a8278" }}>Persönlicher Assistent</p>
                     </Link>
                     <Link to={`/B2BMemorial?case_id=${newCase.id}`} onClick={finish}
                       className="p-4 rounded-2xl text-left transition-all"

@@ -268,7 +268,7 @@ export default function B2BSettings() {
             <div className="space-y-4">
               {[
                 { label: "Fälle diesen Monat", current: home?.cases_this_month || 0, max: limits.cases },
-                { label: "KI-Karten diesen Monat", current: home?.cards_this_month || 0, max: limits.cards },
+                { label: "Erstellte Karten diesen Monat", current: home?.cards_this_month || 0, max: limits.cards },
               ].map(({ label, current, max }) => {
                 const pct = max === Infinity ? 0 : Math.min(100, Math.round((current / max) * 100));
                 return (

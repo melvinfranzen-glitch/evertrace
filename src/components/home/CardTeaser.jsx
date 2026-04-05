@@ -13,17 +13,17 @@ export default function CardTeaser() {
             <div className="flex items-center gap-2 mb-4">
               <Sparkles className="w-4 h-4" style={{ color: "#B07B34" }} />
               <span style={{ fontSize: 11, letterSpacing: "0.25em", textTransform: "uppercase", color: "#B07B34", fontFamily: "'Lato', sans-serif", fontWeight: 400 }}>
-                Neu · KI-Trauerkarten
+                Neu · Personalisierte Trauerkarten
               </span>
             </div>
             <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: 36, color: "#F7F3ED", lineHeight: 1.12, marginBottom: 16 }}>
               Trauerkarten, die wirklich berühren.
             </h2>
             <p style={{ fontFamily: "'Lato', sans-serif", fontWeight: 300, fontSize: 15, color: "rgba(216,195,165,0.65)", lineHeight: 1.8, maxWidth: 460, marginBottom: 24 }}>
-              Unsere KI liest die Geschichte eines Menschen und schreibt einen Text, der sich anfühlt, als wäre er von der Familie selbst verfasst. Sieben Motive, druckfertig, innerhalb von Minuten.
+              Auf Basis Ihrer Erinnerungen und Worte entsteht ein Text, der sich anfühlt, als hätten Sie ihn selbst geschrieben — nur in den richtigen Worten. Sieben Motive, druckfertig, innerhalb von Minuten.
             </p>
             <div className="flex flex-wrap gap-3 mb-8">
-              {["7 einzigartige Motive", "KI-personalisierter Text", "PDF-Export", "Druck & Versand"].map((tag) => (
+              {["Einzigartige Motive", "Persönlich formulierter Text", "PDF-Export", "Druck & Versand"].map((tag) => (
                 <span key={tag} className="px-3 py-1 rounded-full text-xs"
                   style={{ background: "rgba(176,123,52,0.12)", color: "#B07B34", border: "1px solid rgba(176,123,52,0.25)", fontFamily: "'Lato', sans-serif", fontWeight: 400 }}>
                   {tag}
@@ -38,7 +38,7 @@ export default function CardTeaser() {
               onMouseLeave={e => { e.currentTarget.style.background = "#B07B34"; e.currentTarget.style.transform = ""; }}
             >
               <CreditCard className="w-4 h-4" />
-              Jetzt Trauerkarte erstellen
+              Trauerkarte gestalten
             </button>
             <a href="/B2BRegister" className="mt-3 text-xs self-start" style={{ color: "#B07B34", fontFamily: "'Lato', sans-serif", fontWeight: 300 }}>
               Sie sind Bestatter? Zur B2B-Plattform →

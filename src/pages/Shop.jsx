@@ -14,7 +14,7 @@ const PRODUCTS = [
   { id: "plaque_brass", icon: Package, label: "Messing-Plakette", desc: "Klassische Gravur, QR-Code, wetterfest — 20 × 11 cm", price: 149 },
   { id: "plaque_slate", icon: Package, label: "Schiefer-Plakette", desc: "Natürlicher Stein, Lasergravur, zeitlos — 20 × 11 cm", price: 129 },
   { id: "plaque_steel", icon: Package, label: "Edelstahl-Plakette Premium", desc: "Gebürsteter Stahl, UV-Beschichtung, Montageset — 20 × 11 cm", price: 219 },
-  { id: "print_book", icon: BookOpen, label: "Kondolenzbuch (Hardcover)", desc: "Alle Beiträge der Gedenkseite, KI-layoutet, Soft-Touch-Einband — A4", price: 59 },
+  { id: "print_book", icon: BookOpen, label: "Kondolenzbuch (Hardcover)", desc: "Alle Beiträge der Gedenkseite, professionell gestaltet, Soft-Touch-Einband — A4", price: 59 },
 ];
 
 export default function Shop() {

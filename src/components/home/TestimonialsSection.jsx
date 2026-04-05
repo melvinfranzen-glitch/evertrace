@@ -13,7 +13,7 @@ const QUOTES = [
     role: "Bestattungshaus Seidel, München",
   },
   {
-    quote: "Die KI-generierte Biografie hat genau das eingefangen, was wir über unseren Vater sagen wollten — poetisch und tief bewegend.",
+    quote: "Die Lebensgeschichte hat genau das eingefangen, was wir über unseren Vater sagen wollten — poetisch und tief bewegend. Als hätte jemand ihm wirklich zugehört.",
     name: "Claudia Berger",
     role: "Tochter & Privatnutzerin",
   },
@@ -60,10 +60,10 @@ export default function TestimonialsSection() {
             onMouseEnter={e => { e.currentTarget.style.background = "#7A5520"; e.currentTarget.style.transform = "translateY(-1px)"; }}
             onMouseLeave={e => { e.currentTarget.style.background = "#B07B34"; e.currentTarget.style.transform = ""; }}
           >
-            Jetzt kostenlos starten
+            Gedenkseite erstellen
           </a>
           <p className="mt-4 text-xs" style={{ color: "#A89A8A", fontFamily: "'Lato', sans-serif", fontWeight: 300 }}>
-            Kein Kreditkarteneintrag erforderlich · Jederzeit kündbar
+            Kostenlos starten · Keine Verpflichtung
           </p>
         </div>
       </div>

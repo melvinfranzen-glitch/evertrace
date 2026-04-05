@@ -51,7 +51,7 @@ export default function B2BCards() {
         <div className="rounded-2xl py-24 text-center" style={{ background: "#181714", border: "1px solid #302d28" }}>
           <CreditCard className="w-12 h-12 mx-auto mb-4" style={{ color: "#302d28" }} />
           <p className="text-lg font-semibold mb-2" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Noch keine Trauerkarten</p>
-          <p className="text-sm mb-6" style={{ color: "#5a554e" }}>Erstellen Sie Ihre erste KI-gestützte Trauerkarte.</p>
+          <p className="text-sm mb-6" style={{ color: "#5a554e" }}>Erstellen Sie Ihre erste personalisierte Trauerkarte.</p>
           <Link to="/B2BCardWizard" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
             <Plus className="w-4 h-4" /> Erste Karte erstellen
           </Link>

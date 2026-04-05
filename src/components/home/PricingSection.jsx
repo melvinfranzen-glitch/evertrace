@@ -7,7 +7,7 @@ const B2C_PLANS = [
     id: "basic",
     name: "Basic",
     price: "Kostenlos",
-    period: "Zum Kennenlernen",
+    period: "Zum Anfangen",
     features: [
       { text: "1 Gedenkseite", included: true },
       { text: "Bis zu 10 Kondolenz-Einträge", included: true },
@@ -17,7 +17,7 @@ const B2C_PLANS = [
       { text: "Stammbaum", included: false },
       { text: "Passwortschutz", included: false },
     ],
-    cta: "Kostenlos starten",
+    cta: "Kostenlos beginnen",
     ctaLink: createPageUrl("Dashboard"),
     highlight: false,
   },
@@ -38,7 +38,7 @@ const B2C_PLANS = [
       { text: "Passwortschutz", included: true },
       { text: "QR-Code", included: true },
     ],
-    cta: "Erinnerung jetzt gestalten",
+    cta: "Erinnerung gestalten",
     ctaLink: createPageUrl("Dashboard"),
     highlight: true,
   },
@@ -50,20 +50,20 @@ const B2C_PLANS = [
     description: "Alles inklusive, keinerlei Kompromisse.",
     features: [
       { text: "Alles aus Classic", included: true },
-      { text: "KI-Trauerkarte (4 Motive inklusive)", included: true },
+      { text: "Personalisierte Trauerkarte (4 Motive inklusive)", included: true },
       { text: "Kondolenzbuch als Druckprodukt", included: true },
       { text: "Persönliche Betreuung", included: true },
       { text: "Individuelle Memorial-URL", included: true },
     ],
-    cta: "Vollständiges Erbe sichern",
+    cta: "Das vollständige Andenken",
     ctaLink: createPageUrl("Dashboard"),
     highlight: false,
   },
 ];
 
 const B2B_PLANS = [
-  { id: "free", name: "Free", price: "€ 0", period: "/Monat", features: ["3 Fälle / Monat", "3 Karten", "1 Gedenkseite", "Kein White-Label", "Kein Print"], excluded: ["White-Label", "Print-on-Demand", "Analytics"], cta: "Kostenlos starten", highlight: false },
-  { id: "starter", name: "Starter", price: "€ 39", period: "/Monat", features: ["15 Fälle / Monat", "20 Karten", "White-Label", "Print-on-Demand"], excluded: ["Analytics", "Jahrestags-Erinnerungen"], cta: "Jetzt starten", highlight: false },
+  { id: "free", name: "Free", price: "€ 0", period: "/Monat", features: ["3 Fälle / Monat", "3 Karten", "1 Gedenkseite", "Kein White-Label", "Kein Print"], excluded: ["White-Label", "Print-on-Demand", "Analytics"], cta: "Kostenlos testen", highlight: false },
+  { id: "starter", name: "Starter", price: "€ 39", period: "/Monat", features: ["15 Fälle / Monat", "20 Karten", "White-Label", "Print-on-Demand"], excluded: ["Analytics", "Jahrestags-Erinnerungen"], cta: "Starter wählen", highlight: false },
   { id: "premium", name: "Premium", price: "€ 99", period: "/Monat", features: ["50 Fälle / Monat", "75 Karten", "Vollständiges Analytics", "Jahrestags-Erinnerungen", "3 Nutzer"], excluded: [], cta: "Premium wählen", highlight: true, badge: "Empfohlen" },
   { id: "enterprise", name: "Enterprise", price: "ab € 299", period: "/Monat", features: ["Unbegrenzte Fälle & Karten", "Custom-Domain", "API-Zugang", "Persönlicher Account-Manager"], excluded: [], cta: "Angebot anfragen", highlight: false },
 ];

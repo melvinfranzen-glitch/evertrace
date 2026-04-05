@@ -57,7 +57,7 @@ export default function FeaturesSection() {
             onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(176,123,52,0.2)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(176,123,52,0.12)"; }}
           >
-            Gedenkseite kostenlos erstellen
+            Gedenkseite erstellen — kostenlos
           </a>
         </div>
       </div>

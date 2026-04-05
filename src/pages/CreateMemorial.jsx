@@ -432,7 +432,7 @@ export default function CreateMemorial() {
 
               {/* Mode toggle */}
               <div className="flex rounded-xl overflow-hidden border border-stone-200 w-fit">
-                {[{ id: "guided", label: "Geführt" }, { id: "direct", label: "Direkt" }].map(m => (
+                {[{ id: "guided", label: "Schritt für Schritt" }, { id: "direct", label: "Freitext" }].map(m => (
                   <button key={m.id} onClick={() => { setBioMode(m.id); setQuestionIndex(0); }}
                     className="px-5 py-2 text-sm font-medium transition-all"
                     style={{ background: bioMode === m.id ? "#c9a96e" : "white", color: bioMode === m.id ? "white" : "#6b7280" }}>
@@ -550,7 +550,7 @@ export default function CreateMemorial() {
                   </div>
                   <Button onClick={generateBio} disabled={!form.biography_raw_input.trim() || generating}
                     className="w-full rounded-xl text-white py-5" style={{ background: "#c9a96e" }}>
-                    ✦ Lebensgeschichte von der KI verfassen lassen
+                    ✦ Lebensgeschichte verfassen lassen
                   </Button>
                 </div>
               )}
@@ -668,7 +668,7 @@ export default function CreateMemorial() {
                   style={{ background: "#c9a96e", color: "#0f0e0c", height: 52, fontFamily: "'Cormorant Garamond', serif", fontSize: 17, borderRadius: 12 }}
                 >
                   {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : "✦"}&nbsp;
-                  {saving ? "Wird veröffentlicht…" : "Gedenkseite jetzt veröffentlichen"}
+                  {saving ? "Wird veröffentlicht…" : "Gedenkseite veröffentlichen"}
                 </Button>
               </div>
               <p style={{ fontSize: 11, color: "#8a8278", textAlign: "center" }}>

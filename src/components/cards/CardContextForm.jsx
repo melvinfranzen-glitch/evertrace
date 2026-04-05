@@ -40,7 +40,7 @@ export default function CardContextForm({ memorial, onGenerate, generating }) {
           Gestaltungs-Kontext
         </h3>
         <p className="text-sm text-gray-500">
-          Die KI nutzt automatisch die Biografie und das Portrait von <strong>{memorial?.name}</strong> als Basis.
+          Die Texte werden automatisch auf Basis der Biografie und des Portraits von <strong>{memorial?.name}</strong> erstellt.
         </p>
       </div>
 

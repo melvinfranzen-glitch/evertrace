@@ -2,16 +2,7 @@ import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 
-// Fix 2: Prompt Injection Sanitization
-function sanitizePromptInput(str, maxLength = 500) {
-  if (!str || typeof str !== "string") return "";
-  return str
-    .replace(/[<>\"\'`]/g, "")
-    .replace(/\b(ignore|system|assistant|instructions|prompt|override|jailbreak|disregard)\b/gi, "")
-    .replace(/\s{3,}/g, " ")
-    .trim()
-    .slice(0, maxLength);
-}
+import { sanitizePromptInput } from "@/utils/sanitize";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -134,7 +125,7 @@ export default function EditMemorial() {
 
   const TAB_GUIDANCE = {
     info: "Name, Daten und Leitspruch der verstorbenen Person.",
-    bio: "Erzählen Sie uns Erinnerungen — die KI verfasst daraus eine würdevolle Geschichte.",
+    bio: "Erzählen Sie Ihre Erinnerungen — daraus entsteht eine persönliche Lebensgeschichte.",
     media: "Laden Sie Fotos hoch und verknüpfen Sie Lieblingsmusik.",
     timeline: "Wichtige Momente und Stationen aus dem Leben der Person.",
     legacy: "Was hat diese Person für andere Menschen bedeutet?",
@@ -298,7 +289,7 @@ export default function EditMemorial() {
                   <Label>Lebensgeschichte (bearbeitbar)</Label>
                 </div>
                 <p style={{ fontSize: 11, color: "#8a8278", marginBottom: 4 }}>Sie können den Text direkt hier anpassen.</p>
-                <Textarea value={memorial.biography || ""} onChange={(e) => set("biography", e.target.value)} className="mt-1 h-64 resize-none" placeholder="Biografie hier eingeben oder von der KI verfassen lassen..." />
+                <Textarea value={memorial.biography || ""} onChange={(e) => set("biography", e.target.value)} className="mt-1 h-64 resize-none" placeholder="Biografie hier eingeben oder aus Ihren Angaben erstellen lassen..." />
               </div>
             </div>
           )}

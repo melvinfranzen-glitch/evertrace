@@ -20,7 +20,7 @@ export default function HeroLanding() {
         <div className="flex items-center justify-center gap-3 mb-8">
           <div className="h-px w-12" style={{ background: "rgba(216,195,165,0.35)" }} />
           <span className="text-xs uppercase tracking-[0.3em]" style={{ color: "#B07B34", fontFamily: "'Lato', sans-serif", fontWeight: 400 }}>
-            KI-gestützte Trauerbegleitung
+            Digitale Gedenkkultur
           </span>
           <div className="h-px w-12" style={{ background: "rgba(216,195,165,0.35)" }} />
         </div>
@@ -47,7 +47,7 @@ export default function HeroLanding() {
             onMouseLeave={e => { e.currentTarget.style.background = "#B07B34"; e.currentTarget.style.transform = "translateY(0)"; }}
           >
             <Heart className="w-4 h-4" />
-            Kostenlos starten
+            Gedenkseite erstellen
           </button>
           <a
             href="/MemorialProfile?id=demo"
@@ -56,14 +56,14 @@ export default function HeroLanding() {
             onMouseEnter={e => { e.currentTarget.style.background = "rgba(216,195,165,0.08)"; }}
             onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
           >
-            Beispiel ansehen →
+            Beispiel-Gedenkseite ansehen →
           </a>
         </div>
 
         {/* Trust indicators */}
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 32, marginTop: 48, paddingTop: 32, borderTop: "1px solid rgba(216,195,165,0.1)" }}>
           {[
-            { icon: "✦", label: "KI-Personalisierung", sub: "Einzigartig für jeden Menschen" },
+            { icon: "✦", label: "Persönliche Gestaltung", sub: "So einzigartig wie der Mensch, an den Sie erinnern" },
             { icon: "🛡", label: "DSGVO-konform", sub: "Server in Deutschland" },
             { icon: "👨\u200d👩\u200d👧", label: "B2B & Privat", sub: "Bestatter & Familien" },
           ].map(({ icon, label, sub }) => (

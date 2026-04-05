@@ -29,7 +29,7 @@ export default function Home() {
             Jedes Leben verdient ein würdevolles Andenken
           </h2>
           <p className="text-stone-400 mb-10 font-light text-lg leading-relaxed">
-            Beginnen Sie noch heute und schaffen Sie ein dauerhaftes digitales Erbe.
+            Schaffen Sie einen Ort, an dem die Erinnerung weiterlebt.
           </p>
           <button
             onClick={() => window.location.href = createPageUrl("Dashboard")}
@@ -42,7 +42,7 @@ export default function Home() {
             onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 6px 32px rgba(201,169,110,0.5)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
             onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 4px 24px rgba(201,169,110,0.35)"; e.currentTarget.style.transform = "translateY(0)"; }}
           >
-            Kostenlos starten
+            Gedenkseite erstellen
           </button>
         </div>
       </section>

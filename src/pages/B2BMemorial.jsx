@@ -213,7 +213,7 @@ export default function B2BMemorial() {
                   <button onClick={generateBio} disabled={!form.case_id || generatingBio} className="flex items-center gap-1.5 text-xs px-2 py-1 rounded-lg transition-all disabled:opacity-40"
                     style={{ background: "rgba(201,169,110,0.1)", color: "#c9a96e" }}>
                     {generatingBio ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-                    KI-Entwurf
+                    Textentwurf
                   </button>
                 </div>
                 <textarea value={form.biography} onChange={e => set("biography", e.target.value)} rows={4}
