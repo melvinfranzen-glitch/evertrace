@@ -320,7 +320,8 @@ function CardTab({ memorials }) {
     await generate();
   };
 
-  const totalPrice = (qty * tier.unit + tier.shipping).toFixed(2);
+  const addonPerUnit = (addonInvite ? 0.59 : 0) + (addonThanks ? 0.59 : 0);
+  const totalPrice = (qty * (tier.unit + addonPerUnit) + tier.shipping).toFixed(2);
 
   const submitOrder = async () => {
     if (!addrValid(addr)) return;

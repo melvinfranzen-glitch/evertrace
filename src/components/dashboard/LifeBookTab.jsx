@@ -176,7 +176,7 @@ export default function LifeBookTab({ memorials }) {
                 </div>
               </div>
               <ul className="mt-5 space-y-2">
-                {["KI-aufbereitete Lebensgeschichte aus Ihren Einträgen", "Alle Fotos in würdevollem Layout", "Hardcover Soft-Touch, A4, dauerhaft haltbar"].map((f, i) => (
+                {["Persönliche Lebensgeschichte aus Ihren Einträgen", "Alle Fotos in würdevollem Layout", "Hardcover Soft-Touch, A4, dauerhaft haltbar"].map((f, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
                     <span className="mt-0.5 flex-shrink-0" style={{ color: "#c9a96e" }}>•</span>
                     {f}

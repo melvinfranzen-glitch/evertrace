@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function GallerySection({ images, name }) {
@@ -6,6 +6,17 @@ export default function GallerySection({ images, name }) {
 
   const prev = () => setLightbox((i) => (i > 0 ? i - 1 : images.length - 1));
   const next = () => setLightbox((i) => (i < images.length - 1 ? i + 1 : 0));
+
+  useEffect(() => {
+    if (lightbox === null) return;
+    const handler = (e) => {
+      if (e.key === 'Escape') setLightbox(null);
+      if (e.key === 'ArrowLeft') prev();
+      if (e.key === 'ArrowRight') next();
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [lightbox]);
 
   return (
     <section className="py-20 px-6" style={{ background: "#FAFAF8" }}>
@@ -30,6 +41,7 @@ export default function GallerySection({ images, name }) {
               <img
                 src={url}
                 alt={`${name} – Erinnerung ${i + 1}`}
+                loading="lazy"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-300" />

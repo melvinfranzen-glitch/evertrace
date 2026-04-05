@@ -2,12 +2,7 @@ import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Check, ChevronLeft } from "lucide-react";
 import { createPageUrl } from "@/utils";
-
-const PRODUCTS = [
-  { id: "plaque_aluminium", label: "Aluminium-Plakette", desc: "Gebürstetes Aluminium, Lasergravur, wetterfest", price: 129, badge: null },
-  { id: "plaque_slate", label: "Schiefer-Plakette", desc: "Naturschiefer, Lasergravur, zeitlos", price: 149, badge: null },
-  { id: "plaque_steel", label: "Edelstahl Premium", desc: "Edelstahl gebürstet, Tiefengravur, UV-Schutz, inkl. Montageset", price: 219, badge: "Bestseller" },
-];
+import { PLAQUES } from "@/components/pricing/pricingData";
 
 function StepIndicator({ current }) {
   const steps = ["Gedenkseite", "Plakette", "Bestellung"];
@@ -65,7 +60,7 @@ function MemorialSelectorGrid({ memorials, selected, onSelect }) {
 export default function PlaqueOrderTab({ memorials, initialMemorialId }) {
   const [step, setStep] = useState(0);
   const [selectedMemorial, setSelectedMemorial] = useState(null);
-  const [selectedProduct, setSelectedProduct] = useState(PRODUCTS[0]);
+  const [selectedProduct, setSelectedProduct] = useState(PLAQUES[0]);
   const [engravingText, setEngravingText] = useState("");
   const [address, setAddress] = useState({ firstName: "", lastName: "", street: "", zip: "", city: "", email: "" });
   const [saving, setSaving] = useState(false);
@@ -149,7 +144,7 @@ export default function PlaqueOrderTab({ memorials, initialMemorialId }) {
           <h2 className="text-2xl font-semibold text-gray-800 mb-6" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Plakette gestalten</h2>
 
           <div className="space-y-3 mb-6">
-            {PRODUCTS.map(p => (
+            {PLAQUES.map(p => (
               <div key={p.id} onClick={() => setSelectedProduct(p)} className="cursor-pointer p-4 rounded-xl flex items-center gap-4 transition-all"
                 style={{ border: `1.5px solid ${selectedProduct.id === p.id ? "#c9a96e" : "#e5e7eb"}`, background: selectedProduct.id === p.id ? "rgba(201,169,110,0.04)" : "white", borderRadius: 12 }}>
                 <div className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center" style={{ border: `2px solid ${selectedProduct.id === p.id ? "#c9a96e" : "#d1d5db"}`, background: selectedProduct.id === p.id ? "#c9a96e" : "white" }}>
@@ -157,7 +152,7 @@ export default function PlaqueOrderTab({ memorials, initialMemorialId }) {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <p className="font-semibold text-gray-800 text-sm">{p.label}</p>
+                    <p className="font-semibold text-gray-800 text-sm">{p.name}</p>
                     {p.badge && <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: "rgba(201,169,110,0.15)", color: "#c9a96e" }}>{p.badge}</span>}
                   </div>
                   <p className="text-xs text-gray-500 mt-0.5">{p.desc}</p>
@@ -215,7 +210,7 @@ export default function PlaqueOrderTab({ memorials, initialMemorialId }) {
               }
               <div>
                 <p className="font-semibold text-gray-800 text-sm">{selectedMemorial?.name}</p>
-                <p className="text-xs text-gray-500">{selectedProduct.label} · € {selectedProduct.price},–</p>
+                <p className="text-xs text-gray-500">{selectedProduct.name} · € {selectedProduct.price},–</p>
               </div>
             </div>
             {engravingText && <p className="text-xs text-gray-500 mb-2">Gravur: „{engravingText}"</p>}

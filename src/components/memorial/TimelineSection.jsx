@@ -31,8 +31,10 @@ export default function TimelineSection({ events }) {
         </div>
 
         <div className="relative">
-          {/* Center line */}
+          {/* Center line desktop */}
           <div className="absolute left-1/2 top-0 bottom-0 w-px bg-stone-300 -translate-x-1/2 hidden md:block" />
+          {/* Left line mobile */}
+          <div className="absolute left-5 top-0 bottom-0 w-px bg-stone-300 md:hidden" />
 
           <div className="space-y-10">
             {sorted.map((event, i) => {
@@ -40,7 +42,7 @@ export default function TimelineSection({ events }) {
               const type = getType(event.event_type);
               const Icon = type.icon;
               return (
-                <div key={event.id} className={`relative flex flex-col md:flex-row items-start gap-6 ${isLeft ? "" : "md:flex-row-reverse"}`}>
+                <div key={event.id} className={`relative flex flex-col md:flex-row items-start gap-6 pl-12 md:pl-0 ${isLeft ? "" : "md:flex-row-reverse"}`}>
                   {/* Year bubble */}
                   <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 w-14 h-14 rounded-full items-center justify-center z-10 flex-col gap-0.5 shadow-md"
                     style={{ background: "linear-gradient(135deg,#c9a96e,#a07840)" }}>

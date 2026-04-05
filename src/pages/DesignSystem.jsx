@@ -775,7 +775,7 @@ export default function DesignSystem() {
                 <p style={{ ...sans, fontSize: 10, color: T.taupe }}>1942 – 2024</p>
               </div>
             </div>
-            <p style={{ ...sans, fontSize: 12, color: T.taupe, lineHeight: 1.7, marginBottom: 14 }}>Hardcover A4 · Alle Beiträge & Fotos · KI-layoutet · In Deutschland gedruckt</p>
+            <p style={{ ...sans, fontSize: 12, color: T.taupe, lineHeight: 1.7, marginBottom: 14 }}>Hardcover A4 · Alle Beiträge & Fotos · professionell gestaltet · In Deutschland gedruckt</p>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <p style={{ ...serif, fontSize: 20, color: T.anthracite }}>€ 59,–</p>
               <Btn size="sm" variant="primary">Bestellen</Btn>
@@ -825,7 +825,7 @@ export default function DesignSystem() {
             <div style={{ background: "#181714", borderRadius: 20, border: "1px solid #302d28", padding: 24 }}>
               {/* Steps */}
               <div style={{ display: "flex", gap: 6, marginBottom: 20 }}>
-                {["Fall", "Angaben", "KI-Vorschau", "Druck", "Bestellen"].map((s, i) => (
+                {["Fall", "Angaben", "Vorschau", "Druck", "Bestellen"].map((s, i) => (
                   <div key={s} style={{ display: "flex", alignItems: "center", gap: 4 }}>
                     <div style={{ width: 22, height: 22, borderRadius: "50%", background: i < 2 ? T.gold : i === 2 ? "rgba(176,123,52,0.2)" : "#302d28", border: `1px solid ${i <= 2 ? T.gold : "#302d28"}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
                       <span style={{ ...sans, fontSize: 9, color: i < 2 ? "#0f0e0c" : i === 2 ? T.gold : "#5a554e" }}>{i + 1}</span>
@@ -837,7 +837,7 @@ export default function DesignSystem() {
 
               {/* AI text preview */}
               <div style={{ background: "#201e1a", borderRadius: 14, padding: 16, marginBottom: 14 }}>
-                <p style={{ ...sans, fontSize: 11, color: "#5a554e", marginBottom: 8 }}>KI-generierter Text</p>
+                <p style={{ ...sans, fontSize: 11, color: "#5a554e", marginBottom: 8 }}>Textentwurf</p>
                 <p style={{ ...serif, fontSize: 14, color: T.champagne, fontStyle: "italic", lineHeight: 1.9 }}>
                   Ernst Hoffmann lebte mit ruhiger Bestimmtheit — ein Mann, dessen Hände ebenso sicher den Spaten wie ein gutes Buch führten. Die Erde, die Natur, die Stille des Waldes: darin fand er seine tiefste Ruhe.
                 </p>

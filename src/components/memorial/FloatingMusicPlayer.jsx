@@ -6,6 +6,7 @@ export default function FloatingMusicPlayer({ spotifyUrl, name, curatedTracks = 
   const [expanded, setExpanded] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
   const audioRef = useRef(null);
 
   const hasCuratedTracks = curatedTracks && curatedTracks.length > 0;
@@ -23,9 +24,16 @@ export default function FloatingMusicPlayer({ spotifyUrl, name, curatedTracks = 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
-    const onEnded = () => setPlaying(false);
+    const onTimeUpdate = () => {
+      if (audio.duration) setProgress((audio.currentTime / audio.duration) * 100);
+    };
+    const onEnded = () => { setPlaying(false); setProgress(0); };
+    audio.addEventListener("timeupdate", onTimeUpdate);
     audio.addEventListener("ended", onEnded);
-    return () => audio.removeEventListener("ended", onEnded);
+    return () => {
+      audio.removeEventListener("timeupdate", onTimeUpdate);
+      audio.removeEventListener("ended", onEnded);
+    };
   }, []);
 
   if ((!spotifyUrl && !hasCuratedTracks) || dismissed) return null;
@@ -95,7 +103,7 @@ export default function FloatingMusicPlayer({ spotifyUrl, name, curatedTracks = 
           </div>
           {/* Progress bar placeholder */}
           <div className="mt-3 h-0.5 rounded-full" style={{ background: "rgba(216,195,165,0.15)" }}>
-            <div className="h-full rounded-full" style={{ width: "30%", background: "#B07B34" }} />
+            <div className="h-full rounded-full" style={{ width: `${progress}%`, background: "#B07B34", transition: "width 0.3s ease" }} />
           </div>
           <audio ref={audioRef} src={firstCuratedTrack.audio_url} />
         </div>

@@ -160,8 +160,9 @@ export function getB2BBookUnitPrice(qty) {
 
 // Memorial Plaques
 export const PLAQUES = [
-  { id: "standard", name: "Gedenkplakette Standard", price: 149, desc: "Gebürstetes Aluminium mit Lasergravur und QR-Code. Inklusive Wetterschutz-Beschichtung." },
-  { id: "premium", name: "Gedenkplakette Premium", price: 219, desc: "Gebürsteter Edelstahl mit Tiefengravur, UV-resistenter Beschichtung und QR-Code. Inkl. Wandmontage-Set." },
+  { id: "plaque_aluminium", name: "Aluminium-Plakette", price: 129, desc: "Gebürstetes Aluminium, Lasergravur, wetterfest — 20 × 11 cm", badge: null },
+  { id: "plaque_slate", name: "Schiefer-Plakette", price: 149, desc: "Naturschiefer, Lasergravur, zeitlos — 20 × 11 cm", badge: null },
+  { id: "plaque_steel", name: "Edelstahl-Plakette Premium", price: 219, desc: "Edelstahl gebürstet, Tiefengravur, UV-Schutz, Montageset — 20 × 11 cm", badge: "Bestseller" },
 ];
 
 // B2C
