@@ -90,6 +90,7 @@ export default function EditMemorial() {
     if (positionSaveTimer.current) clearTimeout(positionSaveTimer.current);
     positionSaveTimer.current = setTimeout(async () => {
       await base44.entities.Memorial.update(memorial.id, { hero_image_position: parseInt(value) });
+      setMemorial(p => ({ ...p, hero_image_position: parseInt(value) }));
       setIsDirty(false);
     }, 800);
   };
