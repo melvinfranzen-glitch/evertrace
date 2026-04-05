@@ -20,6 +20,7 @@ import CuratedMusicLibrary from "@/components/memorial/CuratedMusicLibrary";
 import LegacyEditor from "@/components/memorial/LegacyEditor";
 import ServiceEventEditor from "@/components/memorial/ServiceEventEditor";
 import MemoryWallModerator from "@/components/memorial/MemoryWallModerator";
+import BiographyQuestionnaire from "@/components/memorial/BiographyQuestionnaire";
 
 import { CURATED_TRACKS } from "@/components/memorial/curatedTracksData";
 
@@ -37,6 +38,7 @@ export default function EditMemorial() {
   const [pendingCount, setPendingCount] = useState(0);
   const [pendingCondolences, setPendingCondolences] = useState([]);
   const [pendingMemoryWall, setPendingMemoryWall] = useState([]);
+  const [useBioQuestionnaire, setUseBioQuestionnaire] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -332,21 +334,59 @@ export default function EditMemorial() {
 
           {activeTab === "bio" && (
             <div className="space-y-4">
-              <div>
-                <Label>Was sollen Menschen über ihn/sie wissen?</Label>
-                <Textarea value={memorial.biography_raw_input || ""} onChange={(e) => set("biography_raw_input", e.target.value)} className="mt-1 h-28 resize-none"
-                  placeholder="Schreiben Sie einfach, was Ihnen einfällt — zum Beispiel: Wo er/sie aufgewachsen ist, was ihn/sie begeistert hat, was er/sie geliebt hat, welche Eigenschaften ihn/sie besonders gemacht haben. Auch kurze Notizen sind vollkommen ausreichend." />
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setUseBioQuestionnaire(false)}
+                  className="flex-1 py-2.5 rounded-lg text-sm font-medium transition-all"
+                  style={{
+                    background: !useBioQuestionnaire ? "#c9a96e" : "white",
+                    color: !useBioQuestionnaire ? "white" : "#6b7280",
+                    border: `1px solid ${!useBioQuestionnaire ? "#c9a96e" : "#e5e7eb"}`,
+                  }}
+                >
+                  Klassisch (Freitextfeld)
+                </button>
+                <button
+                  onClick={() => setUseBioQuestionnaire(true)}
+                  className="flex-1 py-2.5 rounded-lg text-sm font-medium transition-all"
+                  style={{
+                    background: useBioQuestionnaire ? "#c9a96e" : "white",
+                    color: useBioQuestionnaire ? "white" : "#6b7280",
+                    border: `1px solid ${useBioQuestionnaire ? "#c9a96e" : "#e5e7eb"}`,
+                  }}
+                >
+                  ✦ Geführter Fragebogen
+                </button>
               </div>
-              <Button onClick={generateBio} disabled={generating || !memorial.biography_raw_input} className="w-full text-white rounded-xl" style={{ background: "#c9a96e" }}>
-                {generating ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Wir schreiben gerade die Lebensgeschichte…</> : <>✦ Lebensgeschichte neu verfassen lassen</>}
-              </Button>
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <Label>Lebensgeschichte (bearbeitbar)</Label>
-                </div>
-                <p style={{ fontSize: 11, color: "#8a8278", marginBottom: 4 }}>Sie können den Text direkt hier anpassen.</p>
-                <Textarea value={memorial.biography || ""} onChange={(e) => set("biography", e.target.value)} className="mt-1 h-64 resize-none" placeholder="Biografie hier eingeben oder aus Ihren Angaben erstellen lassen..." />
-              </div>
+
+              {useBioQuestionnaire ? (
+                <BiographyQuestionnaire
+                  memorial={memorial}
+                  onComplete={(biographyText, rawAnswers) => {
+                    set("biography", biographyText);
+                    set("biography_raw_input", Object.values(rawAnswers).join(" | "));
+                    setUseBioQuestionnaire(false);
+                  }}
+                />
+              ) : (
+                <>
+                  <div>
+                    <Label>Was sollen Menschen über ihn/sie wissen?</Label>
+                    <Textarea value={memorial.biography_raw_input || ""} onChange={(e) => set("biography_raw_input", e.target.value)} className="mt-1 h-28 resize-none"
+                      placeholder="Schreiben Sie einfach, was Ihnen einfällt — zum Beispiel: Wo er/sie aufgewachsen ist, was ihn/sie begeistert hat, was er/sie geliebt hat, welche Eigenschaften ihn/sie besonders gemacht haben. Auch kurze Notizen sind vollkommen ausreichend." />
+                  </div>
+                  <Button onClick={generateBio} disabled={generating || !memorial.biography_raw_input} className="w-full text-white rounded-xl" style={{ background: "#c9a96e" }}>
+                    {generating ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Wir schreiben gerade die Lebensgeschichte…</> : <>✦ Lebensgeschichte neu verfassen lassen</>}
+                  </Button>
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <Label>Lebensgeschichte (bearbeitbar)</Label>
+                    </div>
+                    <p style={{ fontSize: 11, color: "#8a8278", marginBottom: 4 }}>Sie können den Text direkt hier anpassen.</p>
+                    <Textarea value={memorial.biography || ""} onChange={(e) => set("biography", e.target.value)} className="mt-1 h-64 resize-none" placeholder="Biografie hier eingeben oder aus Ihren Angaben erstellen lassen..." />
+                  </div>
+                </>
+              )}
             </div>
           )}
 
