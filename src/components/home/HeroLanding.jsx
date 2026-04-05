@@ -52,7 +52,9 @@ export default function HeroLanding() {
             Gedenkseite erstellen
           </button>
           <a
-            href="/MemorialProfile?id=demo"
+            href="https://vehement-ever-trace-life.base44.app/MemorialProfile?id=IHSC9WDN"
+            target="_blank"
+            rel="noopener noreferrer"
             className="px-10 py-4 rounded-full text-sm transition-all duration-300"
             style={{ border: "1px solid rgba(216,195,165,0.3)", color: "#D8C3A5", fontFamily: "'Lato', sans-serif", fontWeight: 300, background: "transparent" }}
             onMouseEnter={e => { e.currentTarget.style.background = "rgba(216,195,165,0.08)"; }}
