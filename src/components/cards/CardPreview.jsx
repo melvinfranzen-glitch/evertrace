@@ -29,7 +29,7 @@ export default function CardPreview({ bgImage, texts, showQr, side, memorial, de
       width: portraitPx, height: portraitPx, borderRadius: "50%", overflow: "hidden",
       border: "3px solid rgba(201,169,110,0.5)", boxShadow: "0 4px 20px rgba(0,0,0,0.4)", flexShrink: 0,
     }}>
-      <img src={memorial.hero_image_url} alt={texts.name} className="w-full h-full object-cover" />
+      <img src={memorial.hero_image_url} alt={texts.name} className="w-full h-full object-cover" style={{ objectPosition: `center ${memorial.hero_image_position ?? 30}%` }} />
     </div>
   );
 

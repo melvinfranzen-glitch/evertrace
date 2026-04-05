@@ -27,7 +27,7 @@ function CoverPage({ memorial }) {
       <div className="flex flex-col h-full">
         {memorial.hero_image_url ? (
           <div className="flex-1 overflow-hidden">
-            <img src={memorial.hero_image_url} alt="" className="w-full h-full object-cover" style={{ filter: "brightness(0.88) sepia(0.12)" }} />
+            <img src={memorial.hero_image_url} alt="" className="w-full h-full object-cover" style={{ filter: "brightness(0.88) sepia(0.12)", objectPosition: `center ${memorial.hero_image_position ?? 30}%` }} />
           </div>
         ) : (
           <div className="flex-1" style={{ background: "linear-gradient(160deg, #2d1f0a, #1a1410)" }} />

@@ -38,7 +38,7 @@ function MemorialSelectorGrid({ memorials, selected, onSelect }) {
               style={{ background: isSelected ? "rgba(201,169,110,0.04)" : "white", border: `1px solid ${isSelected ? "#c9a96e" : "#e5e7eb"}`, borderRadius: 12 }}>
               <div className="flex items-center gap-3">
                 {m.hero_image_url
-                  ? <img src={m.hero_image_url} alt={m.name} className="w-12 h-12 rounded-full object-cover flex-shrink-0" />
+                  ? <img src={m.hero_image_url} alt={m.name} className="w-12 h-12 rounded-full object-cover flex-shrink-0" style={{ objectPosition: `center ${m.hero_image_position ?? 30}%` }} />
                   : <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-lg font-semibold"
                       style={{ background: "rgba(201,169,110,0.15)", color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>
                       {m.name?.[0]}
@@ -205,7 +205,7 @@ export default function PlaqueOrderTab({ memorials, initialMemorialId }) {
           <div className="rounded-xl p-6 mb-6" style={{ background: "white", border: "1px solid #e8dfd0", borderRadius: 12 }}>
             <div className="flex items-center gap-3 mb-3">
               {selectedMemorial?.hero_image_url
-                ? <img src={selectedMemorial.hero_image_url} alt="" className="w-10 h-10 rounded-full object-cover" />
+                ? <img src={selectedMemorial.hero_image_url} alt="" className="w-10 h-10 rounded-full object-cover" style={{ objectPosition: `center ${selectedMemorial.hero_image_position ?? 30}%` }} />
                 : <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold" style={{ background: "rgba(201,169,110,0.15)", color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>{selectedMemorial?.name?.[0]}</div>
               }
               <div>

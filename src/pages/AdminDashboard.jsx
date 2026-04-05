@@ -173,7 +173,7 @@ export default function AdminDashboard() {
             {memorials.map((m) => (
               <div key={m.id} className="bg-white rounded-2xl border border-stone-200 p-5 flex items-center gap-4">
                 {m.hero_image_url ? (
-                  <img src={m.hero_image_url} className="w-12 h-12 rounded-xl object-cover flex-shrink-0" alt={m.name} />
+                  <img src={m.hero_image_url} className="w-12 h-12 rounded-xl object-cover flex-shrink-0" alt={m.name} style={{ objectPosition: `center ${m.hero_image_position ?? 30}%` }} />
                 ) : (
                   <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 text-xl font-bold text-stone-400" style={{ background: "#f5f0e8" }}>
                     {m.name?.[0] || "?"}

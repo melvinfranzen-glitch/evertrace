@@ -397,7 +397,7 @@ export default function CreateMemorial() {
                 <div className="mt-1 border-2 border-dashed border-stone-300 rounded-xl p-6 text-center hover:border-amber-400 transition-colors">
                   {form.hero_image_url ? (
                     <div>
-                      <img src={form.hero_image_url} className="w-28 h-28 object-cover rounded-full mx-auto" alt="Portrait" />
+                      <img src={form.hero_image_url} className="w-28 h-28 object-cover rounded-full mx-auto" alt="Portrait" style={{ objectPosition: `center ${form.hero_image_position ?? 30}%` }} />
                       <p className="mt-2 text-sm font-medium" style={{ color: "#16a34a" }}>✓ Foto hochgeladen</p>
                       <button className="mt-1 text-xs text-gray-400 hover:text-gray-600" onClick={() => { set("hero_image_url", ""); set("hero_image_position", 50); }}>Entfernen</button>
                     </div>

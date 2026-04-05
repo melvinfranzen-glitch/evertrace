@@ -63,7 +63,7 @@ export default function FamilyMemberModal({ person, memorialId, isDeceased, onCl
             }
           >
             {person.photo_url
-              ? <img src={person.photo_url} className="w-full h-full object-cover" alt={person.name} />
+              ? <img src={person.photo_url} className="w-full h-full object-cover object-face" alt={person.name} />
               : initials
             }
           </div>

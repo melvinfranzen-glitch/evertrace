@@ -336,7 +336,7 @@ function CardTab({ memorials }) {
                       const m = memorials.find(x => x.id === prefillId);
                       return m?.hero_image_url ? (
                         <div className="absolute" style={{ top: 120, left: "50%", transform: "translateX(-50%)", zIndex: 2 }}>
-                          <img src={m.hero_image_url} alt="" className="w-16 h-16 rounded-full object-cover" style={{ border: "3px solid #c9a96e", boxShadow: "0 2px 12px rgba(0,0,0,0.4)" }} />
+                          <img src={m.hero_image_url} alt="" className="w-16 h-16 rounded-full object-cover" style={{ border: "3px solid #c9a96e", boxShadow: "0 2px 12px rgba(0,0,0,0.4)", objectPosition: `center ${m.hero_image_position ?? 30}%` }} />
                         </div>
                       ) : null;
                     })()}

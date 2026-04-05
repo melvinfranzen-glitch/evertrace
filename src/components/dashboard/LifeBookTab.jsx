@@ -33,7 +33,7 @@ function MemorialSelectorGrid({ memorials, selected, onSelect }) {
               style={{ background: isSelected ? "rgba(201,169,110,0.04)" : "white", border: `1px solid ${isSelected ? "#c9a96e" : "#e5e7eb"}`, borderRadius: 12 }}>
               <div className="flex items-center gap-3 mb-3">
                 {m.hero_image_url
-                  ? <img src={m.hero_image_url} alt={m.name} className="w-12 h-12 rounded-full object-cover flex-shrink-0" />
+                  ? <img src={m.hero_image_url} alt={m.name} className="w-12 h-12 rounded-full object-cover flex-shrink-0" style={{ objectPosition: `center ${m.hero_image_position ?? 30}%` }} />
                   : <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-lg font-semibold"
                       style={{ background: "rgba(201,169,110,0.15)", color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>
                       {m.name?.[0]}
@@ -167,7 +167,7 @@ export default function LifeBookTab({ memorials }) {
               <div className="p-8" style={{ background: "linear-gradient(160deg, #f7f3ed, #ede8df)", border: "1px solid #d4c9b0", borderRadius: 8, boxShadow: "-4px 4px 0 #c9a96e, -8px 8px 0 rgba(201,169,110,0.3)" }}>
                 <div className="flex flex-col items-center text-center">
                   {selectedMemorial?.hero_image_url
-                    ? <img src={selectedMemorial.hero_image_url} alt="" className="w-16 h-16 rounded-full object-cover mb-3" />
+                    ? <img src={selectedMemorial.hero_image_url} alt="" className="w-16 h-16 rounded-full object-cover mb-3" style={{ objectPosition: `center ${selectedMemorial.hero_image_position ?? 30}%` }} />
                     : <div className="w-16 h-16 rounded-full flex items-center justify-center mb-3 text-xl font-semibold" style={{ background: "rgba(201,169,110,0.2)", color: "#c9a96e", fontFamily: "'Cormorant Garamond', serif" }}>{selectedMemorial?.name?.[0]}</div>
                   }
                   <p className="font-semibold italic mb-1" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, color: "#2c2419" }}>{selectedMemorial?.name}</p>

@@ -145,6 +145,11 @@ html, body {
   transform: translateY(-1px);
 }
 
+/* Intelligente Standard-Zentrierung für Personen-Fotos ohne gespeicherte Position */
+.object-face {
+  object-position: center 30%;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--sand); }
