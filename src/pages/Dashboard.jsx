@@ -274,6 +274,10 @@ function CardTab({ memorials }) {
   const [addonThanks, setAddonThanks] = useState(false);
   const [addonQr, setAddonQr] = useState(false);
   const [cardFace, setCardFace] = useState("front");
+  // Design customizer
+  const [showPortrait, setShowPortrait] = useState(true);
+  const [textPosition, setTextPosition] = useState("bottom"); // top | center | bottom
+  const [textAlign, setTextAlign] = useState("center"); // left | center | right
   const [qty, setQty] = useState(50);
   const [tier, setTier] = useState(PRINT_TIERS[0]);
   const [addr, setAddr] = useState({});
@@ -463,8 +467,9 @@ function CardTab({ memorials }) {
       {/* Step 1 */}
       {step === 1 && (
         <div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Left: card preview */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            {/* Col 1: Live card preview */}
             <div>
               <div className="flex gap-2 mb-3">
                 {["front", "inside"].map(f => (
@@ -474,22 +479,87 @@ function CardTab({ memorials }) {
                   </button>
                 ))}
               </div>
-              <div className="rounded-2xl overflow-hidden" style={{ background: cardFace === "front" ? "#0f0e0c" : "white", minHeight: 200, padding: 24, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", border: "1px solid #e8dfd0" }}>
+
+              {/* Card preview */}
+              <div className="rounded-2xl overflow-hidden relative" style={{ background: cardFace === "front" ? "#0f0e0c" : "white", minHeight: 260, border: "1px solid #e8dfd0", display: "flex", flexDirection: "column" }}>
                 {cardFace === "front" ? (
-                  <div className="text-center">
-                    {motifUrl ? <img src={motifUrl} alt="Motiv" className="w-32 h-44 rounded-lg object-cover mx-auto mb-3" /> : generating ? <SkeletonPulse h={176} w={128} rounded={8} /> : null}
-                    <p style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8", fontSize: 17, fontWeight: 600 }}>{form.firstName} {form.lastName}</p>
-                    <p style={{ fontFamily: "'DM Sans', sans-serif", color: "#c9a96e", fontSize: 11 }}>{form.birthDate || ""}{form.birthDate && form.deathDate ? " · " : ""}{form.deathDate || ""}</p>
+                  <div className="flex-1 flex flex-col" style={{ minHeight: 260 }}>
+                    {/* Motif always fills background area */}
+                    {motifUrl ? (
+                      <img src={motifUrl} alt="Motiv" className="w-full object-cover" style={{ height: 160 }} />
+                    ) : generating ? (
+                      <div style={{ height: 160 }}><SkeletonPulse h={160} rounded={0} /></div>
+                    ) : (
+                      <div style={{ height: 160, background: "#181410" }} />
+                    )}
+                    {/* Portrait if enabled */}
+                    {showPortrait && (() => {
+                      const m = memorials.find(x => x.id === prefillId);
+                      return m?.hero_image_url ? (
+                        <div className="absolute" style={{ top: 120, left: "50%", transform: "translateX(-50%)", zIndex: 2 }}>
+                          <img src={m.hero_image_url} alt="" className="w-16 h-16 rounded-full object-cover" style={{ border: "3px solid #c9a96e", boxShadow: "0 2px 12px rgba(0,0,0,0.4)" }} />
+                        </div>
+                      ) : null;
+                    })()}
+                    {/* Name block — positioned by textPosition */}
+                    <div className="flex-1 flex items-end px-5 pb-4 pt-2" style={{ justifyContent: textAlign === "left" ? "flex-start" : textAlign === "right" ? "flex-end" : "center", alignItems: textPosition === "top" ? "flex-start" : textPosition === "center" ? "center" : "flex-end", paddingTop: showPortrait && memorials.find(x => x.id === prefillId)?.hero_image_url ? 36 : 8 }}>
+                      <div style={{ textAlign }}>
+                        <p style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8", fontSize: 17, fontWeight: 600 }}>{form.firstName} {form.lastName}</p>
+                        <p style={{ fontFamily: "'DM Sans', sans-serif", color: "#c9a96e", fontSize: 11 }}>{form.birthDate || ""}{form.birthDate && form.deathDate ? " · " : ""}{form.deathDate || ""}</p>
+                      </div>
+                    </div>
                   </div>
                 ) : (
-                  <div className="w-full">
+                  <div className="p-5">
                     {generating ? (
                       <div className="space-y-2"><SkeletonPulse h={14} /><SkeletonPulse h={14} w="90%" /><SkeletonPulse h={14} w="80%" /><SkeletonPulse h={14} w="95%" /></div>
                     ) : (
-                      <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 15, lineHeight: 1.9, color: "#2c2419", fontStyle: "italic" }}>{generatedText}</p>
+                      <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 14, lineHeight: 1.9, color: "#2c2419", fontStyle: "italic", textAlign }}>{generatedText}</p>
                     )}
                   </div>
                 )}
+              </div>
+
+              {/* Design controls */}
+              <div className="mt-4 rounded-xl p-4 space-y-4" style={{ background: "white", border: "1px solid #e8dfd0" }}>
+                <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "#8a8278" }}>Gestaltung</p>
+
+                {/* Portrait toggle */}
+                <div className="flex items-center justify-between">
+                  <span className="text-sm" style={{ color: "#2c2419", fontFamily: "'DM Sans', sans-serif" }}>Foto der Person</span>
+                  <button onClick={() => setShowPortrait(v => !v)}
+                    className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors"
+                    style={{ background: showPortrait ? "#c9a96e" : "#e5e7eb" }}>
+                    <span className="inline-block h-4 w-4 rounded-full bg-white shadow transition-transform"
+                      style={{ transform: showPortrait ? "translateX(22px)" : "translateX(2px)" }} />
+                  </button>
+                </div>
+
+                {/* Text position */}
+                <div>
+                  <p className="text-xs mb-2" style={{ color: "#8a8278" }}>Textposition</p>
+                  <div className="flex gap-1.5">
+                    {[{ val: "top", label: "Oben" }, { val: "center", label: "Mitte" }, { val: "bottom", label: "Unten" }].map(o => (
+                      <button key={o.val} onClick={() => setTextPosition(o.val)} className="flex-1 py-1.5 rounded-lg text-xs transition-all"
+                        style={{ background: textPosition === o.val ? "rgba(201,169,110,0.15)" : "#f7f3ed", color: textPosition === o.val ? "#c9a96e" : "#6b7280", border: `1px solid ${textPosition === o.val ? "#c9a96e" : "#e5e7eb"}` }}>
+                        {o.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Text alignment */}
+                <div>
+                  <p className="text-xs mb-2" style={{ color: "#8a8278" }}>Textausrichtung</p>
+                  <div className="flex gap-1.5">
+                    {[{ val: "left", label: "Links" }, { val: "center", label: "Mitte" }, { val: "right", label: "Rechts" }].map(o => (
+                      <button key={o.val} onClick={() => setTextAlign(o.val)} className="flex-1 py-1.5 rounded-lg text-xs transition-all"
+                        style={{ background: textAlign === o.val ? "rgba(201,169,110,0.15)" : "#f7f3ed", color: textAlign === o.val ? "#c9a96e" : "#6b7280", border: `1px solid ${textAlign === o.val ? "#c9a96e" : "#e5e7eb"}` }}>
+                        {o.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               {/* Addons */}
@@ -513,10 +583,10 @@ function CardTab({ memorials }) {
               </div>
             </div>
 
-            {/* Right: editable text */}
-            <div>
+            {/* Col 2+3: editable text */}
+            <div className="lg:col-span-2">
               <div className="flex items-center justify-between mb-2">
-                <label className="text-sm font-medium text-gray-700">Kartentext</label>
+                <label className="text-sm font-medium text-gray-700">Kartentext bearbeiten</label>
                 <button onClick={generate} disabled={generating}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs border disabled:opacity-50"
                   style={{ borderColor: "rgba(201,169,110,0.4)", color: "#c9a96e", background: "white" }}>
@@ -528,9 +598,10 @@ function CardTab({ memorials }) {
                   <SkeletonPulse /><SkeletonPulse w="88%" /><SkeletonPulse w="92%" /><SkeletonPulse w="75%" /><SkeletonPulse w="85%" />
                 </div>
               ) : (
-                <textarea value={generatedText} onChange={e => setGeneratedText(e.target.value)} rows={10}
+                <textarea value={generatedText} onChange={e => setGeneratedText(e.target.value)} rows={14}
                   style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 15, lineHeight: 1.9, color: "#2c2419", background: "#fafaf8", border: "1px solid #e8dfd0", borderRadius: 8, padding: 16, width: "100%", outline: "none", resize: "none" }} />
               )}
+              <p className="text-xs mt-2" style={{ color: "#8a8278" }}>Sie können den Text frei bearbeiten und anpassen.</p>
             </div>
           </div>
 
