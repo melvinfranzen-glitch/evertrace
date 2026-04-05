@@ -1,0 +1,143 @@
+{
+  "name": "Memorial",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Vollst\u00e4ndiger Name der verstorbenen Person"
+    },
+    "birth_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "death_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "birth_place": {
+      "type": "string"
+    },
+    "death_place": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string",
+      "description": "Leitspruch oder Lieblingszitat"
+    },
+    "biography": {
+      "type": "string",
+      "description": "KI-generierte Biografie"
+    },
+    "biography_style": {
+      "type": "string",
+      "enum": [
+        "poetisch",
+        "chronologisch",
+        "lebensfroh"
+      ],
+      "default": "chronologisch"
+    },
+    "biography_raw_input": {
+      "type": "string"
+    },
+    "hero_image_url": {
+      "type": "string"
+    },
+    "gallery_images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "URLs der Galerie-Bilder"
+    },
+    "spotify_url": {
+      "type": "string"
+    },
+    "is_private": {
+      "type": "boolean",
+      "default": false
+    },
+    "access_password": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "expired"
+      ],
+      "default": "draft"
+    },
+    "plan": {
+      "type": "string",
+      "enum": [
+        "free",
+        "classic",
+        "premium"
+      ],
+      "default": "free"
+    },
+    "candle_count": {
+      "type": "number",
+      "default": 0
+    },
+    "short_id": {
+      "type": "string",
+      "description": "Kurz-ID f\u00fcr QR-URL"
+    },
+    "theme": {
+      "type": "string",
+      "enum": [
+        "sand",
+        "slate",
+        "gold"
+      ],
+      "default": "sand"
+    },
+    "collaborator_emails": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "E-Mail-Adressen von Mitbearbeitern (z.B. Bestatter oder Angeh\u00f6rige)",
+      "default": []
+    },
+    "funeral_home_case_id": {
+      "type": "string",
+      "description": "ID des verkn\u00fcpften Bestatter-Falls (B2B Case)"
+    },
+    "donation_enabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Spendenkonto aktiviert"
+    },
+    "donation_bank_name": {
+      "type": "string",
+      "description": "Name der Bank"
+    },
+    "donation_account_holder": {
+      "type": "string",
+      "description": "Name des Kontoinhabers"
+    },
+    "donation_iban": {
+      "type": "string",
+      "description": "IBAN f\u00fcr Spenden"
+    },
+    "donation_bic": {
+      "type": "string",
+      "description": "BIC/SWIFT f\u00fcr Spenden"
+    },
+    "donation_message": {
+      "type": "string",
+      "description": "Pers\u00f6nliche Nachricht zum Spendenkonto"
+    },
+    "donation_url": {
+      "type": "string",
+      "description": "Optional: URL zu einer Fundraising-Plattform (GoFundMe, Betterplace, etc.)"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

@@ -19,6 +19,7 @@ import LegacySection from "@/components/memorial/LegacySection";
 import ServiceEventSection from "@/components/memorial/ServiceEventSection";
 import SectionDivider from "@/components/memorial/SectionDivider";
 import FloatingMusicPlayer from "@/components/memorial/FloatingMusicPlayer";
+import DonationSection from "@/components/memorial/DonationSection";
 import ReportContentModal from "@/components/memorial/ReportContentModal";
 
 export default function MemorialProfile() {
@@ -263,6 +264,8 @@ export default function MemorialProfile() {
       )}
 
       {canShow("family") && <FamilyTreeSection memorial={memorial} isOwner={user && user.id === memorial.created_by} />}
+
+      <DonationSection memorial={memorial} />
 
       {canShow("audio") && <AudioSection tracks={audioTracks} curatedTracks={memorial.curated_track_ids ? CURATED_TRACKS.filter(t => memorial.curated_track_ids.includes(t.id)) : []} />}
 

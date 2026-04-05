@@ -179,6 +179,7 @@ export default function EditMemorial() {
     events: "Informationen zur Trauerfeier, die Besucher sehen können.",
     wall: "Nachrichten von Freunden und Familie — Sie entscheiden, was sichtbar ist.",
     family: "Familienmitglieder und ihr Stammbaum.",
+    donations: "Spendenkonto für Unterstützung oder Gedenkfonds.",
     settings: "Sichtbarkeit, Passwortschutz und QR-Code Ihrer Gedenkseite.",
   };
 
@@ -191,6 +192,7 @@ export default function EditMemorial() {
     { id: "events", label: "Trauerfeier" },
     { id: "wall", label: "Erinnerungen" },
     { id: "family", label: "Familie" },
+    { id: "donations", label: "Spendenkonto" },
     { id: "settings", label: "Einstellungen" },
     { id: "approvals", label: pendingCount > 0 ? `Freigaben` : "Freigaben", badge: pendingCount },
   ];
@@ -476,6 +478,55 @@ export default function EditMemorial() {
 
           {activeTab === "family" && (
             <FamilyEditor memorialId={memorial.id} />
+          )}
+
+          {activeTab === "donations" && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 p-4 rounded-xl border border-stone-200 cursor-pointer" onClick={() => set("donation_enabled", !memorial.donation_enabled)}>
+                <div className="w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all"
+                  style={{ borderColor: memorial.donation_enabled ? "#c9a96e" : "#d1d5db", background: memorial.donation_enabled ? "#c9a96e" : "white" }}>
+                  {memorial.donation_enabled && <span className="text-white text-xs">✓</span>}
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-700">Spendenkonto aktivieren</p>
+                  <p className="text-xs text-gray-400">Bankkonten-Details auf der Gedenkseite anzeigen.</p>
+                </div>
+              </div>
+
+              {memorial.donation_enabled && (
+                <div className="space-y-4 p-4 rounded-xl" style={{ background: "#FAF8F4", border: "1px solid #e8dfd0" }}>
+                  <div>
+                    <Label className="text-xs">Kontoinhaber</Label>
+                    <Input value={memorial.donation_account_holder || ""} onChange={(e) => set("donation_account_holder", e.target.value)} placeholder="Name des Kontos oder der Person" className="mt-1" />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Bank / Name der Einrichtung</Label>
+                    <Input value={memorial.donation_bank_name || ""} onChange={(e) => set("donation_bank_name", e.target.value)} placeholder="z.B. Stadtsparkasse München" className="mt-1" />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-xs">IBAN *</Label>
+                      <Input value={memorial.donation_iban || ""} onChange={(e) => set("donation_iban", e.target.value)} placeholder="DE89 3704 0044 0532 0130 00" className="mt-1 font-mono text-sm" />
+                    </div>
+                    <div>
+                      <Label className="text-xs">BIC / SWIFT (optional)</Label>
+                      <Input value={memorial.donation_bic || ""} onChange={(e) => set("donation_bic", e.target.value)} placeholder="COBADEFFXXX" className="mt-1 font-mono text-sm" />
+                    </div>
+                  </div>
+                  <div>
+                    <Label className="text-xs">Nachricht (optional)</Label>
+                    <Textarea value={memorial.donation_message || ""} onChange={(e) => set("donation_message", e.target.value)}
+                      placeholder="z.B. Spenden unterstützen den Gedenkfonds der Familie. Jede Geste ist willkommen."
+                      className="mt-1 resize-none h-16 text-sm" />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Fundraising-Plattform (optional)</Label>
+                    <Input value={memorial.donation_url || ""} onChange={(e) => set("donation_url", e.target.value)} placeholder="https://www.betterplace.org/..." className="mt-1" />
+                    <p className="text-xs text-gray-400 mt-1">Link zu GoFundMe, Betterplace oder ähnlichen Plattformen.</p>
+                  </div>
+                </div>
+              )}
+            </div>
           )}
 
           {activeTab === "approvals" && (
