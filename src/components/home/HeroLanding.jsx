@@ -14,7 +14,7 @@ export default function HeroLanding() {
 
       <div className="relative text-center px-6 max-w-4xl mx-auto fade-in" style={{ paddingTop: 64 }}>
         {/* Logo */}
-        <div className="flex justify-center mb-12">
+        <div className="flex justify-center mb-12" style={{ transform: "scale(1.4)" }}>
           <EvertraceLogo variant="dark" size="xl" />
         </div>
 
