@@ -65,7 +65,7 @@ export default function HeroLanding() {
           {[
             { icon: "✦", label: "Persönliche Gestaltung", sub: "So einzigartig wie der Mensch, an den Sie erinnern" },
             { icon: "🛡", label: "DSGVO-konform", sub: "Server in Deutschland" },
-            { icon: "👨\u200d👩\u200d👧", label: "B2B & Privat", sub: "Bestatter & Familien" },
+            { icon: "👨‍👩‍👧", label: "Für Familien & Bestatter", sub: "Privat und für Bestattungshäuser" },
           ].map(({ icon, label, sub }) => (
             <div key={label} className="flex items-center gap-3 text-left">
               <div style={{ width: 40, height: 40, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: "rgba(216,195,165,0.08)", border: "1px solid rgba(216,195,165,0.14)", fontSize: 16 }}>

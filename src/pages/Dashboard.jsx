@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 
@@ -807,13 +808,20 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [plaqueMemorial, setPlaqueMemorial] = useState(null);
 
-  const urlParams = new URLSearchParams(window.location.search);
+  const location = useLocation();
+  const urlParams = new URLSearchParams(location.search);
   const urlTab = urlParams.get("tab");
   const urlMemorialId = urlParams.get("memorial_id");
 
   const [activeTab, setActiveTab] = useState(
     urlTab === "cards" ? "cards" : urlTab === "book" ? "book" : "memorials"
   );
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const tab = params.get("tab");
+    setActiveTab(tab === "cards" ? "cards" : tab === "book" ? "book" : "memorials");
+  }, [location.search]);
 
   useEffect(() => {
     const init = async () => {
