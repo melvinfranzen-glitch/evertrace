@@ -7,28 +7,7 @@ export default function FloatingMusicPlayer({ spotifyUrl, name, curatedTracks = 
   const [playing, setPlaying] = useState(false);
   const audioRef = useRef(null);
 
-  const hasCuratedTracks = curatedTracks && curatedTracks.length > 0;
-  const firstCuratedTrack = hasCuratedTracks ? curatedTracks[0] : null;
-
-  if (!spotifyUrl && !hasCuratedTracks) return null;
-  if (dismissed) return null;
-
-  const useCurated = !spotifyUrl && hasCuratedTracks;
-
-  let type, spotifyId, embedHeight;
-  if (spotifyUrl && !useCurated) {
-    const match = spotifyUrl.match(/spotify\.com\/(playlist|album|track)\/([a-zA-Z0-9]+)/);
-    if (!match) return null;
-    [, type, spotifyId] = match;
-    embedHeight = type === "track" ? 152 : 352;
-  }
-
-  const handlePlayPause = () => {
-    if (!audioRef.current) return;
-    if (playing) { audioRef.current.pause(); } else { audioRef.current.play(); }
-    setPlaying(!playing);
-  };
-
+  // All hooks must be called before any early returns
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -36,6 +15,12 @@ export default function FloatingMusicPlayer({ spotifyUrl, name, curatedTracks = 
     audio.addEventListener("ended", onEnded);
     return () => audio.removeEventListener("ended", onEnded);
   }, []);
+
+  const hasCuratedTracks = curatedTracks && curatedTracks.length > 0;
+  const firstCuratedTrack = hasCuratedTracks ? curatedTracks[0] : null;
+
+  if (!spotifyUrl && !hasCuratedTracks) return null;
+  if (dismissed) return null;
 
   return (
     <div

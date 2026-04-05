@@ -13,9 +13,14 @@ export default function HomeNav() {
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
     const onScroll = () => setScrolled(window.scrollY > 100);
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
 
   const navLinks = [
     { label: "Gedenkseiten", href: createPageUrl("Dashboard") + "?tab=memorials" },
@@ -24,17 +29,25 @@ export default function HomeNav() {
   ];
 
   return (
-    <nav
+    <>
+      {menuOpen && (
+        <div
+          className="fixed inset-0 z-40 md:hidden"
+          style={{ background: 'rgba(0,0,0,0.5)' }}
+          onClick={() => setMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+      <nav
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
       style={{
-        height: 64,
         background: "rgba(15,14,12,0.92)",
         backdropFilter: "blur(12px)",
         borderBottom: "1px solid rgba(201,169,110,0.12)",
-        transform: scrolled || menuOpen ? "translateY(0)" : "translateY(0)",
+        paddingTop: "env(safe-area-inset-top)",
       }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
 
         {/* Logo */}
         <Link to={createPageUrl("Home")} className="flex items-center gap-2 flex-shrink-0">
@@ -85,7 +98,9 @@ export default function HomeNav() {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden p-2 rounded-lg transition-colors"
+          className="md:hidden p-2 rounded-lg transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+          aria-label="Menü öffnen"
+          aria-expanded={menuOpen}
           style={{ color: "#8a8278" }}
           onClick={() => setMenuOpen(!menuOpen)}
         >
@@ -95,9 +110,11 @@ export default function HomeNav() {
 
       {/* Mobile menu */}
       <div
-        className="md:hidden overflow-hidden transition-all duration-300"
+        className="md:hidden overflow-hidden transition-all duration-300 ease-in-out"
         style={{
-          maxHeight: menuOpen ? 320 : 0,
+          maxHeight: menuOpen ? 400 : 0,
+          opacity: menuOpen ? 1 : 0,
+          visibility: menuOpen ? 'visible' : 'hidden',
           background: "rgba(47,45,42,0.98)",
           borderBottom: menuOpen ? "1px solid rgba(176,123,52,0.12)" : "none",
         }}
@@ -137,5 +154,6 @@ export default function HomeNav() {
         </div>
       </div>
     </nav>
+    </>
   );
 }

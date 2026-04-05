@@ -11,12 +11,15 @@ export default function Layout({ children, currentPageName }) {
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
-    const onScroll = () => {};
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => { setMenuOpen(false); }, [currentPageName]);
+
+  // Body scroll lock when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
 
   const isMemorialPage = currentPageName === "MemorialProfile";
   if (isMemorialPage) return <>{children}</>;
@@ -119,17 +122,25 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ fontFamily: "'Lato', sans-serif", background: "#F7F3ED" }}>
+      {menuOpen && (
+        <div
+          className="fixed inset-0 z-40 md:hidden"
+          style={{ background: 'rgba(0,0,0,0.45)' }}
+          onClick={() => setMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
       <nav
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
         style={{
-          height: 64,
           background: "rgba(47,45,42,0.94)",
           backdropFilter: "blur(14px)",
           WebkitBackdropFilter: "blur(14px)",
           borderBottom: "1px solid rgba(176,123,52,0.12)",
+          paddingTop: "env(safe-area-inset-top)",
         }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
           <Link to={createPageUrl("Home")} className="flex items-center gap-2 shrink-0">
             <EvertraceLogo variant="dark" size="sm" />
           </Link>
@@ -178,6 +189,7 @@ export default function Layout({ children, currentPageName }) {
                 </span>
                 <button
                   onClick={() => base44.auth.logout()}
+                  aria-label="Abmelden"
                   className="flex items-center gap-1.5"
                   style={{ color: "#A89A8A" }}
                   onMouseEnter={e => e.currentTarget.style.color = "#F7F3ED"}
@@ -217,8 +229,14 @@ export default function Layout({ children, currentPageName }) {
         </div>
 
         <div
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${menuOpen ? "max-h-96" : "max-h-0"}`}
-          style={{ background: "rgba(47,45,42,0.98)", borderBottom: menuOpen ? "1px solid rgba(176,123,52,0.12)" : "none" }}
+          className="md:hidden overflow-hidden transition-all duration-300 ease-in-out"
+          style={{
+            maxHeight: menuOpen ? '420px' : 0,
+            opacity: menuOpen ? 1 : 0,
+            visibility: menuOpen ? 'visible' : 'hidden',
+            background: "rgba(47,45,42,0.98)",
+            borderBottom: menuOpen ? "1px solid rgba(176,123,52,0.12)" : "none",
+          }}
         >
           <div className="px-4 py-4 space-y-1">
             {navLinks.map(

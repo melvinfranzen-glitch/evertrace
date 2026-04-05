@@ -111,11 +111,12 @@ export default function B2BSidebar() {
       </div>
 
       {/* Mobile/Tablet bottom bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 flex items-center justify-around px-1 py-2 border-t safe-area-bottom" style={{ background: "#231E1A", borderColor: "rgba(216,195,165,0.08)" }}>
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 flex items-center justify-around px-1 border-t"
+        style={{ background: "#231E1A", borderColor: "rgba(216,195,165,0.08)", paddingBottom: "calc(0.5rem + env(safe-area-inset-bottom))", paddingTop: "0.5rem" }} style={{ background: "#231E1A", borderColor: "rgba(216,195,165,0.08)" }}>
         {NAV.map(({ path, icon: Icon, label, badge, badgeRed }) => {
           const active = isActive(path);
           return (
-            <Link key={path} to={path} className="flex flex-col items-center gap-0.5 px-1.5 py-1 rounded-lg transition-all relative"
+            <Link key={path} to={path} className="flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all relative min-w-[44px] min-h-[44px] justify-center"
               style={{ color: active ? "#D8C3A5" : "rgba(216,195,165,0.4)" }}>
               <div className="relative">
                 <Icon className="w-5 h-5" />
