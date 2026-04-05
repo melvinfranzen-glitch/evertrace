@@ -69,6 +69,8 @@ export default function EditMemorial() {
     });
   }, []);
 
+  const tabsScrollRef = useRef(null);
+  const tabsScrollLeft = useRef(0);
   const [isDirty, setIsDirty] = useState(false);
   const [justUploaded, setJustUploaded] = useState(false);
   const [showGuidance, setShowGuidance] = useState(true);
@@ -222,11 +224,23 @@ export default function EditMemorial() {
 
         {/* Tabs */}
         <div className="relative mb-6">
-          <div className="flex gap-1 overflow-x-auto pb-1 scroll-smooth" style={{ scrollBehavior: 'smooth' }}>
+          <div
+            ref={tabsScrollRef}
+            className="flex gap-1 overflow-x-auto pb-1"
+            style={{ scrollBehavior: 'auto' }}
+            onScroll={e => { tabsScrollLeft.current = e.currentTarget.scrollLeft; }}
+          >
             {tabs.map((t) => (
               <button
                 key={t.id}
-                onClick={() => setActiveTab(t.id)}
+                onClick={() => {
+                const scrollLeft = tabsScrollRef.current?.scrollLeft ?? 0;
+                tabsScrollLeft.current = scrollLeft;
+                setActiveTab(t.id);
+                requestAnimationFrame(() => {
+                  if (tabsScrollRef.current) tabsScrollRef.current.scrollLeft = tabsScrollLeft.current;
+                });
+              }}
                 data-active-tab={activeTab === t.id}
                 className="px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all flex-shrink-0 flex items-center gap-1.5"
               style={{
