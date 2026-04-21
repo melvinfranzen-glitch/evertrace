@@ -4,7 +4,7 @@ import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
 import {
   Plus, Globe, Eye, Lock, Link2, Sparkles, Loader2, X,
-  ExternalLink, Pencil, RefreshCw, Users, Flame
+  ExternalLink, Pencil, RefreshCw, Users, Flame, Copy, Mail
 } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
@@ -20,6 +20,39 @@ const PRIVACY_CONFIG = {
   link:   { label: "Nur mit Link", icon: Link2, color: "#c9a96e" },
   private:{ label: "Privat", icon: Lock, color: "#8a8278" },
 };
+
+function CopyLinkButton({ page }) {
+  const [copied, setCopied] = useState(false);
+  const url = `${window.location.origin}/B2BPublicMemorial?slug=${page.slug}`;
+  return (
+    <button
+      onClick={() => {
+        navigator.clipboard.writeText(url).then(() => {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        });
+      }}
+      className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs transition-all"
+      style={{ background: "#201e1a", color: copied ? "#4ade80" : "#c9a96e", border: `1px solid ${copied ? "#4ade80" : "#302d28"}` }}>
+      <Copy className="w-3 h-3" /> {copied ? "Kopiert ✓" : "Link kopieren"}
+    </button>
+  );
+}
+
+function MailShareButton({ page, c, funeralHome }) {
+  const url = `${window.location.origin}/B2BPublicMemorial?slug=${page.slug}`;
+  const name = c ? `${c.deceased_first_name} ${c.deceased_last_name}` : "Verstorbene/r";
+  const subject = `Gedenkseite für ${name}`;
+  const body = `Sehr geehrte Familie,\n\nwir haben eine digitale Gedenkseite für ${name} erstellt, auf der Sie Erinnerungen teilen, Kerzen anzünden und Beiträge hinterlassen können.\n\nHier ist der Link:\n${url}\n\nMit herzlicher Anteilnahme,\n${funeralHome?.name || "Ihr Bestattungshaus"}`;
+  return (
+    <a
+      href={`mailto:${c?.next_of_kin_email || ""}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`}
+      className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs transition-all"
+      style={{ background: "#201e1a", color: "#8a8278", border: "1px solid #302d28" }}>
+      <Mail className="w-3 h-3" /> Per E-Mail
+    </a>
+  );
+}
 
 function slugify(str) {
   return str.toLowerCase()
@@ -267,8 +300,14 @@ export default function B2BMemorial() {
                         rel="noopener noreferrer"
                         className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-medium transition-all"
                         style={{ background: "#201e1a", color: "#c9a96e", border: "1px solid #302d28" }}>
-                        <ExternalLink className="w-3 h-3" /> Öffentlich ansehen
+                        <ExternalLink className="w-3 h-3" /> Ansehen
                       </a>
+                    </div>
+
+                    {/* Share row */}
+                    <div className="flex gap-2">
+                      <CopyLinkButton page={page} />
+                      <MailShareButton page={page} c={c} funeralHome={funeralHome} />
                     </div>
 
                     {/* Linked B2C memorial */}

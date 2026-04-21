@@ -106,6 +106,18 @@ export default function B2BCardWizard() {
   useEffect(() => {
     const draftId = params.get("draft_id");
     const isDuplicate = params.get("duplicate") === "true";
+    const templateId = params.get("template_id");
+
+    // Load from template URL param
+    if (templateId && !draftId) {
+      base44.entities.CardTemplate.filter({ id: templateId }).then(([tmpl]) => {
+        if (tmpl) {
+          loadTemplate(tmpl);
+          base44.entities.CardTemplate.update(tmpl.id, { use_count: (tmpl.use_count || 0) + 1 }).catch(() => {});
+        }
+      }).catch(() => {});
+    }
+
     if (draftId) {
       base44.entities.MourningCard.filter({ id: draftId }).then(([draft]) => {
         if (!draft) return;

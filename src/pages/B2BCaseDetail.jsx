@@ -73,8 +73,8 @@ export default function B2BCaseDetail() {
         if (mem.length) setMemorial(mem[0]);
         setOrders(o);
         setLoading(false);
-      });
-    });
+      }).catch(() => setLoading(false));
+    }).catch(() => setLoading(false));
   }, [id]);
 
   if (loading) return (

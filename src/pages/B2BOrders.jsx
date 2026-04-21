@@ -37,8 +37,9 @@ export default function B2BOrders() {
         base44.entities.PrintOrder.filter({ created_by: u.email }, "-created_date", 100),
         base44.entities.Case.filter({ created_by: u.email }, "-created_date", 100),
         base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1),
-      ]).then(([o, c, fh]) => { setOrders(o); setCases(c); setFuneralHome(fh[0] || null); setLoading(false); });
-    });
+      ]).then(([o, c, fh]) => { setOrders(o); setCases(c); setFuneralHome(fh[0] || null); setLoading(false); })
+        .catch(() => setLoading(false));
+    }).catch(() => setLoading(false));
   }, []);
 
   const getCase = (id) => cases.find(c => c.id === id);

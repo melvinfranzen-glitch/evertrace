@@ -50,9 +50,9 @@ export default function B2BDashboard() {
           base44.entities.PrintOrder.filter({ created_by: u.email }, "-created_date", 50),
         ]).then(([c, k, o]) => {
           setCases(c); setCards(k); setOrders(o); setFuneralHome(fh); setLoading(false);
-        });
-      });
-    });
+        }).catch(() => setLoading(false));
+      }).catch(() => setLoading(false));
+    }).catch(() => setLoading(false));
   }, []);
 
   // Chart data — last 6 months
