@@ -1,0 +1,31 @@
+{
+  "name": "Candle",
+  "type": "object",
+  "properties": {
+    "memorial_id": {
+      "type": "string"
+    },
+    "lighter_name": {
+      "type": "string",
+      "description": "Name der Person"
+    },
+    "message": {
+      "type": "string"
+    },
+    "candle_type": {
+      "type": "string",
+      "enum": [
+        "classic",
+        "memorial",
+        "peace",
+        "hope"
+      ],
+      "default": "classic",
+      "description": "Kerzentyp"
+    }
+  },
+  "required": [
+    "memorial_id",
+    "lighter_name"
+  ]
+}

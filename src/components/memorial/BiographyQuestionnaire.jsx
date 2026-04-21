@@ -110,7 +110,7 @@ Integriere den Lebenstrahl chronologisch und ergänze mit den zusätzlichen Info
       <div className="space-y-6">
         <div className="rounded-2xl p-6 text-center" style={{ background: "rgba(201,169,110,0.06)", border: "1px solid rgba(201,169,110,0.2)" }}>
           <p className="text-sm text-gray-700 mb-3">✓ Alle Informationen aus dem Lebenstrahl gelesen.</p>
-          <p className="text-xs text-gray-500 mb-4">Die KI erstellt jetzt die Biografie basierend auf den Lebensereignissen.</p>
+          <p className="text-xs text-gray-500 mb-4">Die Biografie wird erstellt basierend auf den Lebensereignissen.</p>
           <button
             onClick={generateBiography}
             disabled={generating}
@@ -237,7 +237,7 @@ Integriere den Lebenstrahl chronologisch und ergänze mit den zusätzlichen Info
       {/* Progress Summary */}
       <div className="text-xs text-gray-400 space-y-1">
         <p>Offene Fragen zum Ergänzen der Lebensgeschichte.</p>
-        <p>Nach allen Antworten wird die KI die Biografie mit dem Lebenstrahl zusammenfassen.</p>
+        <p>Nach allen Antworten wird die Biografie mit dem Lebenstrahl zusammengefasst.</p>
       </div>
     </div>
   );

@@ -32,21 +32,28 @@ export default function GallerySection({ images, name }) {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-          {images.map((url, i) => (
-            <div
-              key={i}
-              className="aspect-square rounded-xl overflow-hidden cursor-pointer group relative"
-              onClick={() => setLightbox(i)}
-            >
-              <img
-                src={url}
-                alt={`${name} – Erinnerung ${i + 1}`}
-                loading="lazy"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-300" />
-            </div>
-          ))}
+          {images.map((url, i) => {
+            const isVideo = /\.(mp4|webm|mov)$/i.test(url);
+            return (
+              <div
+                key={i}
+                className="aspect-square rounded-xl overflow-hidden cursor-pointer group relative"
+                onClick={() => setLightbox(i)}
+              >
+                {isVideo ? (
+                  <video src={url} className="w-full h-full object-cover" muted playsInline preload="metadata" />
+                ) : (
+                  <img
+                    src={url}
+                    alt={`${name} – Erinnerung ${i + 1}`}
+                    loading="lazy"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                )}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-300" />
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -69,12 +76,11 @@ export default function GallerySection({ images, name }) {
           >
             <ChevronLeft className="w-9 h-9" />
           </button>
-          <img
-            src={images[lightbox]}
-            alt=""
-            className="max-h-[88vh] max-w-[88vw] rounded-xl object-contain"
-            onClick={(e) => e.stopPropagation()}
-          />
+          {/\.(mp4|webm|mov)$/i.test(images[lightbox]) ? (
+            <video src={images[lightbox]} className="max-h-[88vh] max-w-[88vw] rounded-xl shadow-2xl" controls autoPlay onClick={(e) => e.stopPropagation()} />
+          ) : (
+            <img src={images[lightbox]} alt="" className="max-h-[88vh] max-w-[88vw] rounded-xl object-contain" onClick={(e) => e.stopPropagation()} />
+          )}
           <button
             onClick={(e) => { e.stopPropagation(); next(); }}
             className="absolute right-4 text-white/50 hover:text-white transition-colors"

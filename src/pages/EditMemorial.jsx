@@ -435,7 +435,7 @@ export default function EditMemorial() {
                   ))}
                   <label className="aspect-square rounded-lg border-2 border-dashed border-stone-300 flex flex-col items-center justify-center cursor-pointer hover:border-amber-400 transition-colors">
                     {uploading ? <Loader2 className="w-5 h-5 animate-spin text-stone-400" /> : <><Plus className="w-5 h-5 text-stone-400" /><span className="text-xs text-stone-400 mt-1">+ Foto hinzufügen</span></>}
-                    <input type="file" accept="image/*" multiple className="hidden" onChange={uploadGallery} disabled={uploading} />
+                    <input type="file" accept="image/*,video/mp4,video/webm,video/quicktime" multiple className="hidden" onChange={uploadGallery} disabled={uploading} />
                   </label>
                 </div>
                 <p style={{ fontSize: 11, color: "#8a8278", marginTop: 8 }}>Alle Fotos werden sicher gespeichert. Sie können die Reihenfolge durch Ziehen ändern.</p>

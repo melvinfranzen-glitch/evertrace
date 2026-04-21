@@ -5,24 +5,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-function CandleSVG({ name, message }) {
+const CANDLE_TYPES = [
+  { id: "classic", label: "Klassisch", color: "#f0e8d8", flame: "#f59e0b" },
+  { id: "memorial", label: "Gedenken", color: "#d4a96e", flame: "#ef4444" },
+  { id: "peace", label: "Frieden", color: "#e8e8f0", flame: "#818cf8" },
+  { id: "hope", label: "Hoffnung", color: "#d8f0d8", flame: "#4ade80" },
+];
+
+function CandleSVG({ name, message, type = "classic" }) {
+  const t = CANDLE_TYPES.find(ct => ct.id === type) || CANDLE_TYPES[0];
   return (
     <div className="flex flex-col items-center cursor-default" title={message || name}>
       <svg width="28" height="52" viewBox="0 0 32 56" className="candle-flame">
-        <defs>
-          <linearGradient id="candleBody" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#d4c5aa" />
-            <stop offset="40%" stopColor="#f0e8d8" />
-            <stop offset="100%" stopColor="#c4b49a" />
-          </linearGradient>
-        </defs>
-        <ellipse cx="16" cy="8" rx="5" ry="7" fill="#f59e0b" opacity="0.9" />
-        <ellipse cx="16" cy="10" rx="3" ry="5" fill="#fcd34d" opacity="0.8" />
-        <ellipse cx="16" cy="6" rx="2" ry="4" fill="#fef3c7" opacity="0.7" />
+        <ellipse cx="16" cy="8" rx="5" ry="7" fill={t.flame} opacity="0.9" />
+        <ellipse cx="16" cy="10" rx="3" ry="5" fill={t.flame} opacity="0.5" />
+        <ellipse cx="16" cy="6" rx="2" ry="4" fill="#fff" opacity="0.4" />
         <line x1="16" y1="14" x2="16" y2="18" stroke="#374151" strokeWidth="1.5" />
-        <rect x="11" y="18" width="10" height="34" rx="2" fill="url(#candleBody)" />
+        <rect x="11" y="18" width="10" height="34" rx="2" fill={t.color} />
         <rect x="11" y="18" width="10" height="4" rx="2" fill="#e7e0d4" />
-        <ellipse cx="16" cy="18" rx="12" ry="5" fill="#fbbf24" opacity="0.12" />
+        <ellipse cx="16" cy="18" rx="12" ry="5" fill={t.flame} opacity="0.12" />
       </svg>
       <p className="text-xs text-stone-500 mt-1.5 max-w-[64px] text-center leading-tight truncate">{name}</p>
     </div>
@@ -34,6 +35,7 @@ export default function VirtualCandleSection({ memorialId, candles, onNewCandle 
   const [form, setForm] = useState({ name: "", message: "" });
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
+  const [candleType, setCandleType] = useState("classic");
 
   const light = async () => {
     if (!form.name.trim()) return;
@@ -42,6 +44,7 @@ export default function VirtualCandleSection({ memorialId, candles, onNewCandle 
       memorial_id: memorialId,
       lighter_name: form.name,
       message: form.message,
+      candle_type: candleType,
     });
     await base44.entities.Memorial.update(memorialId, { candle_count: (candles.length || 0) + 1 });
     onNewCandle(candle);
@@ -86,7 +89,7 @@ export default function VirtualCandleSection({ memorialId, candles, onNewCandle 
         {candles.length > 0 && (
           <div className="flex flex-wrap justify-center gap-5 mb-10 py-4">
             {candles.slice(0, 24).map((c) => (
-              <CandleSVG key={c.id} name={c.lighter_name} message={c.message} />
+              <CandleSVG key={c.id} name={c.lighter_name} message={c.message} type={c.candle_type} />
             ))}
           </div>
         )}
@@ -110,6 +113,24 @@ export default function VirtualCandleSection({ memorialId, candles, onNewCandle 
           </Button>
         ) : (
           <div className="max-w-sm mx-auto space-y-3 text-left mt-6">
+            {/* Kerzentyp-Auswahl */}
+            <div className="flex justify-center gap-3 mb-1">
+              {CANDLE_TYPES.map(t => (
+                <button key={t.id} onClick={() => setCandleType(t.id)} type="button"
+                  className="flex flex-col items-center gap-1 p-2 rounded-xl transition-all"
+                  style={{
+                    border: candleType === t.id ? `2px solid ${t.flame}` : "2px solid transparent",
+                    background: candleType === t.id ? `${t.flame}18` : "transparent"
+                  }}>
+                  <svg width="16" height="28" viewBox="0 0 32 56">
+                    <ellipse cx="16" cy="8" rx="5" ry="7" fill={t.flame} opacity="0.9" />
+                    <ellipse cx="16" cy="10" rx="3" ry="5" fill={t.flame} opacity="0.5" />
+                    <rect x="11" y="18" width="10" height="34" rx="2" fill={t.color} />
+                  </svg>
+                  <span className="text-xs" style={{ color: "#8a8278" }}>{t.label}</span>
+                </button>
+              ))}
+            </div>
             <Input
               value={form.name}
               onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
