@@ -54,7 +54,7 @@ export default function MemorialCard({ memorial, onDelete, onOpenPlaque }) {
       >
         <div className="relative h-36 overflow-hidden" style={{ background: "#EDE3D3" }}>
           {memorial.hero_image_url ? (
-            <img src={memorial.hero_image_url} alt={memorial.name} className="w-full h-full object-cover" style={{ objectPosition: `center ${memorial.hero_image_position ?? 33}%` }} />
+            <img src={memorial.hero_image_url} alt={memorial.name} className="w-full h-full object-cover" style={{ objectPosition: `center ${memorial.hero_image_position ?? 30}%` }} />
           ) : (
             <div className="w-full h-full flex items-center justify-center" style={{ background: "linear-gradient(135deg, #EDE3D3, #D8C3A5)" }}>
               <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 48, fontWeight: 300, color: "#A89A8A" }}>

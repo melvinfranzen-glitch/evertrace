@@ -1,6 +1,6 @@
 import { createPageUrl } from "@/utils";
 import { useNavigate } from "react-router-dom";
-import { Heart, ArrowDown, Sparkles, ShieldCheck } from "lucide-react";
+import { Heart, ArrowDown, Shield, Users, Sparkles } from "lucide-react";
 import EvertraceLogo from "@/components/EvertraceLogo";
 
 export default function HeroLanding() {
@@ -88,12 +88,12 @@ export default function HeroLanding() {
         {/* Trust indicators */}
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 32, marginTop: 48, paddingTop: 32, borderTop: "1px solid rgba(216,195,165,0.1)" }}>
           {[
-            { icon: "✦", label: "Persönliche Gestaltung", sub: "So einzigartig wie der Mensch, an den Sie erinnern" },
-            { icon: "🛡", label: "DSGVO-konform", sub: "Server in Deutschland" },
-            { icon: "👨‍👩‍👧", label: "Für Familien & Bestatter", sub: "Privat und für Bestattungshäuser" },
+            { icon: <Sparkles className="w-4 h-4" style={{ color: "#c9a96e" }} />, label: "Persönliche Gestaltung", sub: "So einzigartig wie der Mensch, an den Sie erinnern" },
+            { icon: <Shield className="w-4 h-4" style={{ color: "#c9a96e" }} />, label: "DSGVO-konform", sub: "Server in Deutschland" },
+            { icon: <Users className="w-4 h-4" style={{ color: "#c9a96e" }} />, label: "Für Familien & Bestatter", sub: "Privat und für Bestattungshäuser" },
           ].map(({ icon, label, sub }) => (
             <div key={label} className="flex items-center gap-3 text-left">
-              <div style={{ width: 40, height: 40, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: "rgba(216,195,165,0.08)", border: "1px solid rgba(216,195,165,0.14)", fontSize: 16 }}>
+              <div style={{ width: 40, height: 40, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: "rgba(216,195,165,0.08)", border: "1px solid rgba(216,195,165,0.14)" }}>
                 {icon}
               </div>
               <div>

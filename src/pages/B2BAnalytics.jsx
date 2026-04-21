@@ -33,7 +33,7 @@ export default function B2BAnalytics() {
       base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1).then(fh => {
         if (fh.length === 0) { navigate("/B2BRegister"); return; }
         Promise.all([
-          base44.entities.Case.filter({ created_by: u.email }, "-created_date", 200),
+          base44.entities.Case.filter({ funeral_home_id: fh[0].id }, "-created_date", 200),
           base44.entities.MourningCard.filter({ created_by: u.email }, "-created_date", 200),
           base44.entities.B2BMemorialPage.filter({ created_by: u.email }, "-created_date", 200),
           base44.entities.PrintOrder.filter({ created_by: u.email }, "-created_date", 200),

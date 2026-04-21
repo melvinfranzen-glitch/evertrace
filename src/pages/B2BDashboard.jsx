@@ -37,18 +37,15 @@ export default function B2BDashboard() {
 
   useEffect(() => {
     base44.auth.me().then(u => {
-      Promise.all([
-        base44.entities.Case.filter({ created_by: u.email }, "-created_date", 100),
-        base44.entities.MourningCard.filter({ created_by: u.email }, "-created_date", 50),
-        base44.entities.PrintOrder.filter({ created_by: u.email }, "-created_date", 50),
-        base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1),
-      ]).then(([c, k, o, fh]) => {
-        // Fix 1: B2B Route Protection — redirect unregistered users
-        if (fh.length === 0) {
-          navigate("/B2BRegister");
-          return;
-        }
-        setCases(c); setCards(k); setOrders(o); setFuneralHome(fh[0]); setLoading(false);
+      base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1).then(([fh]) => {
+        if (!fh) { navigate("/B2BRegister"); return; }
+        Promise.all([
+          base44.entities.Case.filter({ funeral_home_id: fh.id }, "-created_date", 100),
+          base44.entities.MourningCard.filter({ created_by: u.email }, "-created_date", 50),
+          base44.entities.PrintOrder.filter({ created_by: u.email }, "-created_date", 50),
+        ]).then(([c, k, o]) => {
+          setCases(c); setCards(k); setOrders(o); setFuneralHome(fh); setLoading(false);
+        });
       });
     });
   }, []);

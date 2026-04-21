@@ -133,7 +133,7 @@ export default function MemoryWallSection({ memorialId, entries }) {
             {localEntries.map(entry => (
               <div key={entry.id} className="bg-white rounded-2xl border border-stone-100 p-6 shadow-sm">
                 {entry.photo_url && (
-                  <img src={entry.photo_url} alt="" className="w-full h-40 object-cover object-face rounded-xl mb-5" />
+                  <img src={entry.photo_url} alt="" className="w-full h-40 object-cover rounded-xl mb-5" style={{ objectPosition: "center 30%" }} />
                 )}
                 <p className="text-gray-600 text-sm leading-relaxed italic mb-5"
                   style={{ fontFamily: "'Cormorant Garamond', serif" }}>

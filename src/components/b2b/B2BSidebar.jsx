@@ -7,19 +7,23 @@ import { useB2BBranding } from "@/contexts/B2BBrandingContext";
 export default function B2BSidebar() {
   const location = useLocation();
   const [badges, setBadges] = useState({ orders: 0, memorials: 0, cases: 0 });
-  const { branding } = useB2BBranding() || {};
+  const { branding, loaded } = useB2BBranding() || { branding: {}, loaded: false };
   const accent = branding?.accent_color || "#c9a96e";
 
   useEffect(() => {
-    base44.auth.me().then(async u => {
-      const [orders, cases, contributions] = await Promise.all([
-        base44.entities.PrintOrder.filter({ created_by: u.email, status: "In Bearbeitung" }, "-created_date", 50),
-        base44.entities.Case.filter({ created_by: u.email, status: "aktiv" }, "-created_date", 100),
-        base44.entities.B2BContribution.list("-created_date", 100),
-      ]);
-      const cutoff = new Date(Date.now() - 48 * 60 * 60 * 1000);
-      const recentContribs = contributions.filter(c => new Date(c.created_date) > cutoff).length;
-      setBadges({ orders: orders.length, cases: cases.length, memorials: recentContribs });
+    base44.auth.me().then(u => {
+      base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1).then(([fh]) => {
+        if (!fh) return;
+        Promise.all([
+          base44.entities.PrintOrder.filter({ created_by: u.email, status: "In Bearbeitung" }, "-created_date", 50),
+          base44.entities.Case.filter({ funeral_home_id: fh.id, status: "aktiv" }, "-created_date", 100),
+          base44.entities.B2BContribution.list("-created_date", 100),
+        ]).then(([orders, cases, contributions]) => {
+          const cutoff = new Date(Date.now() - 48 * 60 * 60 * 1000);
+          const recentContribs = contributions.filter(c => new Date(c.created_date) > cutoff).length;
+          setBadges({ orders: orders.length, cases: cases.length, memorials: recentContribs });
+        });
+      });
     }).catch(() => {});
   }, []);
 
@@ -89,22 +93,30 @@ export default function B2BSidebar() {
     <>
       {/* Logo */}
       <div className="px-5 py-5 border-b" style={{ borderColor: "rgba(216,195,165,0.08)" }}>
-        {branding?.logo_url ? (
+        {!loaded ? (
+          <div className="h-7" />
+        ) : branding?.logo_url ? (
           <div className="flex items-center gap-2.5">
-            <img src={branding.logo_url} alt="" className="h-7 object-contain" style={{ maxWidth: 120 }} />
+            <img src={branding.logo_url} alt="" className="h-7 object-contain flex-shrink-0" style={{ maxWidth: 36 }} />
+            <div className="min-w-0">
+              <p className="text-sm font-semibold truncate" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>
+                {branding.name || "Bestattungshaus"}
+              </p>
+              {branding.tagline && <p className="text-xs truncate" style={{ color: "#5a554e" }}>{branding.tagline}</p>}
+            </div>
           </div>
         ) : (
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: accent }}>
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: accent }}>
               <span className="text-xs font-bold" style={{ color: "#0f0e0c" }}>
                 {(branding?.name || "E").charAt(0)}
               </span>
             </div>
-            <div>
-              <p className="text-sm font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>
+            <div className="min-w-0">
+              <p className="text-sm font-semibold truncate" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>
                 {branding?.name || "Evertrace"}
               </p>
-              {branding?.tagline && <p className="text-xs" style={{ color: "#5a554e" }}>{branding.tagline}</p>}
+              {branding?.tagline && <p className="text-xs truncate" style={{ color: "#5a554e" }}>{branding.tagline}</p>}
             </div>
           </div>
         )}

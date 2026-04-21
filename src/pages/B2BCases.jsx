@@ -159,7 +159,7 @@ export default function B2BCases() {
                   {c.has_order && <span title="Bestellung"><Package className="w-4 h-4" style={{ color: "#60a5fa" }} /></span>}
                 </div>
                 <div className="col-span-2">
-                  <select value={c.status} onChange={async e => { await base44.entities.Case.update(c.id, { status: e.target.value }); setCases(p => p.map(x => x.id === c.id ? { ...x, status: e.target.value } : x)); }}
+                  <select value={c.status} onChange={async e => { const newStatus = e.target.value; setCases(p => p.map(x => x.id === c.id ? { ...x, status: newStatus } : x)); try { await base44.entities.Case.update(c.id, { status: newStatus }); } catch { setCases(p => p.map(x => x.id === c.id ? { ...x, status: c.status } : x)); } }}
                     style={{ background: "transparent", border: "none", color: STATUS_COLORS[c.status], fontSize: 12, cursor: "pointer", fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>
                     {STATUS_OPTS.map(s => <option key={s} value={s} style={{ color: "#f0ede8", background: "#201e1a" }}>{s}</option>)}
                   </select>
@@ -178,7 +178,7 @@ export default function B2BCases() {
                     {c.deceased_first_name} {c.deceased_last_name}
                   </Link>
                   <div className="flex items-center gap-2 flex-shrink-0">
-                    <select value={c.status} onChange={async e => { await base44.entities.Case.update(c.id, { status: e.target.value }); setCases(p => p.map(x => x.id === c.id ? { ...x, status: e.target.value } : x)); }}
+                    <select value={c.status} onChange={async e => { const newStatus = e.target.value; setCases(p => p.map(x => x.id === c.id ? { ...x, status: newStatus } : x)); try { await base44.entities.Case.update(c.id, { status: newStatus }); } catch { setCases(p => p.map(x => x.id === c.id ? { ...x, status: c.status } : x)); } }}
                       style={{ background: "transparent", border: "none", color: STATUS_COLORS[c.status], fontSize: 11, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>
                       {STATUS_OPTS.map(s => <option key={s} value={s} style={{ color: "#f0ede8", background: "#201e1a" }}>{s}</option>)}
                     </select>
