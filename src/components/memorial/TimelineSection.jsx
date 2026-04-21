@@ -15,6 +15,25 @@ function getType(val) {
   return EVENT_TYPES[val] || EVENT_TYPES.meilenstein;
 }
 
+// Zeigt Bild so, dass der Gesichtspunkt (faceY in %) exakt vertikal zentriert ist
+function FocusedImage({ src, alt, faceY = 30, className }) {
+  // Wir verschieben das Bild so: der Punkt bei faceY% im Bild soll in der Mitte des Containers sein.
+  // backgroundPosition macht genau das mit % korrekt bei background-image.
+  return (
+    <div
+      className={`overflow-hidden rounded-xl ${className}`}
+      style={{
+        backgroundImage: `url(${src})`,
+        backgroundSize: "cover",
+        backgroundPosition: `50% ${faceY}%`,
+        backgroundRepeat: "no-repeat",
+      }}
+      role="img"
+      aria-label={alt}
+    />
+  );
+}
+
 export default function TimelineSection({ events }) {
   if (!events?.length) return null;
 
@@ -61,21 +80,12 @@ export default function TimelineSection({ events }) {
                     </div>
 
                     {event.image_url && (
-                      <div className="w-full h-40 rounded-xl mb-4 overflow-hidden relative">
-                        <img
-                          src={event.image_url}
-                          alt={event.title}
-                          className="absolute w-full"
-                          style={{
-                            top: `${event.image_position ?? 30}%`,
-                            transform: "translateY(-50%)",
-                            left: 0,
-                            height: "auto",
-                            minHeight: "100%",
-                            objectFit: "cover",
-                          }}
-                        />
-                      </div>
+                      <FocusedImage
+                        src={event.image_url}
+                        alt={event.title}
+                        faceY={event.image_position ?? 30}
+                        className="w-full h-40 rounded-xl mb-4"
+                      />
                     )}
 
                     {/* Desktop: category chip */}
