@@ -176,8 +176,15 @@ export default function B2BCaseDetail() {
                   className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium"
                   style={{ background: "#c9a96e", color: "#0f0e0c" }}
                 >
-                  <Globe className="w-4 h-4" /> Jetzt erstellen
+                  <Globe className="w-4 h-4" /> Vollständige Gedenkseite erstellen
                 </a>
+                <Link
+                  to={`/B2BMemorial?case_id=${caseData.id}`}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border"
+                  style={{ borderColor: "#302d28", color: "#8a8278" }}
+                >
+                  Einfache Gedenkseite →
+                </Link>
                 {caseData.next_of_kin_email && (
                   <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm" style={{ background: "rgba(201,169,110,0.08)", border: "1px solid #302d28", color: "#8a8278" }}>
                     <Users className="w-4 h-4" />
