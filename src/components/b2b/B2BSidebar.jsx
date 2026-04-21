@@ -162,6 +162,14 @@ export default function B2BSidebar() {
             </Link>
           );
         })}
+        {/* Logout on mobile */}
+        <button
+          onClick={() => base44.auth.logout()}
+          className="flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg min-w-[44px] min-h-[44px] justify-center"
+          style={{ color: "rgba(216,195,165,0.4)" }}>
+          <LogOut className="w-5 h-5" />
+          <span className="text-[10px]">Abmelden</span>
+        </button>
       </div>
     </>
   );
