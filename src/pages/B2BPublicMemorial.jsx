@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Loader2, Heart, Feather, Upload, Flame, Copy, Check, BookOpen } from "lucide-react";
+import { Loader2, Heart, Feather, Upload, Flame, Copy, Check, BookOpen, Pencil, X, Save, Globe, Link2, Lock, ExternalLink } from "lucide-react";
 import QrSharePanel from "@/components/memorial/QrSharePanel";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
@@ -25,9 +25,9 @@ export default function B2BPublicMemorial() {
   const [photoUrl, setPhotoUrl] = useState("");
   const [user, setUser] = useState(null);
   const [showPrintModal, setShowPrintModal] = useState(false);
-  const [showBioEdit, setShowBioEdit] = useState(false);
-  const [editBio, setEditBio] = useState("");
-  const [savingBio, setSavingBio] = useState(false);
+  const [showEditPanel, setShowEditPanel] = useState(false);
+  const [editForm, setEditForm] = useState(null);
+  const [savingEdit, setSavingEdit] = useState(false);
   const [uploadingHero, setUploadingHero] = useState(false);
 
   useEffect(() => {
@@ -307,55 +307,162 @@ export default function B2BPublicMemorial() {
 
 
 
-      {/* Edit overlay — only in edit mode for logged-in users */}
+      {/* Edit button — fixed bottom bar for logged-in users in edit mode */}
       {editMode && user && page && (
         <div className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between gap-3 px-4 py-3" style={{ background: "#181714", borderTop: "1px solid #c9a96e", height: 60 }}>
-          <span className="text-xs font-medium" style={{ color: "#c9a96e" }}>Bearbeitungsmodus</span>
-          <div className="flex items-center gap-2">
-            <button onClick={() => { setEditBio(page.biography || ""); setShowBioEdit(true); }}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium"
-              style={{ background: "rgba(201,169,110,0.15)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}>
-              Biografie bearbeiten
-            </button>
-            <label className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer"
-              style={{ background: "rgba(201,169,110,0.15)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}>
-              {uploadingHero ? "Lädt…" : "Foto ändern"}
-              <input type="file" accept="image/*" className="hidden" disabled={uploadingHero} onChange={async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                setUploadingHero(true);
-                const { file_url } = await base44.integrations.Core.UploadFile({ file });
-                await base44.entities.B2BMemorialPage.update(page.id, { main_photo_url: file_url });
-                setPage(p => ({ ...p, main_photo_url: file_url }));
-                setUploadingHero(false);
-              }} />
-            </label>
-            <a href="/B2BMemorial" className="px-3 py-1.5 rounded-lg text-xs font-medium"
-              style={{ background: "#302d28", color: "#8a8278" }}>
-              Einstellungen
-            </a>
-          </div>
+          <span className="text-xs font-medium" style={{ color: "#c9a96e" }}>✦ Bearbeitungsmodus</span>
+          <button
+            onClick={() => { setEditForm({ ...page }); setShowEditPanel(true); }}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium"
+            style={{ background: "#c9a96e", color: "#0f0e0c" }}>
+            <Pencil className="w-3.5 h-3.5" /> Gedenkseite bearbeiten
+          </button>
         </div>
       )}
 
-      {/* Bio edit modal */}
-      {showBioEdit && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center px-4" style={{ background: "rgba(0,0,0,0.7)" }}>
-          <div className="w-full max-w-lg rounded-2xl p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
-            <h3 className="text-lg font-semibold mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Biografie bearbeiten</h3>
-            <textarea value={editBio} onChange={e => setEditBio(e.target.value)} rows={6}
-              className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none"
-              style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8", lineHeight: 1.7 }} />
-            <div className="flex gap-3 mt-4">
-              <button onClick={() => setShowBioEdit(false)} className="flex-1 py-2.5 rounded-xl text-sm border" style={{ borderColor: "#302d28", color: "#8a8278" }}>Abbrechen</button>
-              <button disabled={savingBio} onClick={async () => {
-                setSavingBio(true);
-                await base44.entities.B2BMemorialPage.update(page.id, { biography: editBio });
-                setPage(p => ({ ...p, biography: editBio }));
-                setSavingBio(false);
-                setShowBioEdit(false);
-              }} className="flex-1 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2" style={{ background: "#c9a96e", color: "#0f0e0c" }}>
-                {savingBio ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+      {/* Full Edit Panel */}
+      {showEditPanel && editForm && (
+        <div className="fixed inset-0 z-[60] flex" style={{ background: "rgba(0,0,0,0.6)" }}>
+          {/* Backdrop close */}
+          <div className="flex-1" onClick={() => setShowEditPanel(false)} />
+          {/* Drawer */}
+          <div className="w-full max-w-md h-full overflow-y-auto flex flex-col" style={{ background: "#181714", borderLeft: "1px solid #302d28" }}>
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-5 border-b flex-shrink-0" style={{ borderColor: "#302d28" }}>
+              <h2 className="text-xl font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Gedenkseite bearbeiten</h2>
+              <button onClick={() => setShowEditPanel(false)} style={{ color: "#5a554e" }}><X className="w-5 h-5" /></button>
+            </div>
+
+            {/* Fields */}
+            <div className="flex-1 px-6 py-6 space-y-5 overflow-y-auto">
+
+              {/* Photo */}
+              <div>
+                <p className="text-xs mb-2" style={{ color: "#8a8278" }}>Hauptfoto</p>
+                {editForm.main_photo_url ? (
+                  <div className="relative">
+                    <img src={editForm.main_photo_url} alt="" className="w-full h-36 object-cover rounded-xl" style={{ objectPosition: "center 25%" }} />
+                    <div className="absolute inset-0 flex items-center justify-center gap-2 rounded-xl" style={{ background: "rgba(0,0,0,0.4)" }}>
+                      <label className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium cursor-pointer"
+                        style={{ background: "rgba(201,169,110,0.9)", color: "#0f0e0c" }}>
+                        {uploadingHero ? <Loader2 className="w-3 h-3 animate-spin" /> : <Upload className="w-3 h-3" />}
+                        {uploadingHero ? "Lädt…" : "Foto ändern"}
+                        <input type="file" accept="image/*" className="hidden" disabled={uploadingHero} onChange={async (e) => {
+                          const file = e.target.files[0];
+                          if (!file) return;
+                          setUploadingHero(true);
+                          const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                          setEditForm(f => ({ ...f, main_photo_url: file_url }));
+                          setUploadingHero(false);
+                        }} />
+                      </label>
+                      <button onClick={() => setEditForm(f => ({ ...f, main_photo_url: "" }))}
+                        className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs"
+                        style={{ background: "rgba(0,0,0,0.6)", color: "#f0ede8" }}>
+                        <X className="w-3 h-3" /> Entfernen
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <label className="flex flex-col items-center justify-center h-24 rounded-xl cursor-pointer border-2 border-dashed"
+                    style={{ borderColor: "#302d28", color: "#5a554e" }}>
+                    {uploadingHero ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Upload className="w-5 h-5 mb-1" /><span className="text-xs">Foto hochladen</span></>}
+                    <input type="file" accept="image/*" className="hidden" disabled={uploadingHero} onChange={async (e) => {
+                      const file = e.target.files[0];
+                      if (!file) return;
+                      setUploadingHero(true);
+                      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                      setEditForm(f => ({ ...f, main_photo_url: file_url }));
+                      setUploadingHero(false);
+                    }} />
+                  </label>
+                )}
+              </div>
+
+              {/* Biography */}
+              <div>
+                <p className="text-xs mb-1.5" style={{ color: "#8a8278" }}>Biografie / Lebensgeschichte</p>
+                <textarea value={editForm.biography || ""} onChange={e => setEditForm(f => ({ ...f, biography: e.target.value }))}
+                  rows={6} placeholder="Lebensgeschichte der verstorbenen Person…"
+                  className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none"
+                  style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8", lineHeight: 1.7 }} />
+              </div>
+
+              {/* Funeral date + location */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <p className="text-xs mb-1.5" style={{ color: "#8a8278" }}>Datum der Trauerfeier</p>
+                  <input type="date" value={editForm.funeral_date || ""}
+                    onChange={e => setEditForm(f => ({ ...f, funeral_date: e.target.value }))}
+                    className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
+                    style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }} />
+                </div>
+                <div>
+                  <p className="text-xs mb-1.5" style={{ color: "#8a8278" }}>Ort der Trauerfeier</p>
+                  <input value={editForm.funeral_location || ""} onChange={e => setEditForm(f => ({ ...f, funeral_location: e.target.value }))}
+                    placeholder="z. B. Friedhof Mühlstraße"
+                    className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
+                    style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }} />
+                </div>
+              </div>
+
+              {/* Privacy */}
+              <div>
+                <p className="text-xs mb-2" style={{ color: "#8a8278" }}>Sichtbarkeit</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { id: "public", label: "Öffentlich", icon: Globe, color: "#4ade80" },
+                    { id: "link", label: "Nur Link", icon: Link2, color: "#c9a96e" },
+                    { id: "private", label: "Privat", icon: Lock, color: "#8a8278" },
+                  ].map(({ id, label, icon: Icon, color }) => (
+                    <button key={id} onClick={() => setEditForm(f => ({ ...f, privacy: id }))}
+                      className="p-2.5 rounded-xl text-center text-xs flex flex-col items-center gap-1 transition-all"
+                      style={{ background: editForm.privacy === id ? `${color}18` : "#201e1a", border: `1px solid ${editForm.privacy === id ? color : "#302d28"}`, color: editForm.privacy === id ? color : "#5a554e" }}>
+                      <Icon className="w-4 h-4" /> {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Linked memorial */}
+              <div>
+                <p className="text-xs mb-1.5" style={{ color: "#8a8278" }}>Verknüpfte vollständige Gedenkseite (Short-ID)</p>
+                <input value={editForm.linked_memorial_short_id || ""} onChange={e => setEditForm(f => ({ ...f, linked_memorial_short_id: e.target.value }))}
+                  placeholder="z. B. AB12CD34"
+                  className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
+                  style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }} />
+                {editForm.linked_memorial_short_id && (
+                  <a href={`/MemorialProfile?id=${editForm.linked_memorial_short_id}`} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 mt-1.5 text-xs" style={{ color: "#c9a96e" }}>
+                    <ExternalLink className="w-3 h-3" /> Vorschau öffnen
+                  </a>
+                )}
+              </div>
+            </div>
+
+            {/* Save footer */}
+            <div className="flex gap-3 px-6 py-5 border-t flex-shrink-0" style={{ borderColor: "#302d28" }}>
+              <button onClick={() => setShowEditPanel(false)}
+                className="flex-1 py-3 rounded-xl text-sm border" style={{ borderColor: "#302d28", color: "#8a8278" }}>
+                Abbrechen
+              </button>
+              <button disabled={savingEdit} onClick={async () => {
+                setSavingEdit(true);
+                await base44.entities.B2BMemorialPage.update(page.id, {
+                  biography: editForm.biography,
+                  funeral_date: editForm.funeral_date,
+                  funeral_location: editForm.funeral_location,
+                  privacy: editForm.privacy,
+                  main_photo_url: editForm.main_photo_url,
+                  linked_memorial_short_id: editForm.linked_memorial_short_id,
+                });
+                setPage({ ...page, ...editForm });
+                setSavingEdit(false);
+                setShowEditPanel(false);
+              }}
+                className="flex-1 py-3 rounded-xl text-sm font-medium flex items-center justify-center gap-2"
+                style={{ background: "#c9a96e", color: "#0f0e0c" }}>
+                {savingEdit ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                 Speichern
               </button>
             </div>
