@@ -74,7 +74,7 @@ export default function B2BSidebar() {
     <button
       onClick={async () => {
         setLoggingOut(true);
-        await base44.auth.logout();
+        await base44.auth.logout("/");
       }}
       disabled={loggingOut}
       className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-sm transition-all"
@@ -164,7 +164,7 @@ export default function B2BSidebar() {
         })}
         {/* Logout on mobile */}
         <button
-          onClick={() => base44.auth.logout()}
+          onClick={() => base44.auth.logout("/")}
           className="flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg min-w-[44px] min-h-[44px] justify-center"
           style={{ color: "rgba(216,195,165,0.4)" }}>
           <LogOut className="w-5 h-5" />
