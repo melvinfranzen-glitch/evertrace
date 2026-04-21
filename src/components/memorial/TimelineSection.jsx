@@ -61,12 +61,19 @@ export default function TimelineSection({ events }) {
                     </div>
 
                     {event.image_url && (
-                      <div className="w-full h-40 rounded-xl mb-4 overflow-hidden">
+                      <div className="w-full h-40 rounded-xl mb-4 overflow-hidden relative">
                         <img
                           src={event.image_url}
                           alt={event.title}
-                          className="w-full h-full object-cover"
-                          style={{ objectPosition: `50% ${event.image_position ?? 30}%` }}
+                          className="absolute w-full"
+                          style={{
+                            top: `${event.image_position ?? 30}%`,
+                            transform: "translateY(-50%)",
+                            left: 0,
+                            height: "auto",
+                            minHeight: "100%",
+                            objectFit: "cover",
+                          }}
                         />
                       </div>
                     )}

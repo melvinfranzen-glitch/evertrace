@@ -84,8 +84,8 @@ function EventRow({ ev, onDelete, onSave }) {
         <div className="flex items-center gap-3">
           {draft.image_url ? (
             <div className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 group">
-              <img src={draft.image_url} className="w-full h-full object-cover" alt=""
-                style={{ objectPosition: `50% ${draft.image_position ?? 30}%` }} />
+              <img src={draft.image_url} className="absolute w-full" alt=""
+                style={{ top: `${draft.image_position ?? 30}%`, transform: "translateY(-50%)", left: 0, height: "auto", minHeight: "100%" }} />
               <button
                 onClick={() => setDraft((p) => ({ ...p, image_url: "" }))}
                 className="absolute inset-0 bg-black/50 hidden group-hover:flex items-center justify-center text-white"
@@ -130,8 +130,10 @@ function EventRow({ ev, onDelete, onSave }) {
         {ev.description && <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{ev.description}</p>}
       </div>
       {ev.image_url && (
-        <img src={ev.image_url} className="w-12 h-12 object-cover rounded-lg flex-shrink-0" alt=""
-          style={{ objectPosition: `50% ${ev.image_position ?? 30}%` }} />
+        <div className="w-12 h-12 rounded-lg flex-shrink-0 overflow-hidden relative">
+          <img src={ev.image_url} alt="" className="absolute w-full"
+            style={{ top: `${ev.image_position ?? 30}%`, transform: "translateY(-50%)", left: 0, height: "auto", minHeight: "100%" }} />
+        </div>
       )}
       <div className="flex gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
         <button onClick={() => { setDraft(ev); setEditing(true); }} className="text-gray-400 hover:text-amber-700 p-1">
@@ -226,8 +228,8 @@ export default function TimelineEditor({ memorialId, timeline, setTimeline }) {
           <div className="flex items-center gap-3">
             {newEvent.image_url ? (
               <div className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 group">
-                <img src={newEvent.image_url} className="w-full h-full object-cover" alt=""
-                  style={{ objectPosition: `50% ${newEvent.image_position ?? 30}%` }} />
+                <img src={newEvent.image_url} className="absolute w-full" alt=""
+                  style={{ top: `${newEvent.image_position ?? 30}%`, transform: "translateY(-50%)", left: 0, height: "auto", minHeight: "100%" }} />
                 <button
                   onClick={() => setNewEvent((p) => ({ ...p, image_url: "" }))}
                   className="absolute inset-0 bg-black/50 hidden group-hover:flex items-center justify-center text-white"
