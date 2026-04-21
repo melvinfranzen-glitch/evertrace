@@ -203,35 +203,36 @@ export default function B2BCardWizard() {
     setTimeout(() => setTemplateSaved(false), 3000);
   };
 
+  const buildPersonContext = () => {
+    const name = selectedCase ? `${selectedCase.deceased_first_name} ${selectedCase.deceased_last_name}` : "Unbekannte Person";
+    const born = selectedCase ? fmtDate(selectedCase.date_of_birth) : "";
+    const died = selectedCase ? fmtDate(selectedCase.date_of_death) : "";
+    const allPassions = [...passions, ...(customPassion ? [customPassion] : [])].join(", ");
+    return { name, born, died, allPassions };
+  };
+
   const generateText = async () => {
     setGenerating(true);
-    const allPassions = schnellmodus ? "" : [...passions, ...(customPassion ? [customPassion] : [])].join(", ");
-    const professionHint = schnellmodus ? "" : profession ? `Beruf/Handwerk: ${profession}.` : "";
-    const briefDesc = schnellmodus ? shortDescription : "";
-    const prompt = `Du bist ein Experte für würdevolle Trauerkarten auf Deutsch. Erstelle einen personalisierten Trauerkartentext:
+    const { name, born, died, allPassions } = buildPersonContext();
 
-  Name: ${selectedCase ? `${selectedCase.deceased_first_name} ${selectedCase.deceased_last_name}` : "Unbekannte Person"}
-  Geburtsdatum: ${selectedCase ? fmtDate(selectedCase.date_of_birth) : "unbekannt"}
-  Sterbedatum: ${selectedCase ? fmtDate(selectedCase.date_of_death) : "unbekannt"}
-  ${schnellmodus ? `Kurzbeschreibung: ${briefDesc}` : `Charakter: ${character || "gütig und herzlich"}
-  Leidenschaften: ${allPassions || "Familie und Natur"}
-  ${professionHint}
-  Zitat: ${quote || "keines angegeben"}
-  Ausrichtung: ${religion || "nicht religiös"}
-  Ton: ${tone}`}
+    const prompt = schnellmodus
+      ? `Du bist ein erfahrener Texter für Trauerkarten. Schreibe einen würdevollen, persönlichen Trauerkartentext auf Deutsch für ${name}${born ? ` (* ${born})` : ""}${died ? ` († ${died})` : ""}. ${shortDescription ? `Über die Person: ${shortDescription}.` : ""} Schreibe einen vollständigen, druckfertigen Text von 80–110 Wörtern, der so klingt, als hätte ihn jemand verfasst, der die Person wirklich kannte. Kein Boilerplate, keine generischen Floskeln.`
+      : `Du bist ein erfahrener Texter für Trauerkarten. Schreibe einen würdevollen, tief persönlichen Trauerkartentext auf Deutsch.
 
-Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Erstens ein eröffnender Satz, der den Charakter der Person in einer einzigen, präzisen Formulierung einfängt. Zweitens eine mittlere Passage von zwei bis drei Zeilen, die ihre Leidenschaften und ihren Beruf organisch verwebt. Drittens eine abschließende Zeile, die das angegebene Zitat oder einen würdigen Ersatz integriert, falls kein Zitat angegeben wurde. Gesamtlänge: 80 bis 110 Wörter. Der Text soll sich lesen, als wäre er von einem Menschen geschrieben worden, der die Person kannte — nicht wie ein automatisch erstellter Standardtext.`;
+Person: ${name}${born ? ` (* ${born})` : ""}${died ? ` († ${died})` : ""}
+${character ? `Charakter & Wesen: ${character}` : ""}
+${allPassions ? `Leidenschaften & Interessen: ${allPassions}` : ""}
+${profession ? `Beruf / Handwerk: ${profession}` : ""}
+${quote ? `Lieblingszitat oder Wunsch der Familie: "${quote}"` : ""}
+Religiöse/weltliche Ausrichtung: ${religion}
+Gewünschter Ton: ${tone}
 
-    const result = await base44.integrations.Core.InvokeLLM({ prompt });
-    if (typeof result === "string") {
-      setGeneratedText(result);
-      setEditedText(result);
-    } else {
-      console.warn("InvokeLLM returned unexpected type:", typeof result, result);
-      const fallback = "Ein Leben voller Würde und Wärme — in liebevoller Erinnerung.";
-      setGeneratedText(fallback);
-      setEditedText(fallback);
-    }
+Schreibe einen vollständigen, druckfertigen Trauerkartentext von 80–110 Wörtern. Lass alle oben genannten Lebenselemente organisch einfließen — Beruf, Leidenschaften, Charakter und Zitat sollen spürbar sein ohne aufgezählt zu wirken. Kein Boilerplate, keine generischen Floskeln. Der Text soll klingen, als hätte ihn ein Mensch geschrieben, der diese Person wirklich kannte und liebte.`;
+
+    const result = await base44.integrations.Core.InvokeLLM({ prompt, model: "claude_sonnet_4_6" });
+    const text = typeof result === "string" ? result : "Ein Leben voller Würde und Wärme — in liebevoller Erinnerung.";
+    setGeneratedText(text);
+    setEditedText(text);
     setGenerating(false);
   };
 
@@ -248,9 +249,19 @@ Strukturiere den Text in drei klar erkennbare Abschnitte ohne Überschriften: Er
   };
 
   const generateTextRaw = async () => {
-    const allPassions = [...passions, ...(customPassion ? [customPassion] : [])].join(", ");
+    const { name, born, died, allPassions } = buildPersonContext();
     const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `Erstelle einen personalisierten Trauerkartentext (80-110 Wörter) auf Deutsch für ${selectedCase ? `${selectedCase.deceased_first_name} ${selectedCase.deceased_last_name}` : "Unbekannte Person"}. Charakter: ${character || "gütig"}. Leidenschaften: ${allPassions || "das Leben"}. Zitat: ${quote || ""}. Ton: ${tone}.`,
+      model: "claude_sonnet_4_6",
+      prompt: `Du bist ein erfahrener Texter für Trauerkarten. Schreibe eine NEUE, stilistisch völlig andere Variante eines Trauerkartentexts auf Deutsch für dieselbe Person.
+
+Person: ${name}${born ? ` (* ${born})` : ""}${died ? ` († ${died})` : ""}
+${character ? `Charakter: ${character}` : ""}
+${allPassions ? `Leidenschaften: ${allPassions}` : ""}
+${profession ? `Beruf: ${profession}` : ""}
+${quote ? `Zitat: "${quote}"` : ""}
+Ausrichtung: ${religion} · Ton: ${tone}
+
+Diese Variante soll sich in Aufbau, Bildsprache und Rhythmus deutlich von anderen Versionen unterscheiden — aber genauso vollständig, druckfertig und 80–110 Wörter lang sein. Kein Boilerplate.`,
     });
     return typeof result === "string" ? result : "";
   };
