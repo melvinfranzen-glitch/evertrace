@@ -67,9 +67,12 @@ export default function B2BRegister() {
           <p className="mb-8 leading-relaxed" style={{ color: "#8a8278", fontFamily: "'DM Sans', sans-serif" }}>
             Vielen Dank. Wir haben Ihre Anfrage erhalten und werden Ihr Konto innerhalb von 24 Stunden freischalten. Sie erhalten eine Bestätigungs-E-Mail an <strong style={{ color: "#c9a96e" }}>{form.contact_email}</strong>.
           </p>
-          <Link to="/B2BDashboard" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all" style={{ background: "#c9a96e", color: "#0f0e0c", fontFamily: "'DM Sans', sans-serif" }}>
-            Zum Dashboard <ArrowRight className="w-4 h-4" />
-          </Link>
+          <button
+            onClick={() => base44.auth.redirectToLogin("/B2BDashboard")}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all"
+            style={{ background: "#c9a96e", color: "#0f0e0c", fontFamily: "'DM Sans', sans-serif" }}>
+            Jetzt anmelden & zum Dashboard <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
       </div>
     );
