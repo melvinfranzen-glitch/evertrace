@@ -37,6 +37,11 @@ export default function B2BDashboard() {
 
   useEffect(() => {
     base44.auth.me().then(u => {
+      // Only funeral_director or admin can access B2B dashboard
+      if (u.role !== "funeral_director" && u.role !== "admin") {
+        navigate("/B2BLogin");
+        return;
+      }
       base44.entities.FuneralHome.filter({ created_by: u.email }, "-created_date", 1).then(([fh]) => {
         if (!fh) { navigate("/B2BRegister"); return; }
         Promise.all([

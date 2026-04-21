@@ -6,6 +6,7 @@ import { pagesConfig } from './pages.config'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import B2BRegister from './pages/B2BRegister';
+const B2BLogin = lazy(() => import('./pages/B2BLogin'));
 const B2BDashboard = lazy(() => import('./pages/B2BDashboard'));
 const B2BCases = lazy(() => import('./pages/B2BCases'));
 const B2BCaseDetail = lazy(() => import('./pages/B2BCaseDetail'));
@@ -74,6 +75,7 @@ const AuthenticatedApp = () => {
         />
       ))}
       <Route path="/B2BRegister" element={<B2BRegister />} />
+      <Route path="/B2BLogin" element={<Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}><B2BLogin /></Suspense>} />
       <Route path="/B2BDashboard" element={<Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}><B2BDashboard /></Suspense>} />
       <Route path="/B2BCases" element={<Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}><B2BCases /></Suspense>} />
       <Route path="/B2BCaseDetail" element={<Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}><B2BCaseDetail /></Suspense>} />

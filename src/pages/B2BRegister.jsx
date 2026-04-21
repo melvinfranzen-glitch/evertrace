@@ -42,6 +42,8 @@ export default function B2BRegister() {
   const submit = async () => {
    setLoading(true);
    await base44.entities.FuneralHome.create({ ...form, plan: selectedPlan, verified: false });
+   // Set user role to funeral_director
+   await base44.auth.updateMe({ role: "funeral_director" });
    setLoading(false);
    setDone(true);
   };

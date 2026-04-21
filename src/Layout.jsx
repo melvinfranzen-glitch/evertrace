@@ -83,7 +83,7 @@ export default function Layout({ children, currentPageName }) {
               >hallo@evertrace.de</a>
             </div>
             <div className="mt-4">
-              <Link to="/B2BRegister"
+              <Link to="/B2BLogin"
                 className="text-sm transition-colors"
                 style={{ color: "#B07B34", fontFamily: "'Lato', sans-serif", fontWeight: 300 }}
               >Für Bestatter →</Link>
@@ -177,7 +177,7 @@ export default function Layout({ children, currentPageName }) {
 
           <div className="hidden md:flex items-center gap-4 shrink-0">
             {!user && (
-              <Link to="/B2BRegister"
+              <Link to="/B2BLogin"
                 style={{ fontFamily: "'Lato', sans-serif", fontSize: 13, fontWeight: 300, color: "#B07B34" }}>
                 Für Bestatter
               </Link>
@@ -262,7 +262,7 @@ export default function Layout({ children, currentPageName }) {
               </Link>
             )}
             <div className="pt-3 border-t space-y-2" style={{ borderColor: "rgba(176,123,52,0.12)" }}>
-              <Link to="/B2BRegister" className="block px-4 py-3 rounded-xl text-sm"
+              <Link to="/B2BLogin" className="block px-4 py-3 rounded-xl text-sm"
                 style={{ color: "#B07B34" }} onClick={() => setMenuOpen(false)}>
                 Für Bestatter →
               </Link>
