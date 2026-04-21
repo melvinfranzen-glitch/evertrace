@@ -17,31 +17,33 @@ function getType(val) {
   return EVENT_TYPES[val] || EVENT_TYPES.meilenstein;
 }
 
-// Zeigt Bild so, dass das Gesicht exakt vertikal zentriert ist.
+// Zeigt Bild mit object-fit:cover und object-position für pixelgenaue Gesichtszentrierung.
 // Falls kein gespeicherter faceY-Wert vorhanden, wird die Erkennung clientseitig nachgeholt.
 function FocusedImage({ src, alt, faceY, className }) {
-  const [pos, setPos] = useState(faceY != null ? faceY : null);
+  const [pos, setPos] = useState(null);
 
   useEffect(() => {
-    if (pos != null) return; // already known
+    if (faceY != null) {
+      setPos(faceY);
+      return;
+    }
     detectFacePosition(src).then(setPos).catch(() => setPos(50));
-  }, [src]);
-
-  // Solange noch erkannt wird, neutrale Mitte zeigen
-  const displayPos = pos != null ? pos : 50;
+  }, [src, faceY]);
 
   return (
-    <div
-      className={`overflow-hidden rounded-xl ${className}`}
-      style={{
-        backgroundImage: `url(${src})`,
-        backgroundSize: "cover",
-        backgroundPosition: `50% ${displayPos}%`,
-        backgroundRepeat: "no-repeat",
-      }}
-      role="img"
-      aria-label={alt}
-    />
+    <div className={`overflow-hidden rounded-xl ${className}`}>
+      <img
+        src={src}
+        alt={alt}
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          objectPosition: `center ${pos != null ? pos + "%" : "30%"}`,
+          display: "block",
+        }}
+      />
+    </div>
   );
 }
 
