@@ -8,6 +8,7 @@ import {
   Plus, Trash2, Loader2, Upload, Pencil, Check, X,
   Baby, Heart, Star, GraduationCap, Briefcase, MapPin, Music, Camera
 } from "lucide-react";
+import { detectFacePosition } from "@/utils/faceDetection";
 
 const EVENT_TYPES = [
   { value: "geburt",      label: "Geburt",        icon: Baby,          color: "#f0abfc" },
@@ -35,8 +36,14 @@ function EventRow({ ev, onDelete, onSave }) {
     const file = e.target.files[0];
     if (!file) return;
     setUploading(true);
+    let position = 30;
+    try {
+      const localUrl = URL.createObjectURL(file);
+      position = await detectFacePosition(localUrl);
+      URL.revokeObjectURL(localUrl);
+    } catch { position = 30; }
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    setDraft((p) => ({ ...p, image_url: file_url }));
+    setDraft((p) => ({ ...p, image_url: file_url, image_position: position }));
     setUploading(false);
   };
 
@@ -145,8 +152,14 @@ export default function TimelineEditor({ memorialId, timeline, setTimeline }) {
     const file = e.target.files[0];
     if (!file) return;
     setUploading(true);
+    let position = 30;
+    try {
+      const localUrl = URL.createObjectURL(file);
+      position = await detectFacePosition(localUrl);
+      URL.revokeObjectURL(localUrl);
+    } catch { position = 30; }
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    setNewEvent((p) => ({ ...p, image_url: file_url }));
+    setNewEvent((p) => ({ ...p, image_url: file_url, image_position: position }));
     setUploading(false);
   };
 

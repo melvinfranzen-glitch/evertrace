@@ -1,0 +1,51 @@
+{
+  "name": "TimelineEvent",
+  "type": "object",
+  "properties": {
+    "memorial_id": {
+      "type": "string"
+    },
+    "year": {
+      "type": "string",
+      "description": "Jahr oder Zeitraum, z.B. '1975' oder '1990\u20131995'"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "image_position": {
+      "type": "number",
+      "default": 30,
+      "description": "Vertikale Bildposition in % f\u00fcr Gesichtszentrierung (0\u2013100)"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "geburt",
+        "hochzeit",
+        "meilenstein",
+        "bildung",
+        "beruf",
+        "reise",
+        "leidenschaft",
+        "erinnerung"
+      ],
+      "default": "meilenstein",
+      "description": "Kategorie des Ereignisses"
+    },
+    "sort_order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "memorial_id",
+    "year",
+    "title"
+  ]
+}

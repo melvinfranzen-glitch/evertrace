@@ -61,7 +61,12 @@ export default function TimelineSection({ events }) {
                     </div>
 
                     {event.image_url && (
-                      <img src={event.image_url} alt={event.title} className="w-full h-36 object-cover object-face rounded-xl mb-4" />
+                      <img
+                        src={event.image_url}
+                        alt={event.title}
+                        className="w-full h-36 object-cover rounded-xl mb-4"
+                        style={{ objectPosition: `center ${event.image_position ?? 30}%` }}
+                      />
                     )}
 
                     {/* Desktop: category chip */}
