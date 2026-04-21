@@ -166,24 +166,26 @@ export default function B2BMemorial() {
                       </span>
                     </div>
                   </div>
-                  <div className="mt-3 flex gap-2">
-                    <a href={`/B2BPublicMemorial?slug=${page.slug}&edit=true`}
-                      className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs transition-all"
-                      style={{ background: "#c9a96e", color: "#0f0e0c" }}>
-                      Bearbeiten
-                    </a>
-                    <a href={`/B2BPublicMemorial?slug=${page.slug}`} target="_blank" rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs transition-all"
-                      style={{ background: "#201e1a", color: "#c9a96e", border: "1px solid #302d28" }}>
-                      <ExternalLink className="w-3 h-3" /> Ansicht
-                    </a>
-                    {page.linked_memorial_short_id ? (
-                      <a href={`/MemorialProfile?id=${page.linked_memorial_short_id}`} target="_blank" rel="noopener noreferrer"
+                  <div className="mt-3 flex flex-col gap-2">
+                    <div className="flex gap-2">
+                      <a href={`/B2BPublicMemorial?slug=${page.slug}&edit=true`}
                         className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs transition-all"
-                        style={{ background: "rgba(201,169,110,0.08)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}>
-                        <ExternalLink className="w-3 h-3" /> Gedenkseite
+                        style={{ background: "#c9a96e", color: "#0f0e0c" }}>
+                        Bearbeiten
                       </a>
-                    ) : null}
+                      <a href={`/B2BPublicMemorial?slug=${page.slug}`} target="_blank" rel="noopener noreferrer"
+                        className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs transition-all"
+                        style={{ background: "#201e1a", color: "#c9a96e", border: "1px solid #302d28" }}>
+                        <ExternalLink className="w-3 h-3" /> B2B-Seite ansehen
+                      </a>
+                    </div>
+                    {page.linked_memorial_short_id && (
+                      <a href={`/MemorialProfile?id=${page.linked_memorial_short_id}`} target="_blank" rel="noopener noreferrer"
+                        className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs transition-all"
+                        style={{ background: "rgba(201,169,110,0.08)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}>
+                        <ExternalLink className="w-3 h-3" /> Verknüpfte B2C-Gedenkseite öffnen
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
