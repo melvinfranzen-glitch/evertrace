@@ -94,7 +94,7 @@ export default function TimelineSection({ events }) {
                       <FocusedImage
                         src={event.image_url}
                         alt={event.title}
-                        faceY={event.image_position ?? 30}
+                        faceY={event.image_position ?? null}
                         className="w-full h-40 rounded-xl mb-4"
                       />
                     )}
