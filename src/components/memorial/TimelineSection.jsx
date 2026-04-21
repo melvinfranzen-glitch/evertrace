@@ -1,4 +1,6 @@
+import { useState, useEffect } from "react";
 import { Baby, Heart, Star, GraduationCap, Briefcase, MapPin, Music, Camera } from "lucide-react";
+import { detectFacePosition } from "@/utils/faceDetection";
 
 const EVENT_TYPES = {
   geburt:       { label: "Geburt",        icon: Baby,          color: "#f0abfc" },
@@ -15,17 +17,26 @@ function getType(val) {
   return EVENT_TYPES[val] || EVENT_TYPES.meilenstein;
 }
 
-// Zeigt Bild so, dass der Gesichtspunkt (faceY in %) exakt vertikal zentriert ist
-function FocusedImage({ src, alt, faceY = 30, className }) {
-  // Wir verschieben das Bild so: der Punkt bei faceY% im Bild soll in der Mitte des Containers sein.
-  // backgroundPosition macht genau das mit % korrekt bei background-image.
+// Zeigt Bild so, dass das Gesicht exakt vertikal zentriert ist.
+// Falls kein gespeicherter faceY-Wert vorhanden, wird die Erkennung clientseitig nachgeholt.
+function FocusedImage({ src, alt, faceY, className }) {
+  const [pos, setPos] = useState(faceY != null ? faceY : null);
+
+  useEffect(() => {
+    if (pos != null) return; // already known
+    detectFacePosition(src).then(setPos).catch(() => setPos(50));
+  }, [src]);
+
+  // Solange noch erkannt wird, neutrale Mitte zeigen
+  const displayPos = pos != null ? pos : 50;
+
   return (
     <div
       className={`overflow-hidden rounded-xl ${className}`}
       style={{
         backgroundImage: `url(${src})`,
         backgroundSize: "cover",
-        backgroundPosition: `50% ${faceY}%`,
+        backgroundPosition: `50% ${displayPos}%`,
         backgroundRepeat: "no-repeat",
       }}
       role="img"
