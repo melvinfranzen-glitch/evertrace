@@ -239,7 +239,7 @@ export default function B2BMemorial() {
           base44.entities.Case.filter({ funeral_home_id: fh.id }, "-created_date", 200),
           base44.entities.B2BMemorialPage.filter({ funeral_home_id: fh.id }, "-created_date", 200),
           base44.entities.B2BMemorialPage.filter({ created_by: u.email }, "-created_date", 200),
-          base44.entities.Memorial.filter({ created_by: u.email }, "-created_date", 100),
+          base44.entities.Memorial.filter({ created_by: u.email }, "-created_date", 200),
         ]);
 
         setCases(allCases);
@@ -249,15 +249,18 @@ export default function B2BMemorial() {
         [...allB2BPages, ...userB2BPages].forEach(p => pageMap.set(p.id, p));
         setB2bPages([...pageMap.values()].sort((a, b) => new Date(b.created_date) - new Date(a.created_date)));
 
-        // Full memorials: own + those where user is collaborator
-        // Also fetch memorials linked via funeral_home_case_id
-        const caseIds = new Set(allCases.map(c => c.id));
-        const linkedMemorials = await base44.entities.Memorial.filter({ funeral_home_case_id: allCases[0]?.id }, "-created_date", 50).catch(() => []);
-        // Try to get ALL memorials where this bestatter is collaborator (collab invite flow)
-        // We can only do this by fetching memorials containing u.email in collaborator_emails
-        // Since we can't query arrays, we fall back to: ownMemorials + case-linked ones
+        // Full memorials: own ones (created_by) are already fetched.
+        // Additionally fetch memorials linked via funeral_home_case_id for each case.
         const memMap = new Map();
-        [...ownMemorials, ...linkedMemorials].forEach(m => memMap.set(m.id, m));
+        ownMemorials.forEach(m => memMap.set(m.id, m));
+
+        // Fetch case-linked memorials in parallel (up to 20 cases to avoid too many requests)
+        const casesToCheck = allCases.slice(0, 20);
+        const caseLinked = await Promise.all(
+          casesToCheck.map(c => base44.entities.Memorial.filter({ funeral_home_case_id: c.id }, "-created_date", 5).catch(() => []))
+        );
+        caseLinked.flat().forEach(m => memMap.set(m.id, m));
+
         // Also check linked_memorial_short_id from B2B pages
         const shortIds = [...pageMap.values()].map(p => p.linked_memorial_short_id).filter(Boolean);
         if (shortIds.length) {

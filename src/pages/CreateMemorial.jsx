@@ -191,6 +191,9 @@ export default function CreateMemorial() {
     }, 3000);
   };
 
+  // If created from B2B context, go back to B2B after creation
+  const isB2BContext = !!prefillCaseId;
+
   const shareUrl = `${window.location.origin}/MemorialProfile?id=${form.short_id}`;
   const copyShareLink = () => {
     navigator.clipboard.writeText(shareUrl);
@@ -238,9 +241,9 @@ export default function CreateMemorial() {
               Link kopieren
             </button>
           </div>
-          <button onClick={() => navigate(createPageUrl("Dashboard"))}
+          <button onClick={() => navigate(isB2BContext ? "/B2BMemorial" : createPageUrl("Dashboard"))}
             style={{ fontSize: 13, color: "#8a8278" }}>
-            Weiter zum Dashboard →
+            {isB2BContext ? "Zurück zum Bestatter-Dashboard →" : "Weiter zum Dashboard →"}
           </button>
         </div>
       </div>
