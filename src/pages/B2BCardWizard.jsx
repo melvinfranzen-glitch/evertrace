@@ -55,10 +55,13 @@ export default function B2BCardWizard() {
   const [heroImageUrl, setHeroImageUrl] = useState("");
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
-  // Generated motif (when no photo)
+  // 4 personalized designs
+  const [designs, setDesigns] = useState([]); // [{motifUrl, label}]
+  const [selectedDesignIdx, setSelectedDesignIdx] = useState(0);
+  const [generatingDesigns, setGeneratingDesigns] = useState(false);
+  const [personContext, setPersonContext] = useState("");
   const [motifTheme, setMotifTheme] = useState("nature");
   const [motifImageUrl, setMotifImageUrl] = useState("");
-  const [generatingMotif, setGeneratingMotif] = useState(false);
 
   // Text generation
   const [generatedText, setGeneratedText] = useState("");
@@ -98,21 +101,28 @@ export default function B2BCardWizard() {
     });
   }, []);
 
-  // When case is selected, try to load hero photo from linked memorial or B2B page
+  // When case is selected, load photo + person context from linked pages
   useEffect(() => {
     if (selectedCaseId && cases.length) {
       const c = cases.find(x => x.id === selectedCaseId);
       setSelectedCase(c || null);
       if (c) {
-        setHeroImageUrl(""); // reset
+        setHeroImageUrl("");
+        setPersonContext("");
+        setDesigns([]);
         // Try B2BMemorialPage first
         base44.entities.B2BMemorialPage.filter({ case_id: c.id })
-          .then(([page]) => { if (page?.main_photo_url) setHeroImageUrl(page.main_photo_url); })
-          .catch(() => {});
+          .then(([page]) => {
+            if (page?.main_photo_url) setHeroImageUrl(page.main_photo_url);
+            if (page?.biography) setPersonContext(page.biography);
+          }).catch(() => {});
         // Also try linked Memorial via funeral_home_case_id
         base44.entities.Memorial.filter({ funeral_home_case_id: c.id })
-          .then(([m]) => { if (m?.hero_image_url && !heroImageUrl) setHeroImageUrl(m.hero_image_url); })
-          .catch(() => {});
+          .then(([m]) => {
+            if (m?.hero_image_url) setHeroImageUrl(prev => prev || m.hero_image_url);
+            if (m?.biography_raw_input) setPersonContext(prev => prev || m.biography_raw_input);
+            else if (m?.biography) setPersonContext(prev => prev || m.biography);
+          }).catch(() => {});
       }
     }
   }, [selectedCaseId, cases]);
@@ -142,22 +152,48 @@ export default function B2BCardWizard() {
     return { name, born, died, burial };
   };
 
-  const generateMotifImage = async () => {
-    setGeneratingMotif(true);
-    const sceneMap = {
-      nature: "serene misty forest at dawn, golden light through trees, peaceful path disappearing into fog",
-      forest: "single ancient oak tree in morning mist, soft light, peaceful meadow, autumn colors",
-      maritime: "calm ocean horizon at golden hour, gentle waves, dramatic clouds, warm light",
-      floral_classic: "soft white roses and lilies, close-up, shallow depth of field, warm muted tones",
-      religious: "warm candlelight in peaceful setting, soft bokeh, golden glow, contemplative",
-      handwerk: "rustic wood workshop detail, warm natural light, vintage tools, nostalgic atmosphere",
-      minimalist: "abstract soft gradient landscape, muted earth tones, horizon line, minimal and serene",
-    };
-    const scene = sceneMap[motifTheme] || sceneMap.minimalist;
-    const prompt = `Fine art photography, ${scene}. Flat 2D image filling the entire frame edge to edge. Photorealistic, high resolution, moody, contemplative. Vertical portrait orientation. Absolutely NO text, NO letters, NO numbers, NO watermarks, NO borders, NO 3D objects, NO paper, NO mockup, NO product photography. Just a beautiful flat photograph.`;
-    const { url } = await base44.integrations.Core.GenerateImage({ prompt });
-    setMotifImageUrl(url);
-    setGeneratingMotif(false);
+  const generateFourDesigns = async () => {
+    setGeneratingDesigns(true);
+    const { name } = buildPersonContext();
+    const info = [personContext, extraInfo].filter(Boolean).join(" ");
+
+    // Ask Claude to generate 4 personalized scene descriptions
+    const scenePrompt = `Du bist ein kreativer Art Director für Trauerkarten. Basierend auf diesen Informationen über die verstorbene Person:
+
+Name: ${name}
+${extraInfo ? `Informationen: ${extraInfo}` : ""}
+${personContext ? `Biografie/Hintergrund: ${personContext.slice(0, 400)}` : ""}
+Religiöse Ausrichtung: ${religion}
+
+Erstelle 4 VERSCHIEDENE kurze englische Foto-Szenen für die Außenseite einer Trauerkarte. Jede Szene soll zur Person passen. Keine Menschen, keine Gesichter, kein Text im Bild.
+
+Antworte NUR mit einem JSON-Array (kein anderer Text):
+[{"scene":"kurze englische Szene-Beschreibung","label":"kurzer deutscher Titel"},...]`;
+
+    let scenes = [];
+    try {
+      const raw = await base44.integrations.Core.InvokeLLM({ prompt: scenePrompt, model: "claude_sonnet_4_6" });
+      const cleaned = (typeof raw === "string" ? raw : "").replace(/```json|```/g, "").trim();
+      scenes = JSON.parse(cleaned);
+    } catch {
+      scenes = [
+        { scene: "serene misty forest at dawn, golden light through ancient trees, peaceful path", label: "Waldlichtung" },
+        { scene: "calm lake at sunset, mirror reflection, warm golden light, peaceful atmosphere", label: "Stiller See" },
+        { scene: "single ancient oak tree in autumn, golden leaves, soft morning mist", label: "Herbstbaum" },
+        { scene: "soft white roses close-up, morning dew drops, shallow depth of field, warm tones", label: "Weiße Rosen" },
+      ];
+    }
+
+    // Generate all 4 images in parallel
+    const results = await Promise.all(scenes.slice(0, 4).map(async (s) => {
+      const prompt = `Fine art photography, ${s.scene}. Flat 2D image filling the entire frame edge to edge. Photorealistic, high resolution, moody, contemplative. Vertical portrait orientation. Absolutely NO text, NO letters, NO numbers, NO watermarks, NO borders, NO 3D objects, NO paper, NO mockup, NO product photography. Just a beautiful flat photograph.`;
+      const { url } = await base44.integrations.Core.GenerateImage({ prompt });
+      return { motifUrl: url, label: s.label };
+    }));
+
+    setDesigns(results);
+    setSelectedDesignIdx(0);
+    setGeneratingDesigns(false);
   };
 
   const generateText = async () => {
@@ -175,14 +211,11 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
     setGeneratingText(false);
   };
 
-  // Trigger text generation when entering step 1
+  // Trigger generation when entering step 1
   useEffect(() => {
-    if (step === 1 && !generatedText && !generatingText) {
-      generateText();
-      // Also generate motif if no photo
-      if (!heroImageUrl && !motifImageUrl && !generatingMotif) {
-        generateMotifImage();
-      }
+    if (step === 1) {
+      if (!generatedText && !generatingText) generateText();
+      if (!heroImageUrl && designs.length === 0 && !generatingDesigns) generateFourDesigns();
     }
   }, [step]);
 
@@ -211,7 +244,7 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
       questionnaire_answers: JSON.stringify({ extraInfo, religion, motifTheme, heroImageUrl }),
       generated_text: editedText,
       motif_theme: motifTheme,
-      motif_image_url: heroImageUrl || motifImageUrl,
+      motif_image_url: heroImageUrl || designs[selectedDesignIdx]?.motifUrl || "",
       addon_invitation: addonInvitation,
       addon_thankyou: addonThankyou,
       addon_qr: addonQr,
@@ -425,14 +458,110 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
         </div>
       )}
 
-      {/* ── Step 1: Text & Vorschau ── */}
+      {/* ── Step 1: Designs & Text ── */}
       {step === 1 && (
         <div className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Left: Live preview */}
+
+          {/* 4 Design-Kacheln */}
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <h3 className="text-lg font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>
+                  {heroImageUrl ? "Außenseite — Portrait" : "Wählen Sie Ihr Design"}
+                </h3>
+                <p className="text-xs mt-0.5" style={{ color: "#5a554e" }}>
+                  {heroImageUrl
+                    ? "Ihr hochgeladenes Foto wird als Außenseite verwendet."
+                    : `4 personalisierte Designs für ${selectedCase ? `${selectedCase.deceased_first_name} ${selectedCase.deceased_last_name}` : "den Verstorbenen"}`}
+                </p>
+              </div>
+              {!heroImageUrl && (
+                <button onClick={generateFourDesigns} disabled={generatingDesigns}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs transition-all disabled:opacity-40"
+                  style={{ background: "rgba(201,169,110,0.1)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}>
+                  {generatingDesigns ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+                  Alle neu generieren
+                </button>
+              )}
+            </div>
+
+            {heroImageUrl ? (
+              /* Portrait-Vorschau wenn Foto vorhanden */
+              <div className="flex items-start gap-5">
+                <div style={{ width: 160, flexShrink: 0 }}>
+                  <CardPrintPreview
+                    caseData={selectedCase}
+                    generatedText={editedText}
+                    motifImageUrl=""
+                    cardFormat={cardFormat}
+                    side="front"
+                    funeralHome={funeralHome}
+                    heroImageUrl={heroImageUrl}
+                    religion={religion}
+                  />
+                </div>
+                <div className="flex flex-col gap-2 pt-1">
+                  <p className="text-xs" style={{ color: "#4ade80" }}>✓ Portrait wird als Außenseite verwendet</p>
+                  <label className="flex items-center gap-1.5 text-xs cursor-pointer px-3 py-2 rounded-lg w-fit"
+                    style={{ background: "#302d28", color: "#c9a96e" }}>
+                    <Camera className="w-3 h-3" /> Foto ändern
+                    <input type="file" accept="image/*" className="hidden" onChange={uploadPhoto} />
+                  </label>
+                  <button onClick={() => setHeroImageUrl("")} className="text-xs px-3 py-2 rounded-lg w-fit text-left"
+                    style={{ background: "#201e1a", color: "#5a554e" }}>
+                    Entfernen → KI-Design nutzen
+                  </button>
+                </div>
+              </div>
+            ) : generatingDesigns ? (
+              /* Skeleton während Generierung */
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                {[0, 1, 2, 3].map(i => (
+                  <div key={i} className="rounded-xl overflow-hidden" style={{ border: "2px solid #302d28" }}>
+                    <div className="animate-pulse" style={{ aspectRatio: "148/210", background: "#181714", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <Loader2 className="w-5 h-5 animate-spin" style={{ color: "#302d28" }} />
+                    </div>
+                    <div className="p-2.5" style={{ background: "#181714" }}>
+                      <div className="h-3 rounded animate-pulse" style={{ background: "#302d28", width: "60%" }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : designs.length > 0 ? (
+              /* Design-Grid */
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                {designs.map((d, i) => (
+                  <button key={i} onClick={() => setSelectedDesignIdx(i)}
+                    className="rounded-xl overflow-hidden transition-all text-left"
+                    style={{ border: `2px solid ${selectedDesignIdx === i ? "#c9a96e" : "#302d28"}` }}>
+                    <div style={{ aspectRatio: "148/210", position: "relative" }}>
+                      <img src={d.motifUrl} alt={d.label} className="w-full h-full object-cover" />
+                      <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 45%, rgba(0,0,0,0.72) 100%)" }} />
+                      <div className="absolute bottom-0 left-0 right-0 p-3 text-center">
+                        <p style={{ fontFamily: "'Cormorant Garamond', serif", color: "#F7F3ED", fontSize: 12, fontWeight: 500 }}>
+                          {selectedCase ? `${selectedCase.deceased_first_name} ${selectedCase.deceased_last_name}` : ""}
+                        </p>
+                      </div>
+                      {selectedDesignIdx === i && (
+                        <div className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center" style={{ background: "#c9a96e" }}>
+                          <Check className="w-3.5 h-3.5" style={{ color: "#0f0e0c" }} />
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-2.5" style={{ background: "#181714" }}>
+                      <p className="text-xs font-medium" style={{ color: selectedDesignIdx === i ? "#c9a96e" : "#f0ede8" }}>{d.label}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </div>
+
+          {/* Text + Addons */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            {/* Innenseiten-Vorschau */}
             <div>
-              {/* Side toggle */}
-              <div className="flex gap-2 mb-4">
+              <div className="flex gap-2 mb-3">
                 {["front", "inside"].map(side => (
                   <button key={side} onClick={() => setPreviewSide(side)}
                     className="flex-1 py-2 rounded-xl text-xs font-medium transition-all"
@@ -441,74 +570,23 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
                       color: previewSide === side ? "#0f0e0c" : "#8a8278",
                       border: `1px solid ${previewSide === side ? "#c9a96e" : "#302d28"}`,
                     }}>
-                    {side === "front" ? "↖ Außenseite" : "↗ Innenseite"}
+                    {side === "front" ? "Außenseite" : "Innenseite"}
                   </button>
                 ))}
               </div>
-
-              {/* Card preview */}
-              {previewSide === "front" && (
-                <div className="relative">
-                  {generatingMotif && !heroImageUrl && (
-                    <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl" style={{ background: "rgba(15,14,12,0.7)" }}>
-                      <div className="text-center">
-                        <Loader2 className="w-7 h-7 animate-spin mx-auto mb-2" style={{ color: "#c9a96e" }} />
-                        <p className="text-xs" style={{ color: "#c9a96e" }}>Motivbild wird generiert…</p>
-                      </div>
-                    </div>
-                  )}
-                  <CardPrintPreview
-                    caseData={selectedCase}
-                    generatedText={editedText}
-                    motifImageUrl={motifImageUrl}
-                    cardFormat={cardFormat}
-                    side="front"
-                    funeralHome={funeralHome}
-                    heroImageUrl={heroImageUrl}
-                    religion={religion}
-                  />
-                  {/* Regenerate motif button */}
-                  {!heroImageUrl && (
-                    <button
-                      onClick={generateMotifImage}
-                      disabled={generatingMotif}
-                      className="mt-3 w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs disabled:opacity-40"
-                      style={{ background: "#181714", border: "1px solid #302d28", color: "#8a8278" }}>
-                      {generatingMotif ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
-                      Motivbild neu generieren
-                    </button>
-                  )}
-                  {heroImageUrl && (
-                    <div className="mt-3 flex gap-2">
-                      <label className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs cursor-pointer"
-                        style={{ background: "#181714", border: "1px solid #302d28", color: "#8a8278" }}>
-                        <Camera className="w-3 h-3" /> Foto ändern
-                        <input type="file" accept="image/*" className="hidden" onChange={uploadPhoto} />
-                      </label>
-                      <button onClick={() => setHeroImageUrl("")}
-                        className="flex-1 py-2 rounded-xl text-xs"
-                        style={{ background: "#181714", border: "1px solid #302d28", color: "#5a554e" }}>
-                        Foto entfernen
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-              {previewSide === "inside" && (
-                <CardPrintPreview
-                  caseData={selectedCase}
-                  generatedText={editedText}
-                  motifImageUrl={motifImageUrl}
-                  cardFormat={cardFormat}
-                  side="inside"
-                  funeralHome={funeralHome}
-                  heroImageUrl={heroImageUrl}
-                  religion={religion}
-                />
-              )}
+              <CardPrintPreview
+                caseData={selectedCase}
+                generatedText={editedText}
+                motifImageUrl={designs[selectedDesignIdx]?.motifUrl || ""}
+                cardFormat={cardFormat}
+                side={previewSide}
+                funeralHome={funeralHome}
+                heroImageUrl={heroImageUrl}
+                religion={religion}
+              />
             </div>
 
-            {/* Right: Text editor + addons */}
+            {/* Text + Addons rechts */}
             <div className="space-y-4">
               <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
                 <div className="flex items-center justify-between mb-3">
@@ -520,38 +598,32 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs disabled:opacity-40"
                     style={{ background: "rgba(201,169,110,0.1)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}>
                     {generatingText ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
-                    Neu generieren
+                    Neu
                   </button>
                 </div>
-
                 {generatingText ? (
                   <div className="py-8 flex flex-col items-center gap-3">
                     <Loader2 className="w-6 h-6 animate-spin" style={{ color: "#c9a96e" }} />
-                    <p className="text-xs" style={{ color: "#5a554e" }}>Persönlicher Text wird verfasst…</p>
+                    <p className="text-xs" style={{ color: "#5a554e" }}>Text wird verfasst…</p>
                   </div>
                 ) : (
-                  <textarea
-                    value={editedText}
-                    onChange={e => setEditedText(e.target.value)}
-                    rows={8}
+                  <textarea value={editedText} onChange={e => setEditedText(e.target.value)} rows={7}
                     className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none"
-                    style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8", fontFamily: "'Cormorant Garamond', serif", lineHeight: 1.8 }}
-                  />
+                    style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8", fontFamily: "'Cormorant Garamond', serif", lineHeight: 1.8 }} />
                 )}
               </div>
 
-              {/* Addons */}
               <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
                 <p className="text-sm font-semibold mb-3" style={{ color: "#f0ede8" }}>Erweiterungen</p>
                 {[
                   { val: addonInvitation, set: setAddonInvitation, icon: Mail, label: "Einladungskarte" },
                   { val: addonThankyou, set: setAddonThankyou, icon: BookOpen, label: "Danksagungskarte" },
                   { val: addonQr, set: setAddonQr, icon: QrCode, label: "QR-Code zur Gedenkseite" },
-                ].map(({ val, set: setter, icon: Icon, label }) => (
+                ].map(({ val, set: setter, icon: AddonIcon, label }) => (
                   <button key={label} onClick={() => setter(!val)}
                     className="w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left mb-2 last:mb-0"
                     style={{ background: val ? "rgba(201,169,110,0.08)" : "#201e1a", border: `1px solid ${val ? "#c9a96e" : "#302d28"}` }}>
-                    <Icon className="w-4 h-4" style={{ color: val ? "#c9a96e" : "#5a554e" }} />
+                    <AddonIcon className="w-4 h-4" style={{ color: val ? "#c9a96e" : "#5a554e" }} />
                     <span className="text-sm flex-1" style={{ color: "#f0ede8" }}>{label}</span>
                     <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ background: val ? "#c9a96e" : "#302d28" }}>
                       {val && <Check className="w-2.5 h-2.5" style={{ color: "#0f0e0c" }} />}
@@ -571,8 +643,7 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
                 await base44.entities.MourningCard.create({
                   case_id: selectedCaseId, format: cardFormat,
                   generated_text: editedText,
-                  motif_image_url: heroImageUrl || motifImageUrl,
-                  motif_theme: motifTheme,
+                  motif_image_url: heroImageUrl || designs[selectedDesignIdx]?.motifUrl || "",
                   questionnaire_answers: JSON.stringify({ extraInfo, religion }),
                   addon_invitation: addonInvitation, addon_thankyou: addonThankyou, addon_qr: addonQr,
                   status: "entwurf",
@@ -583,9 +654,7 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
               style={{ borderColor: draftSaved ? "#4ade80" : "#c9a96e", color: draftSaved ? "#4ade80" : "#c9a96e" }}>
               {draftSaved ? "✓ Entwurf gespeichert" : "Entwurf speichern"}
             </button>
-            <button
-              onClick={() => setStep(2)}
-              disabled={!editedText}
+            <button onClick={() => setStep(2)} disabled={!editedText}
               className="flex-1 py-3 rounded-xl text-sm font-medium disabled:opacity-40"
               style={{ background: "#c9a96e", color: "#0f0e0c" }}>
               Weiter zum Druck
@@ -703,7 +772,7 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
             <h3 className="text-lg font-semibold mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Bestellübersicht</h3>
             {[
               ["Format", FORMATS.find(f => f.id === cardFormat)?.label || "—"],
-              ["Außenseite", heroImageUrl ? "Portrait (hochgeladen)" : `Motivbild: ${motifTheme}`],
+              ["Außenseite", heroImageUrl ? "Portrait (hochgeladen)" : (designs[selectedDesignIdx]?.label || "KI-Motiv")],
               ["Drucktier", tier?.label || "—"],
               ["Auflage", `${quantity} Stk.`],
               ["Karten", `€ ${fmtEur(cardsSubtotal)}`],
