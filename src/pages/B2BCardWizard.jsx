@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { PRINT_TIERS as TIER_DATA, ADDON_PRICES, DEFAULT_CARD_QUANTITY, fmtEur } from "@/components/pricing/pricingData";
+import CardDesignPreview from "@/components/b2b/CardDesignPreview";
 
 const PRINT_TIERS = TIER_DATA;
 
@@ -135,20 +136,20 @@ export default function B2BCardWizard() {
     const { name, born, died, burial } = buildPersonContext();
     const style = DESIGN_STYLES[styleIdx];
 
-    // Generate image and text in parallel
-    const imagePrompt = `A complete mourning card design ready for print. Full-bleed artwork filling the entire card. ${style.promptStyle} The card should have clearly visible text overlay areas. Person: ${name}${born ? `, born ${born}` : ""}${died ? `, died ${died}` : ""}${burial ? `, ${burial}` : ""}. ${extraInfo ? `Additional context: ${extraInfo}.` : ""} The name "${name}" and dates should appear elegant on the card as text overlays. NO placeholder text, just the visual design background. High resolution, print quality, realistic card mockup perspective.`;
+    // Generate ONLY a subtle background artwork — NOT a card mockup
+    const bgPrompt = `Abstract background artwork for a mourning card. ${style.promptStyle} IMPORTANT: This is purely a background texture/pattern — NO text, NO letters, NO words, NO card edges, NO table, NO mockup, NO perspective. Just a beautiful full-bleed atmospheric background that will have text overlaid on top. No faces, no people. Ultra-high resolution, flat 2D, filling the entire frame edge to edge.`;
 
     const textPrompt = `Du bist ein erfahrener Texter für Trauerkarten. Schreibe einen würdevollen, persönlichen Trauerkartentext auf Deutsch für ${name}${born ? ` (* ${born})` : ""}${died ? ` († ${died})` : ""}${burial ? `, ${burial}` : ""}.${extraInfo ? ` Zusätzliche Informationen: ${extraInfo}.` : ""}
 
 Stil: ${style.label}. Der Text soll 60–90 Wörter lang sein, druckfertig, kein Boilerplate. Klingt als hätte ihn jemand geschrieben der die Person wirklich kannte.`;
 
-    const [imgResult, textResult] = await Promise.all([
-      base44.integrations.Core.GenerateImage({ prompt: imagePrompt }),
+    const [bgResult, textResult] = await Promise.all([
+      base44.integrations.Core.GenerateImage({ prompt: bgPrompt }),
       base44.integrations.Core.InvokeLLM({ prompt: textPrompt, model: "claude_sonnet_4_6" }),
     ]);
 
     return {
-      imageUrl: imgResult.url,
+      bgImageUrl: bgResult.url,
       text: typeof textResult === "string" ? textResult : "",
       style: style.id,
       styleLabel: style.label,
@@ -206,7 +207,7 @@ Stil: ${style.label}. Der Text soll 60–90 Wörter lang sein, druckfertig, kein
       questionnaire_answers: JSON.stringify({ extraInfo, style: chosen?.style }),
       generated_text: editedText,
       motif_theme: chosen?.style || "minimalist",
-      motif_image_url: chosen?.imageUrl || "",
+      motif_image_url: chosen?.bgImageUrl || "",
       addon_invitation: addonInvitation,
       addon_thankyou: addonThankyou,
       addon_qr: addonQr,
@@ -365,77 +366,26 @@ Stil: ${style.label}. Der Text soll 60–90 Wörter lang sein, druckfertig, kein
             )}
           </div>
 
-          {generatingDesigns && designs.every(d => d === null) ? (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {DESIGN_STYLES.map((style, i) => (
-                <div key={i} className="rounded-2xl overflow-hidden" style={{ background: "#181714", border: "1px solid #302d28" }}>
-                  <div className="aspect-[3/4] flex flex-col items-center justify-center gap-3" style={{ background: "#201e1a" }}>
-                    <Loader2 className="w-7 h-7 animate-spin" style={{ color: "#c9a96e" }} />
-                    <p className="text-xs" style={{ color: "#5a554e" }}>{style.label}</p>
-                    <p className="text-xs" style={{ color: "#302d28" }}>wird generiert…</p>
-                  </div>
-                  <div className="p-3">
-                    <p className="text-xs font-medium" style={{ color: "#5a554e" }}>{style.label}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {DESIGN_STYLES.map((style, i) => {
-                const design = designs[i];
-                const isSelected = selectedDesignIdx === i;
-                const isRegen = regeneratingIdx === i;
-                return (
-                  <div key={i} className="rounded-2xl overflow-hidden flex flex-col cursor-pointer transition-all"
-                    style={{ background: "#181714", border: `2px solid ${isSelected ? "#c9a96e" : "#302d28"}`, transform: isSelected ? "scale(1.02)" : "scale(1)" }}
-                    onClick={() => design && !isRegen && selectDesign(i)}>
-
-                    <div className="aspect-[3/4] relative overflow-hidden" style={{ background: "#201e1a" }}>
-                      {isRegen ? (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 z-10" style={{ background: "rgba(15,14,12,0.85)" }}>
-                          <Loader2 className="w-6 h-6 animate-spin" style={{ color: "#c9a96e" }} />
-                          <p className="text-xs" style={{ color: "#5a554e" }}>neu generieren…</p>
-                        </div>
-                      ) : null}
-
-                      {design?.imageUrl ? (
-                        <img src={design.imageUrl} alt={style.label} className="w-full h-full object-cover" />
-                      ) : !isRegen ? (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-                          <Loader2 className="w-6 h-6 animate-spin" style={{ color: "#c9a96e" }} />
-                          <p className="text-xs" style={{ color: "#5a554e" }}>{style.label}…</p>
-                        </div>
-                      ) : null}
-
-                      {/* Selection overlay */}
-                      {isSelected && (
-                        <div className="absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center" style={{ background: "#c9a96e" }}>
-                          <Check className="w-4 h-4" style={{ color: "#0f0e0c" }} />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="p-3 flex items-center justify-between gap-2">
-                      <div>
-                        <p className="text-xs font-semibold" style={{ color: isSelected ? "#c9a96e" : "#f0ede8" }}>{style.label}</p>
-                      </div>
-                      {design && (
-                        <button
-                          onClick={e => { e.stopPropagation(); regenerateSingle(i); }}
-                          disabled={isRegen || !!regeneratingIdx}
-                          className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 disabled:opacity-30"
-                          style={{ background: "#302d28" }}
-                          title="Neu generieren">
-                          <RefreshCw className="w-3 h-3" style={{ color: "#8a8278" }} />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {DESIGN_STYLES.map((style, i) => {
+              const design = designs[i];
+              const isLoading = !design || regeneratingIdx === i;
+              return (
+                <CardDesignPreview
+                  key={i}
+                  design={design || { style: style.id, styleLabel: style.label }}
+                  caseData={selectedCase}
+                  text={isLoading ? "" : (selectedDesignIdx === i ? editedText : design?.text)}
+                  funeralHome={funeralHome}
+                  isSelected={selectedDesignIdx === i}
+                  isLoading={isLoading}
+                  onClick={() => !isLoading && selectDesign(i)}
+                  onRegenerate={() => regenerateSingle(i)}
+                  showRegenerateButton={!!design && regeneratingIdx !== i}
+                />
+              );
+            })}
+          </div>
 
           {/* Text editor for selected design */}
           {selectedDesignIdx !== null && designs[selectedDesignIdx] && (
@@ -477,7 +427,7 @@ Stil: ${style.label}. Der Text soll 60–90 Wörter lang sein, druckfertig, kein
               onClick={async () => {
                 await base44.entities.MourningCard.create({
                   case_id: selectedCaseId, format: cardFormat,
-                  generated_text: editedText, motif_image_url: designs[selectedDesignIdx]?.imageUrl || "",
+                  generated_text: editedText, motif_image_url: designs[selectedDesignIdx]?.bgImageUrl || "",
                   motif_theme: designs[selectedDesignIdx]?.style || "minimalist",
                   questionnaire_answers: JSON.stringify({ extraInfo }),
                   addon_invitation: addonInvitation, addon_thankyou: addonThankyou, addon_qr: addonQr, status: "entwurf",
