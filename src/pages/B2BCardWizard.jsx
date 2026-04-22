@@ -144,8 +144,17 @@ export default function B2BCardWizard() {
 
   const generateMotifImage = async () => {
     setGeneratingMotif(true);
-    const themePrompt = MOTIF_PROMPTS[motifTheme] || MOTIF_PROMPTS.nature;
-    const prompt = `Ultra high quality photograph for a memorial card cover, portrait orientation. ${themePrompt}. Photorealistic, moody and contemplative, cinematic lighting. NO text, NO letters, NO numbers, NO people, NO faces, NO hands. Full bleed, edge to edge, no borders.`;
+    const sceneMap = {
+      nature: "serene misty forest at dawn, golden light through trees, peaceful path disappearing into fog",
+      forest: "single ancient oak tree in morning mist, soft light, peaceful meadow, autumn colors",
+      maritime: "calm ocean horizon at golden hour, gentle waves, dramatic clouds, warm light",
+      floral_classic: "soft white roses and lilies, close-up, shallow depth of field, warm muted tones",
+      religious: "warm candlelight in peaceful setting, soft bokeh, golden glow, contemplative",
+      handwerk: "rustic wood workshop detail, warm natural light, vintage tools, nostalgic atmosphere",
+      minimalist: "abstract soft gradient landscape, muted earth tones, horizon line, minimal and serene",
+    };
+    const scene = sceneMap[motifTheme] || sceneMap.minimalist;
+    const prompt = `Fine art photography, ${scene}. Flat 2D image filling the entire frame edge to edge. Photorealistic, high resolution, moody, contemplative. Vertical portrait orientation. Absolutely NO text, NO letters, NO numbers, NO watermarks, NO borders, NO 3D objects, NO paper, NO mockup, NO product photography. Just a beautiful flat photograph.`;
     const { url } = await base44.integrations.Core.GenerateImage({ prompt });
     setMotifImageUrl(url);
     setGeneratingMotif(false);
