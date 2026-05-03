@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
 import {
   Check, ChevronRight, Loader2, QrCode, Mail, BookOpen,
-  Building2, User, RefreshCw, Sparkles, Camera, ImageIcon, Monitor
+  Building2, User, RefreshCw, Sparkles, Camera, ImageIcon, Monitor, X, Library
 } from "lucide-react";
 // Note: BookOpen already imported above
 import { Link } from "react-router-dom";
@@ -74,6 +74,9 @@ export default function B2BCardWizard() {
   const [editedText, setEditedText] = useState("");
   const [generatingText, setGeneratingText] = useState(false);
   const [textSaved, setTextSaved] = useState(false);
+  const [showTextLibrary, setShowTextLibrary] = useState(false);
+  const [savedTexts, setSavedTexts] = useState([]);
+  const [loadingTexts, setLoadingTexts] = useState(false);
 
   // Preview side
   const [previewSide, setPreviewSide] = useState("front");
@@ -719,7 +722,7 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
                   <h3 className="text-base font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>
                     Trauertext — Innenseite
                   </h3>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <button onClick={async () => {
                       if (!editedText) return;
                       const title = selectedCase
@@ -733,6 +736,21 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
                       style={{ background: textSaved ? "rgba(74,222,128,0.1)" : "rgba(201,169,110,0.06)", color: textSaved ? "#4ade80" : "#8a8278", border: `1px solid ${textSaved ? "rgba(74,222,128,0.3)" : "#302d28"}` }}>
                       {textSaved ? <Check className="w-3 h-3" /> : <BookOpen className="w-3 h-3" />}
                       {textSaved ? "Gespeichert" : "Speichern"}
+                    </button>
+                    <button onClick={async () => {
+                      setShowTextLibrary(true);
+                      if (savedTexts.length === 0) {
+                        setLoadingTexts(true);
+                        const u = await base44.auth.me();
+                        const texts = await base44.entities.SavedText.filter({ created_by: u.email }, "-created_date", 50);
+                        setSavedTexts(texts);
+                        setLoadingTexts(false);
+                      }
+                    }}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs"
+                      style={{ background: "rgba(201,169,110,0.08)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.25)" }}>
+                      <Library className="w-3 h-3" />
+                      Bibliothek
                     </button>
                     <button onClick={() => { setGeneratedText(""); generateText(); }}
                       disabled={generatingText}
@@ -1064,6 +1082,60 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
               {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
               Bestellung aufgeben
             </button>
+          </div>
+        </div>
+      )}
+      {/* ── Textbibliothek Modal ── */}
+      {showTextLibrary && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.7)" }}
+          onClick={() => setShowTextLibrary(false)}>
+          <div className="w-full max-w-lg rounded-2xl overflow-hidden" style={{ background: "#181714", border: "1px solid #302d28", maxHeight: "80vh", display: "flex", flexDirection: "column" }}
+            onClick={e => e.stopPropagation()}>
+            {/* Header */}
+            <div className="flex items-center justify-between px-5 py-4 border-b flex-shrink-0" style={{ borderColor: "#302d28" }}>
+              <div className="flex items-center gap-2">
+                <Library className="w-4 h-4" style={{ color: "#c9a96e" }} />
+                <h3 className="text-base font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Textbibliothek</h3>
+              </div>
+              <button onClick={() => setShowTextLibrary(false)} style={{ color: "#5a554e" }}>
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            {/* Body */}
+            <div className="overflow-y-auto flex-1 p-4 space-y-3">
+              {loadingTexts ? (
+                <div className="py-10 flex items-center justify-center">
+                  <Loader2 className="w-6 h-6 animate-spin" style={{ color: "#c9a96e" }} />
+                </div>
+              ) : savedTexts.length === 0 ? (
+                <div className="py-10 text-center">
+                  <BookOpen className="w-8 h-8 mx-auto mb-3" style={{ color: "#302d28" }} />
+                  <p className="text-sm" style={{ color: "#5a554e" }}>Noch keine Texte gespeichert.</p>
+                  <p className="text-xs mt-1" style={{ color: "#302d28" }}>Speichern Sie Texte im Wizard, um sie hier wiederzuverwenden.</p>
+                </div>
+              ) : (
+                savedTexts.map(t => (
+                  <button key={t.id}
+                    onClick={() => { setEditedText(t.content); setShowTextLibrary(false); }}
+                    className="w-full text-left p-4 rounded-xl transition-all"
+                    style={{ background: "#201e1a", border: "1px solid #302d28" }}
+                    onMouseEnter={e => e.currentTarget.style.borderColor = "#c9a96e"}
+                    onMouseLeave={e => e.currentTarget.style.borderColor = "#302d28"}>
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <p className="text-sm font-medium" style={{ color: "#f0ede8" }}>{t.title || "Trauertext"}</p>
+                      {t.religion && (
+                        <span className="text-xs px-2 py-0.5 rounded-full flex-shrink-0" style={{ background: "rgba(201,169,110,0.1)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.2)" }}>
+                          {t.religion}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm leading-relaxed italic line-clamp-3" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#8a8278" }}>
+                      „{t.content}"
+                    </p>
+                  </button>
+                ))
+              )}
+            </div>
           </div>
         </div>
       )}
