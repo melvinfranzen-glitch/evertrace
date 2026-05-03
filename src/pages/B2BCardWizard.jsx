@@ -78,6 +78,11 @@ export default function B2BCardWizard() {
   const [savedTexts, setSavedTexts] = useState([]);
   const [loadingTexts, setLoadingTexts] = useState(false);
 
+  // Motif library
+  const [showMotifLibrary, setShowMotifLibrary] = useState(false);
+  const [motifLibraryCards, setMotifLibraryCards] = useState([]);
+  const [loadingMotifs, setLoadingMotifs] = useState(false);
+
   // Preview side
   const [previewSide, setPreviewSide] = useState("front");
   // Memorial slug for QR
@@ -603,12 +608,36 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
                 </p>
               </div>
               {!heroImageUrl && (
-                <button onClick={generateFourDesigns} disabled={generatingDesigns}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs transition-all disabled:opacity-40"
-                  style={{ background: "rgba(201,169,110,0.1)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}>
-                  {generatingDesigns ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
-                  Alle neu generieren
-                </button>
+                <div className="flex items-center gap-2">
+                  <button onClick={async () => {
+                    setShowMotifLibrary(true);
+                    if (motifLibraryCards.length === 0) {
+                      setLoadingMotifs(true);
+                      const u = await base44.auth.me();
+                      const [cards, templates] = await Promise.all([
+                        base44.entities.MourningCard.filter({ created_by: u.email }, "-created_date", 50),
+                        base44.entities.CardTemplate.filter({ created_by: u.email }, "-created_date", 50),
+                      ]);
+                      const withMotif = [
+                        ...cards.filter(c => c.motif_image_url),
+                        ...templates.filter(t => t.motif_image_url),
+                      ];
+                      setMotifLibraryCards(withMotif);
+                      setLoadingMotifs(false);
+                    }
+                  }}
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs transition-all"
+                    style={{ background: "rgba(201,169,110,0.06)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.2)" }}>
+                    <Library className="w-3.5 h-3.5" />
+                    Aus Bibliothek
+                  </button>
+                  <button onClick={generateFourDesigns} disabled={generatingDesigns}
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs transition-all disabled:opacity-40"
+                    style={{ background: "rgba(201,169,110,0.1)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}>
+                    {generatingDesigns ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+                    Alle neu generieren
+                  </button>
+                </div>
               )}
             </div>
 
@@ -1085,6 +1114,63 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
           </div>
         </div>
       )}
+      {/* ── Motivbibliothek Modal ── */}
+      {showMotifLibrary && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.7)" }}
+          onClick={() => setShowMotifLibrary(false)}>
+          <div className="w-full max-w-2xl rounded-2xl overflow-hidden" style={{ background: "#181714", border: "1px solid #302d28", maxHeight: "80vh", display: "flex", flexDirection: "column" }}
+            onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-5 py-4 border-b flex-shrink-0" style={{ borderColor: "#302d28" }}>
+              <div className="flex items-center gap-2">
+                <Library className="w-4 h-4" style={{ color: "#c9a96e" }} />
+                <h3 className="text-base font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Motivbibliothek</h3>
+              </div>
+              <button onClick={() => setShowMotifLibrary(false)} style={{ color: "#5a554e" }}>
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="overflow-y-auto flex-1 p-4">
+              {loadingMotifs ? (
+                <div className="py-10 flex items-center justify-center">
+                  <Loader2 className="w-6 h-6 animate-spin" style={{ color: "#c9a96e" }} />
+                </div>
+              ) : motifLibraryCards.length === 0 ? (
+                <div className="py-10 text-center">
+                  <ImageIcon className="w-8 h-8 mx-auto mb-3" style={{ color: "#302d28" }} />
+                  <p className="text-sm" style={{ color: "#5a554e" }}>Noch keine Motivbilder gespeichert.</p>
+                  <p className="text-xs mt-1" style={{ color: "#302d28" }}>Erstellen und speichern Sie Karten, um deren Motive hier wiederzuverwenden.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                  {motifLibraryCards.map((card, i) => (
+                    <button key={card.id || i}
+                      onClick={() => {
+                        setDesigns(prev => {
+                          const newDesign = { motifUrl: card.motif_image_url, label: card.name || "Aus Bibliothek" };
+                          // Add as a new design option and select it
+                          const updated = [...prev, newDesign];
+                          setSelectedDesignIdx(updated.length - 1);
+                          return updated;
+                        });
+                        setShowMotifLibrary(false);
+                      }}
+                      className="rounded-xl overflow-hidden transition-all text-left"
+                      style={{ border: "1px solid #302d28" }}
+                      onMouseEnter={e => e.currentTarget.style.borderColor = "#c9a96e"}
+                      onMouseLeave={e => e.currentTarget.style.borderColor = "#302d28"}>
+                      <img src={card.motif_image_url} alt="" className="w-full object-cover" style={{ aspectRatio: "148/210" }} />
+                      <div className="px-2 py-1.5" style={{ background: "#201e1a" }}>
+                        <p className="text-xs truncate" style={{ color: "#8a8278" }}>{card.name || (card.format ? card.format.replace(/_/g, " ") : "Motiv")}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── Textbibliothek Modal ── */}
       {showTextLibrary && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.7)" }}
