@@ -1,0 +1,48 @@
+{
+  "name": "PresentationState",
+  "type": "object",
+  "properties": {
+    "wizard_user_id": {
+      "type": "string"
+    },
+    "case_id": {
+      "type": "string"
+    },
+    "funeral_home_id": {
+      "type": "string"
+    },
+    "hero_image_url": {
+      "type": "string"
+    },
+    "selected_design_idx": {
+      "type": "number",
+      "default": 0
+    },
+    "designs": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "edited_text": {
+      "type": "string"
+    },
+    "card_format": {
+      "type": "string"
+    },
+    "preview_side": {
+      "type": "string",
+      "default": "front"
+    },
+    "religion": {
+      "type": "string"
+    },
+    "step": {
+      "type": "number",
+      "default": 1
+    }
+  },
+  "required": [
+    "wizard_user_id"
+  ]
+}

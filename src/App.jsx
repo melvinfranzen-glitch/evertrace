@@ -17,6 +17,7 @@ const B2BOrders = lazy(() => import('./pages/B2BOrders'));
 const B2BAnalytics = lazy(() => import('./pages/B2BAnalytics'));
 const B2BSettings = lazy(() => import('./pages/B2BSettings'));
 const B2BPublicMemorial = lazy(() => import('./pages/B2BPublicMemorial'));
+const B2BCardPresentation = lazy(() => import('./pages/B2BCardPresentation'));
 import MemorialCollabInvite from './pages/MemorialCollabInvite';
 import Legal from './pages/Legal';
 const DesignSystem = lazy(() => import('./pages/DesignSystem'));
@@ -86,6 +87,7 @@ const AuthenticatedApp = () => {
       <Route path="/B2BAnalytics" element={<Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}><B2BAnalytics /></Suspense>} />
       <Route path="/B2BSettings" element={<Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}><B2BSettings /></Suspense>} />
       <Route path="/B2BPublicMemorial" element={<Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}><B2BPublicMemorial /></Suspense>} />
+      <Route path="/B2BCardPresentation" element={<Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}><B2BCardPresentation /></Suspense>} />
       <Route path="/Legal" element={<LayoutWrapper currentPageName="Legal"><Legal /></LayoutWrapper>} />
       <Route path="/DesignSystem" element={<Suspense fallback={<div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" /></div>}><DesignSystem /></Suspense>} />
       <Route path="/MemorialCollabInvite" element={<MemorialCollabInvite />} />

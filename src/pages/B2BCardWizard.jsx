@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import B2BLayout from "@/components/b2b/B2BLayout";
 import {
   Check, ChevronRight, Loader2, QrCode, Mail, BookOpen,
-  Building2, User, RefreshCw, Sparkles, Camera, ImageIcon
+  Building2, User, RefreshCw, Sparkles, Camera, ImageIcon, Monitor
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
@@ -93,6 +93,7 @@ export default function B2BCardWizard() {
   const [submitting, setSubmitting] = useState(false);
   const [orderDone, setOrderDone] = useState(false);
   const [draftSaved, setDraftSaved] = useState(false);
+  const [presentationId, setPresentationId] = useState(null);
 
   useEffect(() => {
     base44.auth.me().then(u => {
@@ -221,6 +222,12 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
     }
   }, [step]);
 
+  // Sync to presentation when key state changes
+  useEffect(() => {
+    if (!presentationId) return;
+    syncPresentation();
+  }, [selectedDesignIdx, editedText, previewSide, designs, step, heroImageUrl]);
+
   const uploadPhoto = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -237,6 +244,40 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
   const cardsSubtotal = tier ? tier.basePrice * quantity : 0;
   const shipping = tier ? tier.shipping : 0;
   const totalPrice = fmtEur(cardsSubtotal + addonInvPrice + addonThkPrice + shipping);
+
+  // Auto-scroll to top on step change
+  useEffect(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, [step]);
+
+  // Sync presentation state
+  const syncPresentation = async (overrides = {}) => {
+    const payload = {
+      wizard_user_id: (await base44.auth.me()).id || "",
+      case_id: selectedCaseId,
+      funeral_home_id: funeralHome?.id || "",
+      hero_image_url: heroImageUrl,
+      selected_design_idx: selectedDesignIdx,
+      designs,
+      edited_text: editedText,
+      card_format: cardFormat,
+      preview_side: previewSide,
+      religion,
+      step,
+      ...overrides,
+    };
+    if (presentationId) {
+      await base44.entities.PresentationState.update(presentationId, payload);
+    } else {
+      const created = await base44.entities.PresentationState.create(payload);
+      setPresentationId(created.id);
+      return created.id;
+    }
+    return presentationId;
+  };
+
+  const openPresentation = async () => {
+    const id = await syncPresentation();
+    window.open(`/B2BCardPresentation?id=${id}`, "_blank", "noopener");
+  };
 
   const submitOrder = async () => {
     setSubmitting(true);
@@ -294,8 +335,9 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
 
   return (
     <B2BLayout title="Neue Trauerkarte erstellen">
-      {/* Wizard step indicators */}
-      <div className="flex items-center gap-1 mb-8 overflow-x-auto pb-2">
+      {/* Wizard step indicators + Präsentations-Button */}
+      <div className="flex items-center justify-between gap-3 mb-8 flex-wrap">
+        <div className="flex items-center gap-1 overflow-x-auto pb-2">
         {WIZARD_STEPS.map((s, i) => (
           <div key={i} className="flex items-center gap-1 flex-shrink-0">
             <div className="flex items-center gap-1.5">
@@ -312,6 +354,17 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
             {i < WIZARD_STEPS.length - 1 && <ChevronRight className="w-3 h-3 flex-shrink-0" style={{ color: "#302d28" }} />}
           </div>
         ))}
+        </div>
+        {step >= 1 && (
+          <button
+            onClick={openPresentation}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium flex-shrink-0 transition-all"
+            style={{ background: presentationId ? "rgba(201,169,110,0.15)" : "#201e1a", border: `1px solid ${presentationId ? "#c9a96e" : "#302d28"}`, color: presentationId ? "#c9a96e" : "#8a8278" }}
+          >
+            <Monitor className="w-4 h-4" />
+            {presentationId ? "TV-Ansicht aktualisieren" : "Präsentationsmodus"}
+          </button>
+        )}
       </div>
 
       {/* ── Step 0: Fall, Foto & Format ── */}
