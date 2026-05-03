@@ -92,26 +92,56 @@ export default function B2BCardPresentation() {
     );
   }
 
-  // Alle anderen Steps → Einzelne Kartenvorschau groß
+  // Alle anderen Steps → Außen- UND Innenseite nebeneinander groß
+  const cardW = "min(380px, 38vw)";
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-10" style={{ background: "#0f0e0c" }}>
-      <p className="text-xs uppercase tracking-[0.3em] mb-8" style={{ color: "#c9a96e", fontFamily: "'Lato', sans-serif" }}>
-        {side === "front" ? "Außenseite" : "Innenseite"}
+    <div className="min-h-screen flex flex-col items-center justify-center p-8 gap-10" style={{ background: "#0f0e0c" }}>
+      <p className="text-xs uppercase tracking-[0.3em]" style={{ color: "#c9a96e", fontFamily: "'Lato', sans-serif" }}>
+        Kartenvorschau
       </p>
-      <div style={{ width: "min(340px, 80vw)" }}>
-        <CardPrintPreview
-          caseData={caseData}
-          generatedText={edited_text}
-          motifImageUrl={designs?.[selIdx]?.motifUrl || ""}
-          cardFormat={card_format || "DIN_A5_folded"}
-          side={side}
-          funeralHome={funeralHome}
-          heroImageUrl={hero_image_url}
-          religion={religion}
-        />
+
+      <div className="flex flex-col md:flex-row items-center justify-center gap-10 w-full">
+        {/* Außenseite */}
+        <div className="flex flex-col items-center gap-3">
+          <p className="text-xs uppercase tracking-[0.2em]" style={{ color: "#5a554e", fontFamily: "'Lato', sans-serif" }}>Außenseite</p>
+          <div style={{ width: cardW }}>
+            <CardPrintPreview
+              caseData={caseData}
+              generatedText={edited_text}
+              motifImageUrl={designs?.[selIdx]?.motifUrl || ""}
+              cardFormat={card_format || "DIN_A5_folded"}
+              side="front"
+              funeralHome={funeralHome}
+              heroImageUrl={hero_image_url}
+              religion={religion}
+            />
+          </div>
+        </div>
+
+        {/* Trennlinie */}
+        <div style={{ width: 1, height: 200, background: "rgba(201,169,110,0.15)" }} className="hidden md:block" />
+
+        {/* Innenseite */}
+        <div className="flex flex-col items-center gap-3">
+          <p className="text-xs uppercase tracking-[0.2em]" style={{ color: "#5a554e", fontFamily: "'Lato', sans-serif" }}>Innenseite</p>
+          <div style={{ width: cardW }}>
+            <CardPrintPreview
+              caseData={caseData}
+              generatedText={edited_text}
+              motifImageUrl={designs?.[selIdx]?.motifUrl || ""}
+              cardFormat={card_format || "DIN_A5_folded"}
+              side="inside"
+              funeralHome={funeralHome}
+              heroImageUrl={hero_image_url}
+              religion={religion}
+            />
+          </div>
+        </div>
       </div>
+
       {designs?.[selIdx]?.label && (
-        <p className="mt-5 text-sm" style={{ color: "#8a8278", fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic" }}>
+        <p className="text-sm" style={{ color: "#8a8278", fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic" }}>
           {designs[selIdx].label}
         </p>
       )}
