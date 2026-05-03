@@ -43,6 +43,7 @@ export default function B2BCardWizard() {
   const params = new URLSearchParams(window.location.search);
   const preselectedCaseId = params.get("case_id");
   const draftId = params.get("draft_id");
+  const templateId = params.get("template_id");
 
   const [step, setStep] = useState(0);
   const [draftCardId, setDraftCardId] = useState(draftId || null);
@@ -105,6 +106,35 @@ export default function B2BCardWizard() {
       });
     });
   }, []);
+
+  // Load template if template_id is in URL
+  useEffect(() => {
+    if (!templateId) return;
+    base44.entities.CardTemplate.filter({ id: templateId }).then(([tpl]) => {
+      if (!tpl) return;
+      setCardFormat(tpl.format || "DIN_A5_folded");
+      setAddonInvitation(tpl.addon_invitation || false);
+      setAddonThankyou(tpl.addon_thankyou || false);
+      setAddonQr(tpl.addon_qr || false);
+      if (tpl.text_template) { setGeneratedText(tpl.text_template); setEditedText(tpl.text_template); }
+      try {
+        const qa = JSON.parse(tpl.questionnaire_answers || "{}");
+        if (qa.extraInfo) setExtraInfo(qa.extraInfo);
+        if (qa.religion) setReligion(qa.religion);
+        if (qa.heroImageUrl) setHeroImageUrl(qa.heroImageUrl);
+        if (qa.designs) setDesigns(qa.designs);
+        if (qa.selectedDesignIdx !== undefined) setSelectedDesignIdx(qa.selectedDesignIdx);
+        // If motif image stored directly
+        if (!qa.heroImageUrl && !qa.designs?.length && tpl.motif_image_url) {
+          setDesigns([{ motifUrl: tpl.motif_image_url, label: tpl.name || "Vorlage" }]);
+        }
+      } catch {
+        if (tpl.motif_image_url) setDesigns([{ motifUrl: tpl.motif_image_url, label: tpl.name || "Vorlage" }]);
+      }
+      // Jump to step 1 — case still needs to be selected
+      setStep(1);
+    });
+  }, [templateId]);
 
   // Load draft if draft_id is in URL
   useEffect(() => {
