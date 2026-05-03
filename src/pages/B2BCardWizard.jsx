@@ -42,8 +42,10 @@ const MOTIF_PROMPTS = {
 export default function B2BCardWizard() {
   const params = new URLSearchParams(window.location.search);
   const preselectedCaseId = params.get("case_id");
+  const draftId = params.get("draft_id");
 
   const [step, setStep] = useState(0);
+  const [draftCardId, setDraftCardId] = useState(draftId || null);
   const [cases, setCases] = useState([]);
   const [funeralHome, setFuneralHome] = useState(null);
   const [selectedCaseId, setSelectedCaseId] = useState(preselectedCaseId || "");
@@ -104,28 +106,58 @@ export default function B2BCardWizard() {
     });
   }, []);
 
+  // Load draft if draft_id is in URL
+  useEffect(() => {
+    if (!draftId) return;
+    base44.entities.MourningCard.filter({ id: draftId }).then(([card]) => {
+      if (!card) return;
+      setDraftCardId(card.id);
+      setSelectedCaseId(card.case_id || "");
+      setCardFormat(card.format || "DIN_A5_folded");
+      setEditedText(card.generated_text || "");
+      setGeneratedText(card.generated_text || "");
+      setAddonInvitation(card.addon_invitation || false);
+      setAddonThankyou(card.addon_thankyou || false);
+      setAddonQr(card.addon_qr || false);
+      if (card.motif_image_url) setHeroImageUrl(card.motif_image_url);
+      try {
+        const qa = JSON.parse(card.questionnaire_answers || "{}");
+        if (qa.extraInfo) setExtraInfo(qa.extraInfo);
+        if (qa.religion) setReligion(qa.religion);
+        if (qa.heroImageUrl) setHeroImageUrl(qa.heroImageUrl);
+        if (qa.designs) setDesigns(qa.designs);
+        if (qa.selectedDesignIdx !== undefined) setSelectedDesignIdx(qa.selectedDesignIdx);
+      } catch {}
+      // Go to step 1 directly since we already have text
+      setStep(1);
+    });
+  }, [draftId]);
+
   // When case is selected, load photo + person context from linked pages
   useEffect(() => {
     if (selectedCaseId && cases.length) {
       const c = cases.find(x => x.id === selectedCaseId);
       setSelectedCase(c || null);
       if (c) {
-        setHeroImageUrl("");
-        setPersonContext("");
-        setDesigns([]);
-        // Try B2BMemorialPage first
-        base44.entities.B2BMemorialPage.filter({ case_id: c.id })
-          .then(([page]) => {
-            if (page?.main_photo_url) setHeroImageUrl(page.main_photo_url);
-            if (page?.biography) setPersonContext(page.biography);
-          }).catch(() => {});
-        // Also try linked Memorial via funeral_home_case_id
-        base44.entities.Memorial.filter({ funeral_home_case_id: c.id })
-          .then(([m]) => {
-            if (m?.hero_image_url) setHeroImageUrl(prev => prev || m.hero_image_url);
-            if (m?.biography_raw_input) setPersonContext(prev => prev || m.biography_raw_input);
-            else if (m?.biography) setPersonContext(prev => prev || m.biography);
-          }).catch(() => {});
+        // Don't reset if we loaded from a draft (draft sets heroImageUrl/designs itself)
+        if (!draftId) {
+          setHeroImageUrl("");
+          setPersonContext("");
+          setDesigns([]);
+          // Try B2BMemorialPage first
+          base44.entities.B2BMemorialPage.filter({ case_id: c.id })
+            .then(([page]) => {
+              if (page?.main_photo_url) setHeroImageUrl(page.main_photo_url);
+              if (page?.biography) setPersonContext(page.biography);
+            }).catch(() => {});
+          // Also try linked Memorial via funeral_home_case_id
+          base44.entities.Memorial.filter({ funeral_home_case_id: c.id })
+            .then(([m]) => {
+              if (m?.hero_image_url) setHeroImageUrl(prev => prev || m.hero_image_url);
+              if (m?.biography_raw_input) setPersonContext(prev => prev || m.biography_raw_input);
+              else if (m?.biography) setPersonContext(prev => prev || m.biography);
+            }).catch(() => {});
+        }
       }
     }
   }, [selectedCaseId, cases]);
@@ -695,19 +727,46 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
             </button>
             <button
               onClick={async () => {
-                await base44.entities.MourningCard.create({
+                const payload = {
                   case_id: selectedCaseId, format: cardFormat,
                   generated_text: editedText,
                   motif_image_url: heroImageUrl || designs[selectedDesignIdx]?.motifUrl || "",
-                  questionnaire_answers: JSON.stringify({ extraInfo, religion }),
+                  questionnaire_answers: JSON.stringify({ extraInfo, religion, heroImageUrl, designs, selectedDesignIdx }),
                   addon_invitation: addonInvitation, addon_thankyou: addonThankyou, addon_qr: addonQr,
                   status: "entwurf",
-                });
+                };
+                if (draftCardId) {
+                  await base44.entities.MourningCard.update(draftCardId, payload);
+                } else {
+                  const created = await base44.entities.MourningCard.create(payload);
+                  setDraftCardId(created.id);
+                }
                 setDraftSaved(true); setTimeout(() => setDraftSaved(false), 2500);
               }}
               className="px-4 py-3 rounded-xl text-sm border flex-shrink-0"
               style={{ borderColor: draftSaved ? "#4ade80" : "#c9a96e", color: draftSaved ? "#4ade80" : "#c9a96e" }}>
-              {draftSaved ? "✓ Entwurf gespeichert" : "Entwurf speichern"}
+              {draftSaved ? "✓ Gespeichert" : "Entwurf speichern"}
+            </button>
+            <button
+              onClick={async () => {
+                const name = selectedCase
+                  ? `${selectedCase.deceased_first_name} ${selectedCase.deceased_last_name} – ${cardFormat}`
+                  : `Vorlage ${new Date().toLocaleDateString("de")}`;
+                await base44.entities.CardTemplate.create({
+                  name,
+                  format: cardFormat,
+                  motif_image_url: heroImageUrl || designs[selectedDesignIdx]?.motifUrl || "",
+                  text_template: editedText,
+                  questionnaire_answers: JSON.stringify({ extraInfo, religion, heroImageUrl, designs, selectedDesignIdx }),
+                  addon_invitation: addonInvitation,
+                  addon_thankyou: addonThankyou,
+                  addon_qr: addonQr,
+                });
+                setDraftSaved(true); setTimeout(() => setDraftSaved(false), 2500);
+              }}
+              className="px-4 py-3 rounded-xl text-sm border flex-shrink-0"
+              style={{ borderColor: "#302d28", color: "#8a8278" }}>
+              Als Vorlage
             </button>
             <button onClick={() => setStep(2)} disabled={!editedText}
               className="flex-1 py-3 rounded-xl text-sm font-medium disabled:opacity-40"
