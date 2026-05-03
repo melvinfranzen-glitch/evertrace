@@ -10,6 +10,7 @@ import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { PRINT_TIERS as TIER_DATA, ADDON_PRICES, DEFAULT_CARD_QUANTITY, fmtEur } from "@/components/pricing/pricingData";
 import CardPrintPreview from "@/components/b2b/CardPrintPreview";
+import CardPdfExport from "@/components/b2b/CardPdfExport";
 
 const PRINT_TIERS = TIER_DATA;
 
@@ -79,6 +80,7 @@ export default function B2BCardWizard() {
   // Print config
   const [quantity, setQuantity] = useState(DEFAULT_CARD_QUANTITY);
   const [printTier, setPrintTier] = useState("standard");
+  const [printMode, setPrintMode] = useState("order"); // "order" | "self"
 
   // Delivery
   const [deliveryMode, setDeliveryMode] = useState("funeral_home");
@@ -666,50 +668,107 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
       {/* ── Step 2: Print config ── */}
       {step === 2 && (
         <div className="max-w-2xl space-y-5">
-          <div className="rounded-2xl p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
-            <h3 className="text-lg font-semibold mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Auflage</h3>
-            <div className="flex items-center gap-4">
-              <button onClick={() => setQuantity(q => Math.max(25, q - 10))} className="w-10 h-10 rounded-xl text-lg flex items-center justify-center" style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }}>−</button>
-              <input type="number" value={quantity} onChange={e => setQuantity(Math.max(25, parseInt(e.target.value) || 25))}
-                className="w-20 text-center py-2.5 rounded-xl text-lg font-semibold outline-none"
-                style={{ background: "#201e1a", border: "1px solid #c9a96e", color: "#f0ede8" }} />
-              <button onClick={() => setQuantity(q => q + 10)} className="w-10 h-10 rounded-xl text-lg flex items-center justify-center" style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }}>+</button>
-              <span className="text-sm" style={{ color: "#8a8278" }}>Exemplare</span>
-            </div>
+
+          {/* Druckmodus-Auswahl */}
+          <div className="grid grid-cols-2 gap-3">
+            <button onClick={() => setPrintMode("order")}
+              className="p-5 rounded-2xl text-left transition-all"
+              style={{ background: printMode === "order" ? "rgba(201,169,110,0.08)" : "#181714", border: `2px solid ${printMode === "order" ? "#c9a96e" : "#302d28"}` }}>
+              <p className="font-semibold mb-1" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Print-on-Demand</p>
+              <p className="text-xs" style={{ color: "#8a8278" }}>Wir drucken & liefern — professioneller Offsetdruck, fertig gefalzt</p>
+            </button>
+            <button onClick={() => setPrintMode("self")}
+              className="p-5 rounded-2xl text-left transition-all"
+              style={{ background: printMode === "self" ? "rgba(201,169,110,0.08)" : "#181714", border: `2px solid ${printMode === "self" ? "#c9a96e" : "#302d28"}` }}>
+              <p className="font-semibold mb-1" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Selbst drucken</p>
+              <p className="text-xs" style={{ color: "#8a8278" }}>PDF-Export im Druckformat — für Ihren eigenen Drucker oder lokale Druckerei</p>
+            </button>
           </div>
 
-          <div className="space-y-3">
-            {PRINT_TIERS.map(t => (
-              <button key={t.id} onClick={() => setPrintTier(t.id)}
-                className="w-full p-5 rounded-2xl text-left transition-all"
-                style={{ background: printTier === t.id ? "rgba(201,169,110,0.08)" : "#181714", border: `1.5px solid ${printTier === t.id ? "#c9a96e" : "#302d28"}` }}>
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="font-semibold" style={{ color: "#f0ede8", fontFamily: "'Cormorant Garamond', serif" }}>{t.label}</p>
-                    <p className="text-sm mt-0.5" style={{ color: "#8a8278" }}>{t.desc}</p>
-                    <p className="text-xs mt-1" style={{ color: "#5a554e" }}>Lieferzeit: {t.delivery} · Mind. {t.minQty} Stk.</p>
-                  </div>
-                  <div className="text-right flex-shrink-0">
-                    <p className="font-semibold" style={{ color: "#c9a96e" }}>€ {fmtEur(t.basePrice)} / Stk.</p>
-                    <p className="text-sm mt-0.5" style={{ color: "#8a8278" }}>€ {fmtEur(t.basePrice * quantity)} gesamt</p>
-                    <p className="text-xs mt-0.5" style={{ color: "#5a554e" }}>+ € {fmtEur(t.shipping)} Versand</p>
-                  </div>
+          {/* Print-on-Demand: Auflage + Tiers */}
+          {printMode === "order" && (
+            <>
+              <div className="rounded-2xl p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
+                <h3 className="text-lg font-semibold mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Auflage</h3>
+                <div className="flex items-center gap-4">
+                  <button onClick={() => setQuantity(q => Math.max(25, q - 10))} className="w-10 h-10 rounded-xl text-lg flex items-center justify-center" style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }}>−</button>
+                  <input type="number" value={quantity} onChange={e => setQuantity(Math.max(25, parseInt(e.target.value) || 25))}
+                    className="w-20 text-center py-2.5 rounded-xl text-lg font-semibold outline-none"
+                    style={{ background: "#201e1a", border: "1px solid #c9a96e", color: "#f0ede8" }} />
+                  <button onClick={() => setQuantity(q => q + 10)} className="w-10 h-10 rounded-xl text-lg flex items-center justify-center" style={{ background: "#201e1a", border: "1px solid #302d28", color: "#f0ede8" }}>+</button>
+                  <span className="text-sm" style={{ color: "#8a8278" }}>Exemplare</span>
                 </div>
-              </button>
-            ))}
-          </div>
+              </div>
 
-          <div className="rounded-2xl p-5" style={{ background: "rgba(201,169,110,0.06)", border: "1px solid rgba(201,169,110,0.3)" }}>
-            <div className="flex items-center justify-between pt-3">
-              <span className="font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Gesamtbetrag</span>
-              <span className="text-2xl font-bold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#c9a96e" }}>€ {totalPrice}</span>
+              <div className="space-y-3">
+                {PRINT_TIERS.map(t => (
+                  <button key={t.id} onClick={() => setPrintTier(t.id)}
+                    className="w-full p-5 rounded-2xl text-left transition-all"
+                    style={{ background: printTier === t.id ? "rgba(201,169,110,0.08)" : "#181714", border: `1.5px solid ${printTier === t.id ? "#c9a96e" : "#302d28"}` }}>
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="font-semibold" style={{ color: "#f0ede8", fontFamily: "'Cormorant Garamond', serif" }}>{t.label}</p>
+                        <p className="text-sm mt-0.5" style={{ color: "#8a8278" }}>{t.desc}</p>
+                        <p className="text-xs mt-1" style={{ color: "#5a554e" }}>Lieferzeit: {t.delivery} · Mind. {t.minQty} Stk.</p>
+                      </div>
+                      <div className="text-right flex-shrink-0">
+                        <p className="font-semibold" style={{ color: "#c9a96e" }}>€ {fmtEur(t.basePrice)} / Stk.</p>
+                        <p className="text-sm mt-0.5" style={{ color: "#8a8278" }}>€ {fmtEur(t.basePrice * quantity)} gesamt</p>
+                        <p className="text-xs mt-0.5" style={{ color: "#5a554e" }}>+ € {fmtEur(t.shipping)} Versand</p>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              <div className="rounded-2xl p-5" style={{ background: "rgba(201,169,110,0.06)", border: "1px solid rgba(201,169,110,0.3)" }}>
+                <div className="flex items-center justify-between pt-3">
+                  <span className="font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Gesamtbetrag</span>
+                  <span className="text-2xl font-bold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#c9a96e" }}>€ {totalPrice}</span>
+                </div>
+                <p className="text-xs mt-2" style={{ color: "#5a554e" }}>Alle Preise zzgl. MwSt.</p>
+              </div>
+            </>
+          )}
+
+          {/* Selbst drucken: PDF Export */}
+          {printMode === "self" && (
+            <div className="rounded-2xl p-6" style={{ background: "#181714", border: "1px solid #302d28" }}>
+              <h3 className="text-lg font-semibold mb-1" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>Druckdaten exportieren</h3>
+              <p className="text-xs mb-5" style={{ color: "#8a8278" }}>
+                Das PDF enthält beide Seiten (Außen & Innen) im exakten Format mit 3 mm Beschnitt und Schnittmarken — direkt druckfertig für Ihren Drucker oder eine lokale Druckerei.
+              </p>
+              <CardPdfExport
+                caseData={selectedCase}
+                generatedText={editedText}
+                motifImageUrl={designs[selectedDesignIdx]?.motifUrl || ""}
+                heroImageUrl={heroImageUrl}
+                cardFormat={cardFormat}
+                funeralHome={funeralHome}
+                religion={religion}
+              />
+              <div className="mt-4 p-3 rounded-xl" style={{ background: "#201e1a", border: "1px solid #302d28" }}>
+                <p className="text-xs font-medium mb-1" style={{ color: "#c9a96e" }}>Druckempfehlungen</p>
+                <ul className="text-xs space-y-1" style={{ color: "#8a8278" }}>
+                  <li>• Papier: 300g/m² Kunstdruckpapier, beidseitig matt</li>
+                  <li>• Auflösung: mindestens 300 dpi</li>
+                  <li>• Farbprofil: CMYK (ISO Coated v2)</li>
+                  <li>• Beschnitt: 3 mm an allen Seiten (bereits enthalten)</li>
+                </ul>
+              </div>
             </div>
-            <p className="text-xs mt-2" style={{ color: "#5a554e" }}>Alle Preise zzgl. MwSt.</p>
-          </div>
+          )}
 
           <div className="flex gap-3">
             <button onClick={() => setStep(1)} className="flex-1 py-3 rounded-xl text-sm border" style={{ borderColor: "#302d28", color: "#8a8278" }}>Zurück</button>
-            <button onClick={() => setStep(3)} className="flex-1 py-3 rounded-xl text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>Weiter zur Bestellung</button>
+            {printMode === "order" && (
+              <button onClick={() => setStep(3)} className="flex-1 py-3 rounded-xl text-sm font-medium" style={{ background: "#c9a96e", color: "#0f0e0c" }}>Weiter zur Bestellung</button>
+            )}
+            {printMode === "self" && (
+              <button onClick={() => setStep(3)} className="flex-1 py-3 rounded-xl text-sm font-medium" style={{ background: "#302d28", color: "#8a8278" }}>
+                Trotzdem bestellen →
+              </button>
+            )}
           </div>
         </div>
       )}
