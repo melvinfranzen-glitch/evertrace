@@ -12,6 +12,7 @@ import { de } from "date-fns/locale";
 import { PRINT_TIERS as TIER_DATA, ADDON_PRICES, DEFAULT_CARD_QUANTITY, fmtEur } from "@/components/pricing/pricingData";
 import CardPrintPreview from "@/components/b2b/CardPrintPreview";
 import CardPdfExport from "@/components/b2b/CardPdfExport";
+import { InvitationCardPreview, ThankyouCardPreview } from "@/components/b2b/AddonCardPreviews";
 
 const PRINT_TIERS = TIER_DATA;
 
@@ -76,6 +77,8 @@ export default function B2BCardWizard() {
 
   // Preview side
   const [previewSide, setPreviewSide] = useState("front");
+  // Memorial slug for QR
+  const [memorialSlug, setMemorialSlug] = useState("");
 
   // Addons
   const [addonInvitation, setAddonInvitation] = useState(false);
@@ -181,6 +184,7 @@ export default function B2BCardWizard() {
             .then(([page]) => {
               if (page?.main_photo_url) setHeroImageUrl(page.main_photo_url);
               if (page?.biography) setPersonContext(page.biography);
+              if (page?.slug) setMemorialSlug(page.slug);
             }).catch(() => {});
           // Also try linked Memorial via funeral_home_case_id
           base44.entities.Memorial.filter({ funeral_home_case_id: c.id })
@@ -188,6 +192,7 @@ export default function B2BCardWizard() {
               if (m?.hero_image_url) setHeroImageUrl(prev => prev || m.hero_image_url);
               if (m?.biography_raw_input) setPersonContext(prev => prev || m.biography_raw_input);
               else if (m?.biography) setPersonContext(prev => prev || m.biography);
+              if (m?.short_id) setMemorialSlug(prev => prev || m.short_id);
             }).catch(() => {});
         }
       }
@@ -702,6 +707,8 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
                 funeralHome={funeralHome}
                 heroImageUrl={heroImageUrl}
                 religion={religion}
+                showQr={addonQr}
+                memorialSlug={memorialSlug}
               />
             </div>
 
@@ -750,21 +757,62 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
 
               <div className="rounded-2xl p-5" style={{ background: "#181714", border: "1px solid #302d28" }}>
                 <p className="text-sm font-semibold mb-3" style={{ color: "#f0ede8" }}>Erweiterungen</p>
-                {[
-                  { val: addonInvitation, set: setAddonInvitation, icon: Mail, label: "Einladungskarte" },
-                  { val: addonThankyou, set: setAddonThankyou, icon: BookOpen, label: "Danksagungskarte" },
-                  { val: addonQr, set: setAddonQr, icon: QrCode, label: "QR-Code zur Gedenkseite" },
-                ].map(({ val, set: setter, icon: AddonIcon, label }) => (
-                  <button key={label} onClick={() => setter(!val)}
-                    className="w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left mb-2 last:mb-0"
-                    style={{ background: val ? "rgba(201,169,110,0.08)" : "#201e1a", border: `1px solid ${val ? "#c9a96e" : "#302d28"}` }}>
-                    <AddonIcon className="w-4 h-4" style={{ color: val ? "#c9a96e" : "#5a554e" }} />
-                    <span className="text-sm flex-1" style={{ color: "#f0ede8" }}>{label}</span>
-                    <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ background: val ? "#c9a96e" : "#302d28" }}>
-                      {val && <Check className="w-2.5 h-2.5" style={{ color: "#0f0e0c" }} />}
-                    </div>
-                  </button>
-                ))}
+
+                {/* QR-Code Toggle */}
+                <button onClick={() => setAddonQr(!addonQr)}
+                  className="w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left mb-2"
+                  style={{ background: addonQr ? "rgba(201,169,110,0.08)" : "#201e1a", border: `1px solid ${addonQr ? "#c9a96e" : "#302d28"}` }}>
+                  <QrCode className="w-4 h-4" style={{ color: addonQr ? "#c9a96e" : "#5a554e" }} />
+                  <div className="flex-1">
+                    <span className="text-sm block" style={{ color: "#f0ede8" }}>QR-Code zur Gedenkseite</span>
+                    <span className="text-xs" style={{ color: "#5a554e" }}>Erscheint unten auf der Innenseite</span>
+                  </div>
+                  <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ background: addonQr ? "#c9a96e" : "#302d28" }}>
+                    {addonQr && <Check className="w-2.5 h-2.5" style={{ color: "#0f0e0c" }} />}
+                  </div>
+                </button>
+
+                {/* Einladungskarte */}
+                <button onClick={() => setAddonInvitation(!addonInvitation)}
+                  className="w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left mb-2"
+                  style={{ background: addonInvitation ? "rgba(201,169,110,0.08)" : "#201e1a", border: `1px solid ${addonInvitation ? "#c9a96e" : "#302d28"}` }}>
+                  <Mail className="w-4 h-4" style={{ color: addonInvitation ? "#c9a96e" : "#5a554e" }} />
+                  <div className="flex-1">
+                    <span className="text-sm block" style={{ color: "#f0ede8" }}>Einladungskarte</span>
+                    <span className="text-xs" style={{ color: "#5a554e" }}>Passend zur Trauerkarte, gleicher Stil</span>
+                  </div>
+                  <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ background: addonInvitation ? "#c9a96e" : "#302d28" }}>
+                    {addonInvitation && <Check className="w-2.5 h-2.5" style={{ color: "#0f0e0c" }} />}
+                  </div>
+                </button>
+
+                {addonInvitation && (
+                  <div className="mb-3 p-3 rounded-xl" style={{ background: "#201e1a", border: "1px solid #302d28" }}>
+                    <p className="text-xs mb-2" style={{ color: "#8a8278" }}>Vorschau Einladungskarte</p>
+                    <InvitationCardPreview caseData={selectedCase} funeralHome={funeralHome} heroImageUrl={heroImageUrl} motifImageUrl={designs[selectedDesignIdx]?.motifUrl || ""} />
+                  </div>
+                )}
+
+                {/* Danksagungskarte */}
+                <button onClick={() => setAddonThankyou(!addonThankyou)}
+                  className="w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left mb-2"
+                  style={{ background: addonThankyou ? "rgba(201,169,110,0.08)" : "#201e1a", border: `1px solid ${addonThankyou ? "#c9a96e" : "#302d28"}` }}>
+                  <BookOpen className="w-4 h-4" style={{ color: addonThankyou ? "#c9a96e" : "#5a554e" }} />
+                  <div className="flex-1">
+                    <span className="text-sm block" style={{ color: "#f0ede8" }}>Danksagungskarte</span>
+                    <span className="text-xs" style={{ color: "#5a554e" }}>Für nach der Bestattung, im gleichen Design</span>
+                  </div>
+                  <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ background: addonThankyou ? "#c9a96e" : "#302d28" }}>
+                    {addonThankyou && <Check className="w-2.5 h-2.5" style={{ color: "#0f0e0c" }} />}
+                  </div>
+                </button>
+
+                {addonThankyou && (
+                  <div className="p-3 rounded-xl" style={{ background: "#201e1a", border: "1px solid #302d28" }}>
+                    <p className="text-xs mb-2" style={{ color: "#8a8278" }}>Vorschau Danksagungskarte</p>
+                    <ThankyouCardPreview caseData={selectedCase} funeralHome={funeralHome} heroImageUrl={heroImageUrl} motifImageUrl={designs[selectedDesignIdx]?.motifUrl || ""} />
+                  </div>
+                )}
               </div>
             </div>
           </div>

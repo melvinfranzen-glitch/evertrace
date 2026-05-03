@@ -127,7 +127,7 @@ const RELIGION_SYMBOLS = {
   Weltlich: "◆",
 };
 
-function CardInside({ caseData, generatedText, cardFormat, religion }) {
+function CardInside({ caseData, generatedText, cardFormat, religion, showQr, memorialSlug }) {
   const name = caseData
     ? `${caseData.deceased_first_name} ${caseData.deceased_last_name}`
     : "";
@@ -141,6 +141,12 @@ function CardInside({ caseData, generatedText, cardFormat, religion }) {
   const aspect = aspectMap[cardFormat] || "148/210";
   const symbol = RELIGION_SYMBOLS[religion] || "◆";
 
+  // QR URL — use memorial slug if available, otherwise generic URL
+  const qrUrl = memorialSlug
+    ? `${window.location.origin}/B2BPublicMemorial?slug=${memorialSlug}`
+    : `${window.location.origin}`;
+  const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=72x72&data=${encodeURIComponent(qrUrl)}&bgcolor=F7F3ED&color=4A4540&margin=2`;
+
   return (
     <div style={{
       aspectRatio: aspect,
@@ -152,10 +158,10 @@ function CardInside({ caseData, generatedText, cardFormat, religion }) {
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      padding: "2rem 1.5rem",
+      padding: "1.5rem 1.5rem",
     }}>
       {/* Top ornament */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
         <div style={{ height: 1, width: 24, background: "#D8C3A5" }} />
         <span style={{ color: "#B07B34", fontSize: 13 }}>{symbol}</span>
         <div style={{ height: 1, width: 24, background: "#D8C3A5" }} />
@@ -188,8 +194,8 @@ function CardInside({ caseData, generatedText, cardFormat, religion }) {
         )}
       </div>
 
-      {/* Bottom ornament + name */}
-      <div style={{ marginTop: 18, textAlign: "center" }}>
+      {/* Bottom: ornament + name + optional QR */}
+      <div style={{ marginTop: 14, textAlign: "center", width: "100%" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, justifyContent: "center", marginBottom: 8 }}>
           <div style={{ height: 1, width: 24, background: "#D8C3A5" }} />
           <div style={{ width: 3, height: 3, borderRadius: "50%", background: "#D8C3A5" }} />
@@ -199,9 +205,25 @@ function CardInside({ caseData, generatedText, cardFormat, religion }) {
           <p style={{
             fontFamily: "'Cormorant Garamond', serif", fontWeight: 400,
             fontSize: 12, letterSpacing: "0.06em", color: "#8A7F72",
+            marginBottom: showQr ? 10 : 0,
           }}>
             {name}
           </p>
+        )}
+
+        {/* QR Code */}
+        {showQr && (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+            <img
+              src={qrApiUrl}
+              alt="QR"
+              crossOrigin="anonymous"
+              style={{ width: 52, height: 52, borderRadius: 4, border: "1px solid #EAE0D0" }}
+            />
+            <p style={{ fontFamily: "'Lato', sans-serif", fontWeight: 300, fontSize: 7, color: "#B0A899", letterSpacing: "0.12em" }}>
+              Zur digitalen Gedenkseite
+            </p>
+          </div>
         )}
       </div>
     </div>
@@ -210,7 +232,7 @@ function CardInside({ caseData, generatedText, cardFormat, religion }) {
 
 // ─── EXPORT ────────────────────────────────────────────────────────────────────
 
-export default function CardPrintPreview({ caseData, generatedText, motifImageUrl, cardFormat, side, funeralHome, heroImageUrl, religion }) {
+export default function CardPrintPreview({ caseData, generatedText, motifImageUrl, cardFormat, side, funeralHome, heroImageUrl, religion, showQr, memorialSlug }) {
   if (side === "front") {
     return (
       <CardFront
@@ -228,6 +250,8 @@ export default function CardPrintPreview({ caseData, generatedText, motifImageUr
       generatedText={generatedText}
       cardFormat={cardFormat}
       religion={religion}
+      showQr={showQr}
+      memorialSlug={memorialSlug}
     />
   );
 }
