@@ -5,6 +5,7 @@ import {
   Check, ChevronRight, Loader2, QrCode, Mail, BookOpen,
   Building2, User, RefreshCw, Sparkles, Camera, ImageIcon, Monitor
 } from "lucide-react";
+// Note: BookOpen already imported above
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
@@ -71,6 +72,7 @@ export default function B2BCardWizard() {
   const [generatedText, setGeneratedText] = useState("");
   const [editedText, setEditedText] = useState("");
   const [generatingText, setGeneratingText] = useState(false);
+  const [textSaved, setTextSaved] = useState(false);
 
   // Preview side
   const [previewSide, setPreviewSide] = useState("front");
@@ -710,13 +712,29 @@ Der Text soll 60–90 Wörter lang sein, druckfertig, persönlich und würdevoll
                   <h3 className="text-base font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#f0ede8" }}>
                     Trauertext — Innenseite
                   </h3>
-                  <button onClick={() => { setGeneratedText(""); generateText(); }}
-                    disabled={generatingText}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs disabled:opacity-40"
-                    style={{ background: "rgba(201,169,110,0.1)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}>
-                    {generatingText ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
-                    Neu
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button onClick={async () => {
+                      if (!editedText) return;
+                      const title = selectedCase
+                        ? `${selectedCase.deceased_first_name} ${selectedCase.deceased_last_name}`
+                        : `Trauertext ${new Date().toLocaleDateString("de")}`;
+                      await base44.entities.SavedText.create({ title, content: editedText, religion });
+                      setTextSaved(true); setTimeout(() => setTextSaved(false), 2500);
+                    }}
+                      disabled={!editedText || textSaved}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs disabled:opacity-40"
+                      style={{ background: textSaved ? "rgba(74,222,128,0.1)" : "rgba(201,169,110,0.06)", color: textSaved ? "#4ade80" : "#8a8278", border: `1px solid ${textSaved ? "rgba(74,222,128,0.3)" : "#302d28"}` }}>
+                      {textSaved ? <Check className="w-3 h-3" /> : <BookOpen className="w-3 h-3" />}
+                      {textSaved ? "Gespeichert" : "Speichern"}
+                    </button>
+                    <button onClick={() => { setGeneratedText(""); generateText(); }}
+                      disabled={generatingText}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs disabled:opacity-40"
+                      style={{ background: "rgba(201,169,110,0.1)", color: "#c9a96e", border: "1px solid rgba(201,169,110,0.3)" }}>
+                      {generatingText ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
+                      Neu
+                    </button>
+                  </div>
                 </div>
                 {generatingText ? (
                   <div className="py-8 flex flex-col items-center gap-3">

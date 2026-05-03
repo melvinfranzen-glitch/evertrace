@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, CreditCard, Globe, BarChart3, Settings, Package, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, CreditCard, Globe, BarChart3, Settings, Package, LogOut, BookOpen } from "lucide-react";
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Link, useLocation } from "react-router-dom";
@@ -34,6 +34,7 @@ export default function B2BSidebar() {
     { path: "/B2BMemorial", icon: Globe, label: "Gedenkseiten", badge: badges.memorials, badgeGold: true },
     { path: "/B2BOrders", icon: Package, label: "Bestellungen", badge: badges.orders, badgeRed: true },
     { path: "/B2BAnalytics", icon: BarChart3, label: "Analysen" },
+    { path: "/B2BTextLibrary", icon: BookOpen, label: "Textbibliothek" },
     { path: "/B2BSettings", icon: Settings, label: "Einstellungen" },
   ];
 

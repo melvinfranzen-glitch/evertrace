@@ -1,0 +1,25 @@
+{
+  "name": "SavedText",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Kurztitel / Bezeichnung des Textes"
+    },
+    "content": {
+      "type": "string",
+      "description": "Der Trauertext"
+    },
+    "religion": {
+      "type": "string",
+      "description": "Religi\u00f6se Ausrichtung"
+    },
+    "tags": {
+      "type": "string",
+      "description": "Optionale Schlagw\u00f6rter (kommagetrennt)"
+    }
+  },
+  "required": [
+    "content"
+  ]
+}
